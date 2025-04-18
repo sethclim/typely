@@ -70,6 +70,20 @@ export async function openJSONFile() {
     return undefined;
 }
 
+export async function openLatexFile() {
+    const latexRaw = await openFile([
+        {
+            description: "LaTeX Files",
+            accept: {
+                "application/x-tex": [".tex"],
+                "text/x-tex": [".tex"], // Optional: adds fallback
+            },
+        },
+    ]);
+
+    return latexRaw;
+}
+
 export async function openTextFile() {
     const text = await openFile([
         {
