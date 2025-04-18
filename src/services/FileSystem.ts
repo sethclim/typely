@@ -30,3 +30,36 @@ export async function saveFile(content: string): Promise<void> {
         }
     }
 }
+
+export async function openFile(): Promise<string | undefined> {
+    try {
+        // Show the file picker dialog
+        const [handle]: FileSystemFileHandle[] =
+            await window.showOpenFilePicker({
+                types: [
+                    {
+                        description: "Text Files",
+                        accept: {
+                            "text/plain": [".txt"],
+                        },
+                    },
+                ],
+                multiple: false,
+            });
+
+        // Get the file from the handle
+        const file: File = await handle.getFile();
+
+        // Read the contents as text
+        const contents: string = await file.text();
+
+        console.log("File contents:", contents);
+
+        return contents;
+    } catch (err) {
+        if ((err as DOMException).name !== "AbortError") {
+            console.error("Error opening file:", err);
+            return undefined;
+        }
+    }
+}
