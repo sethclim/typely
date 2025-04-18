@@ -1,16 +1,38 @@
-export async function saveFile(content: string): Promise<void> {
+export async function saveJSONFile(content: string) {
+    return saveFile(content, "example.json", [
+        {
+            description: "JSON Files",
+            accept: { "application/json": [".json"] },
+        },
+    ]);
+}
+
+export async function saveTextFile(content: string) {
+    return saveFile(content, "example.txt", [
+        {
+            description: "Text Files",
+            accept: { "text/plain": [".txt"] },
+        },
+    ]);
+}
+
+export async function saveFile(
+    content: string,
+    suggestedName: string,
+    acceptTypes: FilePickerAcceptType[] = [
+        {
+            description: "Text Files",
+            accept: { "text/plain": [".txt"] },
+        },
+    ]
+): Promise<void> {
+    console.log("acceptTypes " + JSON.stringify(acceptTypes));
+
     try {
         // Show the save file picker
         const handle: FileSystemFileHandle = await window.showSaveFilePicker({
-            suggestedName: "example.txt",
-            types: [
-                {
-                    description: "Text Files",
-                    accept: {
-                        "text/plain": [".txt"],
-                    },
-                },
-            ],
+            suggestedName: suggestedName,
+            types: acceptTypes,
         });
 
         // Create a writable stream to the file
@@ -31,35 +53,58 @@ export async function saveFile(content: string): Promise<void> {
     }
 }
 
-export async function openFile(): Promise<string | undefined> {
+export async function openJSONFile() {
+    const jsonRaw = await openFile([
+        {
+            description: "JSON Files",
+            accept: { "application/json": [".json"] },
+        },
+    ]);
+
+    if (jsonRaw) {
+        const json = JSON.parse(jsonRaw);
+        console.log("Parsed JSON:", json);
+
+        return json;
+    }
+    return undefined;
+}
+
+export async function openTextFile() {
+    const text = await openFile([
+        {
+            description: "Text Files",
+            accept: { "text/plain": [".txt"] },
+        },
+    ]);
+
+    console.log("Text content:", text);
+
+    return text;
+}
+
+async function openFile(
+    acceptTypes: FilePickerAcceptType[] = [
+        {
+            description: "Text Files",
+            accept: { "text/plain": [".txt"] },
+        },
+    ]
+): Promise<string | undefined> {
     try {
-        // Show the file picker dialog
         const [handle]: FileSystemFileHandle[] =
             await window.showOpenFilePicker({
-                types: [
-                    {
-                        description: "Text Files",
-                        accept: {
-                            "text/plain": [".txt"],
-                        },
-                    },
-                ],
+                types: acceptTypes,
                 multiple: false,
             });
 
-        // Get the file from the handle
         const file: File = await handle.getFile();
-
-        // Read the contents as text
         const contents: string = await file.text();
-
-        console.log("File contents:", contents);
-
         return contents;
     } catch (err) {
         if ((err as DOMException).name !== "AbortError") {
             console.error("Error opening file:", err);
-            return undefined;
         }
+        return undefined;
     }
 }

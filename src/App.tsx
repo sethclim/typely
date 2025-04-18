@@ -2,8 +2,8 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
-import { FileListDisplay } from './components/FIleLIst'
-import { openFile, saveFile } from './services/FileSystem'
+// import { FileListDisplay } from './components/FIleLIst'
+import { openTextFile, saveFile, saveJSONFile, saveTextFile } from './services/FileSystem'
 import { ResumeTemplateDisplay } from './components/ResumeTemplateDisplay'
 
 export type Block = {
@@ -40,7 +40,7 @@ function App() {
   })
 
   const readFileHandler = async() => {
-    const res = await openFile()
+    const res = await openTextFile()
     if (res != undefined)
       setContent(res)
   }
@@ -57,7 +57,8 @@ function App() {
             placeholder="File content appears here..."
           />
           <button onClick={() => readFileHandler()}>OPEN</button>
-          <button onClick={() => saveFile(content)}>SAVE</button>
+          <button onClick={() => saveTextFile(content)}>SAVE</button>
+          <button onClick={() => saveJSONFile(JSON.stringify(resumeTemplate))}>SAVE Template</button>
         </div>
         <div>
           <ResumeTemplateDisplay resumeTemplate={resumeTemplate} />
