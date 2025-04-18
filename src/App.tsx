@@ -3,6 +3,7 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import { FileListDisplay } from './components/FIleLIst'
+import { saveFile } from './services/FileSystem'
 
 function App() {
 
@@ -12,6 +13,7 @@ function App() {
     <>
       <div>
         <FileListDisplay files={files} />
+        <button onClick={() => saveFile("This is a message")}>SAVE</button>
       </div>
     </>
   )
