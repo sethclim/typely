@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
-// import { FileListDisplay } from './components/FIleLIst'
+
 import { openLatexFile, openTextFile, saveFile, saveJSONFile, saveTextFile } from './services/FileSystem'
 import { ResumeTemplateDisplay } from './components/ResumeTemplateDisplay'
 import { ComponentLibrary } from './components/ComponentLibrary'
@@ -16,24 +14,29 @@ export type ResumeTemplate = {
   components : Array<Block>
 }
 
-type ResumeInstance = {
-  template : ResumeTemplate,
-  data : string
+export type HeaderInfo = {
+  name: string,
 }
+
+export type Resume = {
+  name : string
+  // template : ResumeTemplate,
+  // data : string
+}
+
 
 import { DB } from "./db";
 import { ResumeTable } from "./db/tables";
+import { useResume } from './context/resume/ResumeContext'
+import { ResumeProvider } from './context/resume/ResumeProvider'
 
-function App() {
-
-  const [files, setFiles] = useState([])
-
+const ResumeView = () => {
+  const { resume: myResume } = useResume();
+  
+   const [files, setFiles] = useState([])
   const [newCompName, setNewCompName] = useState("")
-
   const [content, setContent] = useState("")
-
   const [latexComps, setLatexComps] = useState<Array<Block>>([])
-
   const [resumeTemplate, setResumeTemplate] = useState({
     components : [
       {
@@ -47,21 +50,6 @@ function App() {
     ]
   })
 
-   useEffect(() => {
-      const init = async () => {
-        await DB.ready;
-
-        // Create users table if not exists
-        DB.runAndSave("CREATE TABLE IF NOT EXISTS resume (id INT, name TEXT)");
-        ResumeTable.insert({ id: 1, name: "Alice" });
-        const res = ResumeTable.findAll()
-
-        console.log("Saved " + JSON.stringify(res))
-
-      }
-      init();
-    }, []
-  )
 
   const readFileHandler = async() => {
     const res = await openTextFile()
@@ -69,7 +57,6 @@ function App() {
       setContent(res)
   }
 
-  
   // const readLatexHandler = async() => {
   //   const res = await openLatexFile()
   //   if (res != undefined)
@@ -117,11 +104,42 @@ function App() {
           <button onClick={() => saveJSONFile(JSON.stringify(resumeTemplate))}>SAVE Template</button>
         </div>
         <div>
-          <ResumeTemplateDisplay resumeTemplate={resumeTemplate} />
+          <h3>{myResume?.name}</h3>
+          {/* <ResumeTemplateDisplay resumeTemplate={resumeTemplate} /> */}
         </div>
       </div>
     </>
   )
+}
+
+function App() {
+
+  useEffect(() => {
+      const init = async () => {
+        await DB.ready;
+
+        // Create users table if not exists
+        DB.runAndSave("CREATE TABLE IF NOT EXISTS resume (id INT, name TEXT)");
+        // const res = ResumeTable.getResume()
+
+        // console.log("Saved " + JSON.stringify(res))
+
+        // ResumeTable.updateHeader({name : "Seth CLimenhaga"})
+
+        // const res2 = ResumeTable.getResume()
+
+        // console.log("Saved " + JSON.stringify(res2))
+
+      }
+      init();
+    }, []
+  )
+
+ return (
+    <ResumeProvider resumeId={1}>
+      <ResumeView />
+    </ResumeProvider>
+ )
 }
 
 export default App
