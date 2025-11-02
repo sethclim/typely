@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
@@ -20,6 +20,9 @@ type ResumeInstance = {
   template : ResumeTemplate,
   data : string
 }
+
+import { DB } from "./db";
+import { ResumeTable } from "./db/tables";
 
 function App() {
 
@@ -43,6 +46,22 @@ function App() {
       }
     ]
   })
+
+   useEffect(() => {
+      const init = async () => {
+        await DB.ready;
+
+        // Create users table if not exists
+        DB.runAndSave("CREATE TABLE IF NOT EXISTS resume (id INT, name TEXT)");
+        ResumeTable.insert({ id: 1, name: "Alice" });
+        const res = ResumeTable.findAll()
+
+        console.log("Saved " + JSON.stringify(res))
+
+      }
+      init();
+    }, []
+  )
 
   const readFileHandler = async() => {
     const res = await openTextFile()
