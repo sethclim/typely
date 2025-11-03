@@ -6,17 +6,16 @@ type InsertResume = {
     name: string;
 };
 
-export const ResumeTable = {
+const RESUME_CONFIG_TABLE = "resume_config";
+
+export const ResumeConfigTable = {
     insert: ({ id, name }: InsertResume) => {
-        DB.runAndSave("INSERT INTO resume (id, name) VALUES (?, ?)", [
-            id,
-            name,
-        ]);
+        DB.runAndSave(
+            `INSERT INTO ${RESUME_CONFIG_TABLE} (id, name) VALUES (?, ?)`,
+            [id, name]
+        );
 
         DB.notifyTable("resume");
-    },
-    findAll: () => {
-        return DB.exec("SELECT * FROM resume");
     },
     updateHeader: (headerInfo: HeaderInfo) => {
         DB.update("resume", 1, headerInfo);

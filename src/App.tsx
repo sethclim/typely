@@ -26,14 +26,14 @@ export type Resume = {
 
 
 import { DB } from "./db";
-import { ResumeTable } from "./db/tables";
+import { ResumeConfigTable } from "./db/tables";
 import { useResume } from './context/resume/ResumeContext'
 import { ResumeProvider } from './context/resume/ResumeProvider'
 
 const ResumeView = () => {
   const { resume: myResume } = useResume();
   
-   const [files, setFiles] = useState([])
+  const [files, setFiles] = useState([])
   const [newCompName, setNewCompName] = useState("")
   const [content, setContent] = useState("")
   const [latexComps, setLatexComps] = useState<Array<Block>>([])
@@ -105,7 +105,7 @@ const ResumeView = () => {
         </div>
         <div>
           <h3>{myResume?.name}</h3>
-          {/* <ResumeTemplateDisplay resumeTemplate={resumeTemplate} /> */}
+          <ResumeTemplateDisplay resumeTemplate={resumeTemplate} />
         </div>
       </div>
     </>
@@ -118,18 +118,62 @@ function App() {
       const init = async () => {
         await DB.ready;
 
-        // Create users table if not exists
-        DB.runAndSave("CREATE TABLE IF NOT EXISTS resume (id INT, name TEXT)");
-        // const res = ResumeTable.getResume()
-
-        // console.log("Saved " + JSON.stringify(res))
-
-        // ResumeTable.updateHeader({name : "Seth CLimenhaga"})
-
-        // const res2 = ResumeTable.getResume()
-
-        // console.log("Saved " + JSON.stringify(res2))
-
+        DB.runAndSave(`
+          CREATE TABLE IF NOT EXISTS resume_config (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            created_at TEXT DEFAULT (datetime('now')),
+            updated_at TEXT DEFAULT (datetime('now'))
+          )
+        `);
+        DB.runAndSave(`
+          CREATE TABLE IF NOT EXISTS resume_section_config (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            resume_id INTEGER NOT NULL,
+            section_type TEXT NOT NULL,
+            template_id INTEGER NOT NULL,
+            section_order INTEGER DEFAULT 0,
+            FOREIGN KEY (resume_id) REFERENCES resume_config(id) ON DELETE CASCADE,
+            FOREIGN KEY (template_id) REFERENCES template(id)
+          )
+        `);
+        DB.runAndSave(`
+          CREATE TABLE IF NOT EXISTS template (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            section_type TEXT NOT NULL,
+            content TEXT NOT NULL,
+            description TEXT,
+            created_at TEXT DEFAULT (datetime('now'))
+          )
+        `);
+        DB.runAndSave(`
+          CREATE TABLE IF NOT EXISTS resume_section_data (
+            section_id INTEGER NOT NULL,
+            data_item_id INTEGER NOT NULL,
+            PRIMARY KEY (section_id, data_item_id),
+            FOREIGN KEY (section_id) REFERENCES resume_section_config(id) ON DELETE CASCADE,
+            FOREIGN KEY (data_item_id) REFERENCES data_item(id)
+          )
+        `);
+        DB.runAndSave(`
+          CREATE TABLE IF NOT EXISTS data_item (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            type_id INTEGER NOT NULL,
+            title TEXT,
+            description TEXT,
+            data TEXT, -- store JSON as TEXT
+            created_at TEXT DEFAULT (datetime('now')),
+            updated_at TEXT DEFAULT (datetime('now')),
+            FOREIGN KEY (type_id) REFERENCES data_item_type(id)
+          )
+        `);
+        DB.runAndSave(`
+          CREATE TABLE IF NOT EXISTS data_item_type (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL UNIQUE
+          )
+        `);
       }
       init();
     }, []

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ResumeContext } from "./ResumeContext";
 import { Resume } from "../../App";
-import { ResumeTable } from "../../db/tables";
+import { ResumeConfigTable } from "../../db/tables";
 import { DB } from "../../db";
 
 type ResumeProviderProps = {
@@ -14,14 +14,14 @@ export const ResumeProvider: React.FC<ResumeProviderProps> = ({ resumeId, childr
 
   const fetchResume = async () => {
     await DB.ready;
-    const data = await ResumeTable.getResume(resumeId);
+    const data = await ResumeConfigTable.getResume(resumeId);
     console.log("data " + JSON.stringify(data))
     setResume(data);
   };
 
   useEffect(() => {
     fetchResume();
-    const unsubscribe = ResumeTable.subscribe(fetchResume);
+    const unsubscribe = ResumeConfigTable.subscribe(fetchResume);
     return () => unsubscribe();
   }, [resumeId]);
 
