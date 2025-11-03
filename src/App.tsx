@@ -26,7 +26,7 @@ export type Resume = {
 
 
 import { DB } from "./db";
-import { ResumeConfigTable } from "./db/tables";
+import { ResumeConfigTable, ResumeSectionConfigTable } from "./db/tables";
 import { useResume } from './context/resume/ResumeContext'
 import { ResumeProvider } from './context/resume/ResumeProvider'
 
@@ -180,6 +180,14 @@ function App() {
           "name" : "Resume_1",
           "created_at" : Date.now().toString(),
           "updated_at" : Date.now().toString(),
+        })
+
+        ResumeSectionConfigTable.insert({
+          "id": 1,
+          "resume_id": 1,
+          "template_id": 1111,
+          "section_order": 0,
+          "section_type": "header"
         })
       }
       init();
