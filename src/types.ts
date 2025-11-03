@@ -16,7 +16,7 @@ export interface DataItem {
 export interface Template {
     id: number;
     name: string;
-    sectionType: "project" | "experience" | "education" | "skills";
+    sectionType: "project" | "experience" | "education" | "skills" | "header";
     content: string;
     description?: string;
 }

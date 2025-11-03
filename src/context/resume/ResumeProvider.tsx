@@ -14,7 +14,7 @@ export const ResumeProvider: React.FC<ResumeProviderProps> = ({ resumeId, childr
 
   const fetchResume = async () => {
     await DB.ready;
-    const data = await ResumeConfigTable.getResume(resumeId);
+    const data = await ResumeConfigTable.getResumeConfig(resumeId);
     console.log("data " + JSON.stringify(data))
     setResume(data);
   };

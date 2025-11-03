@@ -174,6 +174,13 @@ function App() {
             name TEXT NOT NULL UNIQUE
           )
         `);
+
+        ResumeConfigTable.insert({
+          "id": 1,
+          "name" : "Resume_1",
+          "created_at" : Date.now().toString(),
+          "updated_at" : Date.now().toString(),
+        })
       }
       init();
     }, []
