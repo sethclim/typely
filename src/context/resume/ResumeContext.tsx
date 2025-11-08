@@ -1,9 +1,9 @@
 import { createContext, useContext } from "react";
-import { Resume } from "../../App";
+import { ResumeConfig } from "../../types";
 
 
 type ResumeContextType = {
-  resume: Resume | null;
+  resume: ResumeConfig | null;
   refresh: () => void;
 };
 
