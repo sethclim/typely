@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 
-import { openLatexFile, openTextFile, saveFile, saveJSONFile, saveTextFile } from './services/FileSystem'
+import { openLatexFile, openTextFile, saveJSONFile, saveTextFile } from './services/FileSystem'
 import { ResumeTemplateDisplay } from './components/ResumeTemplateDisplay'
 import { ComponentLibrary } from './components/ComponentLibrary'
 
@@ -26,7 +26,7 @@ export type Resume = {
 
 
 import { DB } from "./db";
-import { ResumeConfigTable, ResumeSectionConfigTable } from "./db/tables";
+import { ResumeConfigTable, ResumeDataItemTable, ResumeDataItemTypeTable, ResumeSectionConfigTable, ResumeSectionDataTable } from "./db/tables";
 import { useResume } from './context/resume/ResumeContext'
 import { ResumeProvider } from './context/resume/ResumeProvider'
 
@@ -188,6 +188,26 @@ function App() {
           "template_id": 1111,
           "section_order": 0,
           "section_type": "header"
+        })
+
+        ResumeSectionDataTable.insert({
+          section_id: 1,
+          data_item_id: 1
+        })
+
+        ResumeDataItemTable.insert({
+          "id": 1,
+          title: "header",
+          description: "resume header",
+          data: "{'something': 'sometning'}",
+          type_id: 1,
+          "created_at" : Date.now().toString(),
+          "updated_at" : Date.now().toString(),
+        })
+
+        ResumeDataItemTypeTable.insert({
+          "id": 1,
+          name : "header"
         })
       }
       init();
