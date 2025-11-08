@@ -5,8 +5,53 @@ import { DataItemRow, DataItemTypeRow, ResumeConfigRow, ResumeSectionConfigRow, 
 const RESUME_CONFIG_TABLE = "resume_config";
 const RESUME_SECTION_CONFIG_TABLE = "resume_section_config";
 const RESUME_SECTION_DATA_TABLE = "resume_section_data";
-const RESUME_DATA_ITEM_TABLE = "resume_section_data";
-const RESUME_DATA_ITEM_TYPE_TABLE = "data_item_type";
+const RESUME_DATA_ITEM_TABLE = "resume_data_item";
+const RESUME_DATA_ITEM_TYPE_TABLE = "resume_data_item_type";
+
+export function getFullResumeQuery(resumeIdParam = "?"): string {
+  return `
+    SELECT rc.id,
+           rc.name,
+           COALESCE(
+             json_group_array(
+               json_object(
+                 'id', rs.id,
+                 'sectionType', rs.section_type,
+                 'order', rs.section_order,
+                 'items',
+                   COALESCE(
+                     (
+                       SELECT json_group_array(
+                         json_object(
+                           'id', di.id,
+                           'type', json_object('id', dit.id, 'name', dit.name),
+                           'title', di.title,
+                           'description', di.description,
+                           'data', json(di.data),
+                           'created_at', di.created_at,
+                           'updated_at', di.updated_at
+                         )
+                       )
+                       FROM ${RESUME_SECTION_DATA_TABLE} rsd
+                       JOIN ${RESUME_DATA_ITEM_TABLE} di ON di.id = rsd.data_item_id
+                       LEFT JOIN ${RESUME_DATA_ITEM_TYPE_TABLE} dit ON dit.id = di.type_id
+                       WHERE rsd.section_id = rs.id
+                     ),
+                     json('[]')
+                   )
+               )
+             ),
+             json('[]')
+           ) AS sections
+    FROM ${RESUME_CONFIG_TABLE} rc
+    LEFT JOIN ${RESUME_SECTION_CONFIG_TABLE} rs ON rs.resume_id = rc.id
+    WHERE rc.id = ${resumeIdParam}
+    GROUP BY rc.id;
+  `.trim();
+}
+
+
+//LEFT JOIN ${TEMPLATE_TABLE} t ON t.id = rs.template_id
 
 export const ResumeConfigTable = {
     insert: ({ id, name, created_at, updated_at }: ResumeConfigRow) => {
@@ -22,23 +67,26 @@ export const ResumeConfigTable = {
         DB.notifyTable(RESUME_CONFIG_TABLE);
     },
     getResumeConfig: (id: number) => {
-        const resRow = DB.exec(
-            `SELECT * FROM ${RESUME_CONFIG_TABLE} WHERE id = ?`,
-            [id]
-        )[0]?.values?.[0];
+        const row = DB.exec(getFullResumeQuery(), [id]);
 
-        if (!resRow) return null;
+        console.log("RESUME!! " + JSON.stringify(row));
+        // const resRow = DB.exec(
+        //     `SELECT * FROM ${RESUME_CONFIG_TABLE} WHERE id = ?`,
+        //     [id]
+        // )[0]?.values?.[0];
 
-        console.log(RESUME_CONFIG_TABLE + " " + JSON.stringify(resRow));
+        // if (!resRow) return null;x
 
-        const resume: ResumeConfigRow = {
-            id: resRow[0],
-            name: resRow[1],
-            created_at: resRow[2],
-            updated_at: resRow[3],
-        };
+        // console.log(RESUME_CONFIG_TABLE + " " + JSON.stringify(resRow));
 
-        return resume;
+        // const resume: ResumeConfigRow = {
+        //     id: resRow[0],
+        //     name: resRow[1],
+        //     created_at: resRow[2],
+        //     updated_at: resRow[3],
+        // };
+
+        return row;
     },
     subscribe: (cb: () => void) => DB.subscribe(RESUME_CONFIG_TABLE, cb),
 };
@@ -81,7 +129,7 @@ export const ResumeDataItemTable = {
         data,
         type_id
     }: DataItemRow) => {
-       DB.runAndSave(
+        DB.runAndSave(
             `INSERT INTO ${RESUME_DATA_ITEM_TABLE} (type_id, title, description, data) VALUES (?, ?, ?, ?)`,
             [type_id, title, description, JSON.stringify(data)]
         );

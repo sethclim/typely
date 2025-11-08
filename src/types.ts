@@ -25,7 +25,7 @@ export interface ResumeSection {
     id: number;
     sectionType: string;
     order: number;
-    template: Template;
+    template: Template | undefined;
     items: DataItem[];
 }
 

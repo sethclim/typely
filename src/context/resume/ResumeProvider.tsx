@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { ResumeContext } from "./ResumeContext";
-import { Resume } from "../../App";
 import { ResumeConfigTable } from "../../db/tables";
 import { DB } from "../../db";
+import { ResumeConfig } from "../../types";
+import { hydrateResume } from "../../hooks/ResumeHydrator";
 
 type ResumeProviderProps = {
   resumeId: number;
@@ -10,13 +11,14 @@ type ResumeProviderProps = {
 };
 
 export const ResumeProvider: React.FC<ResumeProviderProps> = ({ resumeId, children }) => {
-  const [resume, setResume] = useState<Resume | null>(null);
+  const [resume, setResume] = useState<ResumeConfig | null>(null);
 
   const fetchResume = async () => {
-    await DB.ready;
+    await DB.tablesReady;
     const data = await ResumeConfigTable.getResumeConfig(resumeId);
-    console.log("data " + JSON.stringify(data))
-    setResume(data);
+    const resume = hydrateResume(data)
+    console.log("data " + JSON.stringify(resume))
+    setResume(resume);
   };
 
   useEffect(() => {

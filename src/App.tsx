@@ -118,97 +118,40 @@ function App() {
       const init = async () => {
         await DB.ready;
 
-        DB.runAndSave(`
-          CREATE TABLE IF NOT EXISTS resume_config (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
-            created_at TEXT DEFAULT (datetime('now')),
-            updated_at TEXT DEFAULT (datetime('now'))
-          )
-        `);
-        DB.runAndSave(`
-          CREATE TABLE IF NOT EXISTS resume_section_config (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            resume_id INTEGER NOT NULL,
-            section_type TEXT NOT NULL,
-            template_id INTEGER NOT NULL,
-            section_order INTEGER DEFAULT 0,
-            FOREIGN KEY (resume_id) REFERENCES resume_config(id) ON DELETE CASCADE,
-            FOREIGN KEY (template_id) REFERENCES template(id)
-          )
-        `);
-        DB.runAndSave(`
-          CREATE TABLE IF NOT EXISTS template (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
-            section_type TEXT NOT NULL,
-            content TEXT NOT NULL,
-            description TEXT,
-            created_at TEXT DEFAULT (datetime('now'))
-          )
-        `);
-        DB.runAndSave(`
-          CREATE TABLE IF NOT EXISTS resume_section_data (
-            section_id INTEGER NOT NULL,
-            data_item_id INTEGER NOT NULL,
-            PRIMARY KEY (section_id, data_item_id),
-            FOREIGN KEY (section_id) REFERENCES resume_section_config(id) ON DELETE CASCADE,
-            FOREIGN KEY (data_item_id) REFERENCES data_item(id)
-          )
-        `);
-        DB.runAndSave(`
-          CREATE TABLE IF NOT EXISTS data_item (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            type_id INTEGER NOT NULL,
-            title TEXT,
-            description TEXT,
-            data TEXT, -- store JSON as TEXT
-            created_at TEXT DEFAULT (datetime('now')),
-            updated_at TEXT DEFAULT (datetime('now')),
-            FOREIGN KEY (type_id) REFERENCES data_item_type(id)
-          )
-        `);
-        DB.runAndSave(`
-          CREATE TABLE IF NOT EXISTS data_item_type (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL UNIQUE
-          )
-        `);
+        // ResumeConfigTable.insert({
+        //   "id": 1,
+        //   "name" : "Resume_1",
+        //   "created_at" : Date.now().toString(),
+        //   "updated_at" : Date.now().toString(),
+        // })
 
-        ResumeConfigTable.insert({
-          "id": 1,
-          "name" : "Resume_1",
-          "created_at" : Date.now().toString(),
-          "updated_at" : Date.now().toString(),
-        })
+        // ResumeSectionConfigTable.insert({
+        //   "id": 1,
+        //   "resume_id": 1,
+        //   "template_id": 1111,
+        //   "section_order": 0,
+        //   "section_type": "header"
+        // })
 
-        ResumeSectionConfigTable.insert({
-          "id": 1,
-          "resume_id": 1,
-          "template_id": 1111,
-          "section_order": 0,
-          "section_type": "header"
-        })
+        // ResumeSectionDataTable.insert({
+        //   section_id: 1,
+        //   data_item_id: 1
+        // })
 
-        ResumeSectionDataTable.insert({
-          section_id: 1,
-          data_item_id: 1
-        })
+        // ResumeDataItemTable.insert({
+        //   "id": 1,
+        //   title: "header",
+        //   description: "resume header",
+        //   data: "{'something': 'sometning'}",
+        //   type_id: 1,
+        //   "created_at" : Date.now().toString(),
+        //   "updated_at" : Date.now().toString(),
+        // })
 
-        ResumeDataItemTable.insert({
-          "id": 1,
-          title: "header",
-          description: "resume header",
-          data: "{'something': 'sometning'}",
-          type_id: 1,
-          "created_at" : Date.now().toString(),
-          "updated_at" : Date.now().toString(),
-        })
-
-        ResumeDataItemTypeTable.insert({
-          "id": 1,
-          name : "header"
-        })
+        // ResumeDataItemTypeTable.insert({
+        //   "id": 1,
+        //   name : "header"
+        // })
       }
       init();
     }, []
