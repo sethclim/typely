@@ -5,8 +5,6 @@ import { openTextFile, saveTextFile } from './services/FileSystem'
 import { ResumeTemplateDisplay } from './components/ResumeTemplateDisplay'
 // import { ComponentLibrary } from './components/ComponentLibrary'
 
-
-
 import { DB } from "./db";
 import { useResume } from './context/resume/ResumeContext'
 import { ResumeProvider } from './context/resume/ResumeProvider'
@@ -74,11 +72,13 @@ const ResumeView = () => {
         </div>
         <div>
           <h3>{myResume?.name}</h3>
+          <div className='flex flex-col gap-4'>
           {
             myResume?.sections.map((section) => {
               return <ResumeTemplateDisplay resumeSection={section} /> 
             })
           }
+          </div>
         </div>
       </div>
     </>
