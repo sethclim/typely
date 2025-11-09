@@ -71,7 +71,7 @@ const ResumeView = () => {
           {/* <button onClick={() => saveJSONFile(JSON.stringify(resumeTemplate))}>SAVE Template</button> */}
         </div>
         <div>
-          <h3>{myResume?.name}</h3>
+          <h3 className='text-4xl font-extrabold'>{myResume?.name}</h3>
           <div className='flex flex-col gap-4'>
           {
             myResume?.sections.map((section) => {
@@ -101,7 +101,7 @@ function App() {
         ResumeSectionConfigTable.insert({
           "id": 1,
           "resume_id": 1,
-          "template_id": 1111,
+          "template_id": 1,
           "section_order": 0,
           "section_type": "header"
         })
@@ -109,9 +109,9 @@ function App() {
         ResumeSectionConfigTable.insert({
           "id": 2,
           "resume_id": 1,
-          "template_id": 1,
-          "section_order": 0,
-          "section_type": "header"
+          "template_id": 2,
+          "section_order": 1,
+          "section_type": "skills"
         })
 
         ResumeSectionDataTable.insert({
@@ -121,13 +121,13 @@ function App() {
 
         ResumeSectionDataTable.insert({
           section_id: 2,
-          data_item_id: 1
+          data_item_id: 2
         })
 
         ResumeDataItemTable.insert({
           "id": 1,
-          title: "header",
-          description: "resume header",
+          title: "email",
+          description: "my email",
           data: "{'email': 'sethclim@gmail.com'}",
           type_id: 1,
           "created_at" : Date.now().toString(),
@@ -136,7 +136,12 @@ function App() {
 
         ResumeDataItemTypeTable.insert({
           "id": 1,
-          name : "header"
+          name : "email"
+        })
+
+        ResumeDataItemTypeTable.insert({
+          "id": 2,
+          name : "skill"
         })
 
         const headerLaTeX = `\\newcommand{\\AND}{\\unskip
@@ -159,6 +164,20 @@ function App() {
           "section_type": "header",
           "created_at" : Date.now().toString(),
           "content": headerLaTeX
+        })
+
+        const skillsLatex = `\\textbf{Languages:} C++, GO, Rust, C\\#, Python, Typescript, Lua, HLSL/GLSL \\newline
+                              \\textbf{AR/VR:} Unity, Vive, HoloLens, Quest, Unity XR Interation Tool Kit  \\newline
+                              \\textbf{Frameworks:} Vulkan, OpenGL, JUCE, Skia, Dear ImGui, GLFW, GLM, Kubernetes, WebRTC  \\newline
+                              \\textbf{General:} OOP, Functional, Git, Docker, CI/CD (Terraform, GitHub Actions), SQL, AWS \\newline`
+
+        TemplateTable.insert({
+          "id": 2,
+          "name": "skills template",
+          "description": "this is a s template",
+          "section_type": "header",
+          "created_at" : Date.now().toString(),
+          "content": skillsLatex
         })
       }
       init();
