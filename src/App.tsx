@@ -10,6 +10,7 @@ import { ResumeTemplateDisplay } from './components/ResumeTemplateDisplay'
 import { DB } from "./db";
 import { useResume } from './context/resume/ResumeContext'
 import { ResumeProvider } from './context/resume/ResumeProvider'
+import { ResumeConfigTable, ResumeSectionConfigTable, ResumeSectionDataTable, ResumeDataItemTable, ResumeDataItemTypeTable, TemplateTable } from './db/tables';
 
 const ResumeView = () => {
   const { resume: myResume } = useResume();
@@ -90,40 +91,75 @@ function App() {
       const init = async () => {
         await DB.ready;
 
-        // ResumeConfigTable.insert({
-        //   "id": 1,
-        //   "name" : "Resume_1",
-        //   "created_at" : Date.now().toString(),
-        //   "updated_at" : Date.now().toString(),
-        // })
+        ResumeConfigTable.insert({
+          "id": 1,
+          "name" : "Resume_1",
+          "created_at" : Date.now().toString(),
+          "updated_at" : Date.now().toString(),
+        })
 
-        // ResumeSectionConfigTable.insert({
-        //   "id": 1,
-        //   "resume_id": 1,
-        //   "template_id": 1111,
-        //   "section_order": 0,
-        //   "section_type": "header"
-        // })
+        ResumeSectionConfigTable.insert({
+          "id": 1,
+          "resume_id": 1,
+          "template_id": 1111,
+          "section_order": 0,
+          "section_type": "header"
+        })
 
-        // ResumeSectionDataTable.insert({
-        //   section_id: 1,
-        //   data_item_id: 1
-        // })
+        ResumeSectionConfigTable.insert({
+          "id": 2,
+          "resume_id": 1,
+          "template_id": 1,
+          "section_order": 0,
+          "section_type": "header"
+        })
 
-        // ResumeDataItemTable.insert({
-        //   "id": 1,
-        //   title: "header",
-        //   description: "resume header",
-        //   data: "{'something': 'sometning'}",
-        //   type_id: 1,
-        //   "created_at" : Date.now().toString(),
-        //   "updated_at" : Date.now().toString(),
-        // })
+        ResumeSectionDataTable.insert({
+          section_id: 1,
+          data_item_id: 1
+        })
 
-        // ResumeDataItemTypeTable.insert({
-        //   "id": 1,
-        //   name : "header"
-        // })
+        ResumeSectionDataTable.insert({
+          section_id: 2,
+          data_item_id: 1
+        })
+
+        ResumeDataItemTable.insert({
+          "id": 1,
+          title: "header",
+          description: "resume header",
+          data: "{'email': 'sethclim@gmail.com'}",
+          type_id: 1,
+          "created_at" : Date.now().toString(),
+          "updated_at" : Date.now().toString(),
+        })
+
+        ResumeDataItemTypeTable.insert({
+          "id": 1,
+          name : "header"
+        })
+
+        const headerLaTeX = `\\newcommand{\\AND}{\\unskip
+          \\cleaders\\copy\\ANDbox\\hskip\\wd\\ANDbox
+          \\ignorespaces
+          }
+          \\newsavebox\\ANDbox
+          \\sbox\\ANDbox{$|$}
+
+          \\begin{header}
+              \\fontsize{31 pt}{31 pt}\\selectfont Seth Climenhaga
+          \\end{header}
+          `;
+
+
+        TemplateTable.insert({
+          "id": 1,
+          "name": "header template",
+          "description": "this is a header template",
+          "section_type": "header",
+          "created_at" : Date.now().toString(),
+          "content": headerLaTeX
+        })
       }
       init();
     }, []
