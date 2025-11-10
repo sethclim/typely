@@ -10,6 +10,8 @@ import { useResume } from './context/resume/ResumeContext'
 import { ResumeProvider } from './context/resume/ResumeProvider'
 import { ResumeConfigTable, ResumeSectionConfigTable, ResumeSectionDataTable, ResumeDataItemTable, ResumeDataItemTypeTable, TemplateTable } from './db/tables';
 
+import Modal from "./components/Modal";
+
 const ResumeView = () => {
   const { resume: myResume } = useResume();
   
@@ -17,6 +19,7 @@ const ResumeView = () => {
   const [content, setContent] = useState("")
 
 
+  const [isOpen, setIsOpen] = useState(false);
 
   const readFileHandler = async() => {
     const res = await openTextFile()
@@ -78,9 +81,19 @@ const ResumeView = () => {
               return <ResumeTemplateDisplay resumeSection={section} /> 
             })
           }
-          <button>Add New Component</button>
+          <button onClick={() => setIsOpen(true)}>Add New Component</button>
           </div>
         </div>
+         <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
+          <h2 className="text-xl font-bold mb-4 text-black">Dynamic Content</h2>
+          <p className="text-black">This modal can show anything you pass as children!</p>
+          <button
+            className="mt-4 px-4 py-2 bg-red-500 text-white rounded"
+            onClick={() => setIsOpen(false)}
+          >
+            Close
+          </button>
+        </Modal>
       </div>
     </>
   )
