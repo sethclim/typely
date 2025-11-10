@@ -57,7 +57,7 @@ const ResumeView = () => {
       <div className='flex flex-row'>
         {/* <FileListDisplay files={files} /> */}
         {/* <ComponentLibrary latex_comps={latexComps} /> */}
-        <div>
+        {/* <div>
           <textarea
             style={{ width: "100%", height: "300px", marginTop: "1rem" }}
             value={content}
@@ -66,18 +66,19 @@ const ResumeView = () => {
           />
           <input onChange={(e) => setNewCompName(e.target.value)} />
           <button onClick={() => readFileHandler()}>OPEN</button>
-          {/* <button onClick={() => addLatexComp()}>OPEN Laxtex</button> */}
+          <button onClick={() => addLatexComp()}>OPEN Laxtex</button>
           <button onClick={() => saveTextFile(content)}>SAVE</button>
-          {/* <button onClick={() => saveJSONFile(JSON.stringify(resumeTemplate))}>SAVE Template</button> */}
-        </div>
+          <button onClick={() => saveJSONFile(JSON.stringify(resumeTemplate))}>SAVE Template</button>
+        </div> */}
         <div>
           <h3 className='text-4xl font-extrabold'>{myResume?.name}</h3>
-          <div className='flex flex-col gap-4'>
+          <div className='flex flex-col gap-4 w-150'>
           {
             myResume?.sections.map((section) => {
               return <ResumeTemplateDisplay resumeSection={section} /> 
             })
           }
+          <button>Add New Component</button>
           </div>
         </div>
       </div>
@@ -128,7 +129,7 @@ function App() {
           "id": 1,
           title: "email",
           description: "my email",
-          data: "{'email': 'sethclim@gmail.com'}",
+          data: '{"email": "sethclim@gmail.com"}',
           type_id: 1,
           "created_at" : Date.now().toString(),
           "updated_at" : Date.now().toString(),
