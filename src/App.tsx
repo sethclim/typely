@@ -12,6 +12,7 @@ import { ResumeConfigTable, ResumeSectionConfigTable, ResumeSectionDataTable, Re
 
 import Modal from "./components/Modal";
 import ComboBox from './components/ComboBox';
+import { ComponentLibrary } from './components/ComponentLibrary';
 
 const ResumeView = () => {
   const { resume: myResume } = useResume();
@@ -78,7 +79,7 @@ const ResumeView = () => {
     <>
       <div className='flex flex-row'>
         {/* <FileListDisplay files={files} /> */}
-        {/* <ComponentLibrary latex_comps={latexComps} /> */}
+        <ComponentLibrary />
         {/* <div>
           <textarea
             style={{ width: "100%", height: "300px", marginTop: "1rem" }}

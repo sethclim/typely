@@ -16,6 +16,16 @@ const RESUME_DATA_ITEM_TABLE = "resume_data_item";
 const RESUME_DATA_ITEM_TYPE_TABLE = "resume_data_item_type";
 const RESUME_TEMPLATE_TABLE = "template";
 
+function mapRows<T = any>(columns: string[], values: any[][]): T[] {
+    return values.map((row) => {
+        const obj: any = {};
+        columns.forEach((col, i) => {
+            obj[col] = row[i];
+        });
+        return obj as T;
+    });
+}
+
 export function getFullResumeQuery(resumeIdParam = "?"): string {
     return `
     SELECT rc.id,
@@ -128,6 +138,12 @@ export const ResumeDataItemTable = {
         );
 
         DB.notifyTable(RESUME_CONFIG_TABLE);
+    },
+    getAll: () => {
+        const res = DB.exec(`SELECT * FROM ${RESUME_DATA_ITEM_TABLE}`);
+        const rows = mapRows<DataItemRow>(res[0].columns, res[0].values);
+        console.log("rows!! " + JSON.stringify(rows));
+        return rows;
     },
 };
 
