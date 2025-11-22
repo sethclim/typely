@@ -11,6 +11,7 @@ import { ResumeProvider } from './context/resume/ResumeProvider'
 import { ResumeConfigTable, ResumeSectionConfigTable, ResumeSectionDataTable, ResumeDataItemTable, ResumeDataItemTypeTable, TemplateTable } from './db/tables';
 
 import Modal from "./components/Modal";
+import ComboBox from './components/ComboBox';
 
 const ResumeView = () => {
   const { resume: myResume } = useResume();
@@ -21,10 +22,28 @@ const ResumeView = () => {
 
   const [isOpen, setIsOpen] = useState(false);
 
+  const [selected, setSelected] = useState<string | null>(null);
+
   const readFileHandler = async() => {
     const res = await openTextFile()
     if (res != undefined)
       setContent(res)
+  }
+
+  const createResumeComponent = () => {
+    if (myResume === null || selected == null)
+      return;
+
+    ResumeSectionConfigTable.insert({
+      "id": 3,
+      "resume_id": myResume!.id,
+      "template_id": -1,
+      "section_order": 0, //TODO needs to be the last one in the list
+      "section_type": selected!
+    })
+
+    setSelected(null);
+    setIsOpen(false);
   }
 
   // const readLatexHandler = async() => {
@@ -85,14 +104,25 @@ const ResumeView = () => {
           </div>
         </div>
          <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
-          <h2 className="text-xl font-bold mb-4 text-black">Dynamic Content</h2>
-          <p className="text-black">This modal can show anything you pass as children!</p>
-          <button
-            className="mt-4 px-4 py-2 bg-red-500 text-white rounded"
-            onClick={() => setIsOpen(false)}
-          >
-            Close
-          </button>
+          <h2 className="text-xl font-bold mb-4 text-black">New Resume Block</h2>uik
+          <form>
+            <p className="text-black">Type</p>
+            <ComboBox selected={selected} onSelectedChange={setSelected} options={["Skills"]} />
+          </form>
+          <div className='flex flex-row gap-4'>
+            <button
+              className="mt-4 px-4 py-2 bg-green-500 text-white rounded"
+              onClick={() => createResumeComponent()}
+            >
+              Create
+            </button>
+            <button
+              className="mt-4 px-4 py-2 bg-red-500 text-white rounded"
+              onClick={() => setIsOpen(false)}
+            >
+              Cancel
+            </button>
+          </div>
         </Modal>
       </div>
     </>
