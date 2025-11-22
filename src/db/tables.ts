@@ -167,4 +167,10 @@ export const TemplateTable = {
 
         DB.notifyTable(RESUME_CONFIG_TABLE);
     },
+    getAll: () => {
+        const res = DB.exec(`SELECT * FROM ${RESUME_TEMPLATE_TABLE}`);
+        const rows = mapRows<TemplateRow>(res[0].columns, res[0].values);
+        console.log("template rows!! " + JSON.stringify(rows));
+        return rows;
+    },
 };

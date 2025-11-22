@@ -77,7 +77,7 @@ const ResumeView = () => {
 
   return (
     <>
-      <div className='flex flex-row'>
+      <div className='flex flex-row w-lvw justify-start bg-white'>
         {/* <FileListDisplay files={files} /> */}
         <ComponentLibrary />
         {/* <div>
@@ -93,9 +93,9 @@ const ResumeView = () => {
           <button onClick={() => saveTextFile(content)}>SAVE</button>
           <button onClick={() => saveJSONFile(JSON.stringify(resumeTemplate))}>SAVE Template</button>
         </div> */}
-        <div>
-          <h3 className='text-4xl font-extrabold'>{myResume?.name}</h3>
-          <div className='flex flex-col gap-4 w-150'>
+        <div className='bg-black'>
+          <h3 className='text-4xl font-extrabold text-white'>{myResume?.name}</h3>
+          <div className='flex flex-col gap-4 w-150 p-4'>
           {
             myResume?.sections.map((section) => {
               return <ResumeTemplateDisplay resumeSection={section} /> 
