@@ -1,97 +1,15 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import './App.css'
 
-import { openTextFile, saveTextFile } from './services/FileSystem'
-import { ResumeTemplateDisplay } from './components/ResumeTemplateDisplay'
+
 
 import { DB } from "./db";
-import { useResume } from './context/resume/ResumeContext'
-import { ResumeProvider } from './context/resume/ResumeProvider'
-import { ResumeConfigTable, ResumeSectionConfigTable, ResumeSectionDataTable, ResumeDataItemTable, ResumeDataItemTypeTable, TemplateTable } from './db/tables';
 
-import Modal from "./components/Modal";
-import ComboBox from './components/ComboBox';
-import { ComponentLibrary } from './components/ComponentLibrary';
+import { ResumeProvider } from './context/resume/ResumeProvider'
+import { ResumeSectionDataTable } from './db/tables';
 
 import {DndContext, DragEndEvent} from '@dnd-kit/core';
-
-const ResumeView = () => {
-  const { resume: myResume } = useResume();
-
-  useEffect(() => {
-    console.log("resume updated!!", myResume?.id);
-  }, [myResume]);
-  
-  const [newCompName, setNewCompName] = useState("")
-  const [content, setContent] = useState("")
-
-  const [isOpen, setIsOpen] = useState(false);
-
-  const [selected, setSelected] = useState<string | null>(null);
-
-  const readFileHandler = async() => {
-    const res = await openTextFile()
-    if (res != undefined)
-      setContent(res)
-  }
-
-  const createResumeComponent = () => {
-    if (myResume === null || selected == null)
-      return;
-
-    ResumeSectionConfigTable.insert({
-      "id": 3,
-      "resume_id": myResume!.id,
-      "template_id": -1,
-      "section_order": 0, //TODO needs to be the last one in the list
-      "section_type": selected!
-    })
-
-    setSelected(null);
-    setIsOpen(false);
-  }
-
-  return (
-    <>
-      <div className='flex flex-row w-lvw justify-start bg-white'>
-        {/* <FileListDisplay files={files} /> */}
-        <ComponentLibrary />
-        <div className='bg-black'>
-          <h3 className='text-4xl font-extrabold text-white'>{myResume?.name}</h3>
-          <div className='flex flex-col gap-4 w-150 p-4'>
-          {
-            myResume?.sections.map((section) => {
-              return <ResumeTemplateDisplay key={section.id} resumeSection={section} /> 
-            })
-          }
-          <button onClick={() => setIsOpen(true)}>Add New Component</button>
-          </div>
-        </div>
-         <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
-          <h2 className="text-xl font-bold mb-4 text-black">New Resume Block</h2>uik
-          <form>
-            <p className="text-black">Type</p>
-            <ComboBox selected={selected} onSelectedChange={setSelected} options={["Skills"]} />
-          </form>
-          <div className='flex flex-row gap-4'>
-            <button
-              className="mt-4 px-4 py-2 bg-green-500 text-white rounded"
-              onClick={() => createResumeComponent()}
-            >
-              Create
-            </button>
-            <button
-              className="mt-4 px-4 py-2 bg-red-500 text-white rounded"
-              onClick={() => setIsOpen(false)}
-            >
-              Cancel
-            </button>
-          </div>
-        </Modal>
-      </div>
-    </>
-  )
-}
+import { ResumeView } from './components/ResumeView';
 
 function App() {
 
