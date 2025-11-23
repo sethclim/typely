@@ -24,7 +24,7 @@ export default function Modal({ isOpen, onClose, children }: ModalProps) {
 
   return createPortal(
     <div
-      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 z-50"
+      className="fixed inset-0 flex items-center justify-center bg-black/90  z-50"
       onClick={onClose} // click on overlay closes modal
     >
       <div

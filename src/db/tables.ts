@@ -136,7 +136,7 @@ export const ResumeDataItemTable = {
             `INSERT INTO ${RESUME_DATA_ITEM_TABLE} (type_id, title, description, data) VALUES (?, ?, ?, ?)`,
             [type_id, title, description, JSON.stringify(data)]
         );
-
+        DB.notifyTable(RESUME_DATA_ITEM_TABLE);
         DB.notifyTable(RESUME_CONFIG_TABLE);
     },
     getAll: () => {
@@ -145,6 +145,7 @@ export const ResumeDataItemTable = {
         console.log("rows!! " + JSON.stringify(rows));
         return rows;
     },
+    subscribe: (cb: () => void) => DB.subscribe(RESUME_DATA_ITEM_TABLE, cb),
 };
 
 export const ResumeDataItemTypeTable = {
