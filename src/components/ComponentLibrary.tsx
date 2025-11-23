@@ -24,7 +24,7 @@ type DataItemsProps = {
 const DataItemComponent = (props : DataItemsProps) => {
 
     const {attributes, listeners, setNodeRef, transform} = useDraggable({
-        id: props.dataItem.id,
+        id: `dataitem-${props.dataItem.id}`,
     });
     
     const style = transform ? {
@@ -36,6 +36,34 @@ const DataItemComponent = (props : DataItemsProps) => {
             <div className="max-h-20 text-black text-ellipsis overflow-hidden bg-black/20 m-2">
                 <h3 className="text-xl text-bold">{props.dataItem.title}</h3>
                 <p className="max-h-40 text-ellipsis">{props.dataItem.data}</p>
+            </div>
+        </button>
+    )
+}
+
+type TemplateItemComponentProps = {
+    template: Template
+}
+
+const TemplateItemComponent = (props : TemplateItemComponentProps) => {
+
+    const {attributes, listeners, setNodeRef, transform} = useDraggable({
+        id:  `template-${props.template.id}`,
+    });
+    
+    const style = transform ? {
+        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+    } : undefined;
+
+    return (
+        <button ref={setNodeRef} style={style} {...listeners} {...attributes}>
+            <div className="text-black text-ellipsis overflow-hidden bg-white/40">
+                {/* <p>{JSON.stringify(template)}</p> */}
+                <h3 className="text-xl text-bold">{props.template.name}</h3>
+                <SyntaxHighlighter language="latex" style={nord} >
+                    {props.template.content}
+                </SyntaxHighlighter>
+                {/* <p className="max-h-40 text-ellipsis">{template.content}</p> */}
             </div>
         </button>
     )
@@ -132,16 +160,7 @@ export const ComponentLibrary = () => {
                     <div className="flex flex-col gap-4">
                     {
                         templates?.map((template) => {
-                            return (
-                                <div className=" text-black text-ellipsis overflow-hidden bg-white/40">
-                                    {/* <p>{JSON.stringify(template)}</p> */}
-                                    <h3 className="text-xl text-bold">{template.name}</h3>
-                                    <SyntaxHighlighter language="latex" style={nord} >
-                                        {template.content}
-                                    </SyntaxHighlighter>
-                                    {/* <p className="max-h-40 text-ellipsis">{template.content}</p> */}
-                                </div>
-                            )
+                            return <TemplateItemComponent template={template} />
                         })
                     }
                     </div> 

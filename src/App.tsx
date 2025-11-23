@@ -1,12 +1,10 @@
 import { useEffect } from 'react'
 import './App.css'
 
-
-
 import { DB } from "./db";
 
 import { ResumeProvider } from './context/resume/ResumeProvider'
-import { ResumeSectionDataTable } from './db/tables';
+import { ResumeSectionConfigTable, ResumeSectionDataTable } from './db/tables';
 
 import {DndContext, DragEndEvent} from '@dnd-kit/core';
 import { ResumeView } from './components/ResumeView';
@@ -14,18 +12,24 @@ import { ResumeView } from './components/ResumeView';
 function App() {
 
   function handleDragEnd(event : DragEndEvent) {
-    console.log("DRAG ENDED!!! " +  event.over?.id)
-    if (event.over && event.over.id.toString().startsWith("dataitem-")) {
+    const over = event.over
+    const active = event.active
 
-      const [, section_id] = event.over.id.toString().split('-');
+    if(!over || !active)
+      return;
 
-      console.log("DRAG dataitem event id" +  section_id + " active id " + event.active.id.toString())
-
-
+    const [overPrefix, section_id] = over.id.toString().split('-');
+    const [activePrefix, active_id] = active.id.toString().split('-');
+    console.log("On Droppable overPrefix:" + overPrefix + " section_id " + section_id + " activePrefix " +  activePrefix  + " active id " + active_id)
+    
+    if (overPrefix === "dataitem" && activePrefix === "dataitem") {
       ResumeSectionDataTable.insert({
         section_id: parseInt(section_id),
         data_item_id: parseInt(event.active.id.toString())
       })
+    }
+    else if (overPrefix === "template" && activePrefix === "template"){
+      ResumeSectionConfigTable.updateTemplate(section_id, active_id)
     }
   }
 

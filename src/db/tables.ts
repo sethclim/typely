@@ -117,6 +117,17 @@ export const ResumeSectionConfigTable = {
 
         DB.notifyTable(RESUME_CONFIG_TABLE);
     },
+    updateTemplate: (id: string, template_id: string) => {
+        console.log(
+            `[ResumeSectionConfigTable] id: ${id} template_id: ${template_id}`
+        );
+        DB.runAndSave(
+            `UPDATE ${RESUME_SECTION_CONFIG_TABLE} SET template_id = ? WHERE id = ?`,
+            [template_id, id]
+        );
+
+        DB.notifyTable(RESUME_CONFIG_TABLE);
+    },
 };
 
 export const ResumeSectionDataTable = {
