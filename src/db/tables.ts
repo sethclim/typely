@@ -16,6 +16,16 @@ const RESUME_DATA_ITEM_TABLE = "resume_data_item";
 const RESUME_DATA_ITEM_TYPE_TABLE = "resume_data_item_type";
 const RESUME_TEMPLATE_TABLE = "template";
 
+function mapRows<T = any>(columns: string[], values: any[][]): T[] {
+    return values.map((row) => {
+        const obj: any = {};
+        columns.forEach((col, i) => {
+            obj[col] = row[i];
+        });
+        return obj as T;
+    });
+}
+
 export function getFullResumeQuery(resumeIdParam = "?"): string {
     return `
     SELECT rc.id,
@@ -107,6 +117,17 @@ export const ResumeSectionConfigTable = {
 
         DB.notifyTable(RESUME_CONFIG_TABLE);
     },
+    updateTemplate: (id: string, template_id: string) => {
+        console.log(
+            `[ResumeSectionConfigTable] id: ${id} template_id: ${template_id}`
+        );
+        DB.runAndSave(
+            `UPDATE ${RESUME_SECTION_CONFIG_TABLE} SET template_id = ? WHERE id = ?`,
+            [template_id, id]
+        );
+
+        DB.notifyTable(RESUME_CONFIG_TABLE);
+    },
 };
 
 export const ResumeSectionDataTable = {
@@ -126,9 +147,16 @@ export const ResumeDataItemTable = {
             `INSERT INTO ${RESUME_DATA_ITEM_TABLE} (type_id, title, description, data) VALUES (?, ?, ?, ?)`,
             [type_id, title, description, JSON.stringify(data)]
         );
-
+        DB.notifyTable(RESUME_DATA_ITEM_TABLE);
         DB.notifyTable(RESUME_CONFIG_TABLE);
     },
+    getAll: () => {
+        const res = DB.exec(`SELECT * FROM ${RESUME_DATA_ITEM_TABLE}`);
+        const rows = mapRows<DataItemRow>(res[0].columns, res[0].values);
+        console.log("rows!! " + JSON.stringify(rows));
+        return rows;
+    },
+    subscribe: (cb: () => void) => DB.subscribe(RESUME_DATA_ITEM_TABLE, cb),
 };
 
 export const ResumeDataItemTypeTable = {
@@ -150,5 +178,11 @@ export const TemplateTable = {
         );
 
         DB.notifyTable(RESUME_CONFIG_TABLE);
+    },
+    getAll: () => {
+        const res = DB.exec(`SELECT * FROM ${RESUME_TEMPLATE_TABLE}`);
+        const rows = mapRows<TemplateRow>(res[0].columns, res[0].values);
+        console.log("template rows!! " + JSON.stringify(rows));
+        return rows;
     },
 };
