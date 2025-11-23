@@ -73,7 +73,7 @@ export const ResumeTemplateDisplay = (props : ResumeTemplateDisplayProps) => {
             d.push(c)
         })
         setData(d)
-    },[])
+    },[props.resumeSection.items])
 
     return(
         <div className="flex flex-col items-start gap-4 bg-gray-300 p-4 rounded-lg">

@@ -17,6 +17,10 @@ import {DndContext, DragEndEvent} from '@dnd-kit/core';
 
 const ResumeView = () => {
   const { resume: myResume } = useResume();
+
+  useEffect(() => {
+    console.log("resume updated!!", myResume?.id);
+  }, [myResume]);
   
   const [newCompName, setNewCompName] = useState("")
   const [content, setContent] = useState("")
