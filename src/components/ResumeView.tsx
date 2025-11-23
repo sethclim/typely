@@ -34,7 +34,7 @@ export const ResumeView = () => {
 
   return (
     <>
-      <div className='flex flex-row w-lvw justify-start bg-white'>
+      <div className='flex flex-row w-lvw justify-start bg-white p-4 gap-2'>
         {/* <FileListDisplay files={files} /> */}
         <ComponentLibrary />
         <div className='bg-black'>

@@ -4,10 +4,12 @@ import './App.css'
 import { DB } from "./db";
 
 import { ResumeProvider } from './context/resume/ResumeProvider'
-import { ResumeSectionConfigTable, ResumeSectionDataTable } from './db/tables';
+import { ResumeConfigTable, ResumeDataItemTable, ResumeDataItemTypeTable, ResumeSectionConfigTable, ResumeSectionDataTable, TemplateTable } from './db/tables';
 
 import {DndContext, DragEndEvent} from '@dnd-kit/core';
 import { ResumeView } from './components/ResumeView';
+import { Header } from './components/Header';
+import { Footer } from './components/Footer';
 
 function App() {
 
@@ -37,94 +39,94 @@ function App() {
       const init = async () => {
         await DB.ready;
 
-        // ResumeConfigTable.insert({
-        //   "id": 1,
-        //   "name" : "Resume_1",
-        //   "created_at" : Date.now().toString(),
-        //   "updated_at" : Date.now().toString(),
-        // })
+        ResumeConfigTable.insert({
+          "id": 1,
+          "name" : "Resume_1",
+          "created_at" : Date.now().toString(),
+          "updated_at" : Date.now().toString(),
+        })
 
-        // ResumeSectionConfigTable.insert({
-        //   "id": 1,
-        //   "resume_id": 1,
-        //   "template_id": 1,
-        //   "section_order": 0,
-        //   "section_type": "header"
-        // })
+        ResumeSectionConfigTable.insert({
+          "id": 1,
+          "resume_id": 1,
+          "template_id": 1,
+          "section_order": 0,
+          "section_type": "header"
+        })
 
-        // ResumeSectionConfigTable.insert({
-        //   "id": 2,
-        //   "resume_id": 1,
-        //   "template_id": 2,
-        //   "section_order": 1,
-        //   "section_type": "skills"
-        // })
+        ResumeSectionConfigTable.insert({
+          "id": 2,
+          "resume_id": 1,
+          "template_id": 2,
+          "section_order": 1,
+          "section_type": "skills"
+        })
 
-        // ResumeSectionDataTable.insert({
-        //   section_id: 1,
-        //   data_item_id: 1
-        // })
+        ResumeSectionDataTable.insert({
+          section_id: 1,
+          data_item_id: 1
+        })
 
-        // ResumeSectionDataTable.insert({
-        //   section_id: 2,
-        //   data_item_id: 2
-        // })
+        ResumeSectionDataTable.insert({
+          section_id: 2,
+          data_item_id: 2
+        })
 
-        // ResumeDataItemTable.insert({
-        //   "id": 1,
-        //   title: "email",
-        //   description: "my email",
-        //   data: '{"email": "sethclim@gmail.com"}',
-        //   type_id: 1,
-        //   "created_at" : Date.now().toString(),
-        //   "updated_at" : Date.now().toString(),
-        // })
+        ResumeDataItemTable.insert({
+          "id": 1,
+          title: "email",
+          description: "my email",
+          data: '{"email": "sethclim@gmail.com"}',
+          type_id: 1,
+          "created_at" : Date.now().toString(),
+          "updated_at" : Date.now().toString(),
+        })
 
-        // ResumeDataItemTypeTable.insert({
-        //   "id": 1,
-        //   name : "email"
-        // })
+        ResumeDataItemTypeTable.insert({
+          "id": 1,
+          name : "email"
+        })
 
-        // ResumeDataItemTypeTable.insert({
-        //   "id": 2,
-        //   name : "skill"
-        // })
+        ResumeDataItemTypeTable.insert({
+          "id": 2,
+          name : "skill"
+        })
 
-        // const headerLaTeX = `\\newcommand{\\AND}{\\unskip
-        //   \\cleaders\\copy\\ANDbox\\hskip\\wd\\ANDbox
-        //   \\ignorespaces
-        //   }
-        //   \\newsavebox\\ANDbox
-        //   \\sbox\\ANDbox{$|$}
+        const headerLaTeX = `\\newcommand{\\AND}{\\unskip
+          \\cleaders\\copy\\ANDbox\\hskip\\wd\\ANDbox
+          \\ignorespaces
+          }
+          \\newsavebox\\ANDbox
+          \\sbox\\ANDbox{$|$}
 
-        //   \\begin{header}
-        //       \\fontsize{31 pt}{31 pt}\\selectfont Seth Climenhaga
-        //   \\end{header}
-        //   `;
+          \\begin{header}
+              \\fontsize{31 pt}{31 pt}\\selectfont Seth Climenhaga
+          \\end{header}
+          `;
 
 
-        // TemplateTable.insert({
-        //   "id": 1,
-        //   "name": "header template",
-        //   "description": "this is a header template",
-        //   "section_type": "header",
-        //   "created_at" : Date.now().toString(),
-        //   "content": headerLaTeX
-        // })
+        TemplateTable.insert({
+          "id": 1,
+          "name": "header template",
+          "description": "this is a header template",
+          "section_type": "header",
+          "created_at" : Date.now().toString(),
+          "content": headerLaTeX
+        })
 
-        // const skillsLatex = `\\textbf{Languages:} C++, GO, Rust, C\\#, Python, Typescript, Lua, HLSL/GLSL \\newline
-        //                       \\textbf{AR/VR:} Unity, Vive, HoloLens, Quest, Unity XR Interation Tool Kit  \\newline
-        //                       \\textbf{Frameworks:} Vulkan, OpenGL, JUCE, Skia, Dear ImGui, GLFW, GLM, Kubernetes, WebRTC  \\newline
-        //                       \\textbf{General:} OOP, Functional, Git, Docker, CI/CD (Terraform, GitHub Actions), SQL, AWS \\newline`
+        const skillsLatex = `\\textbf{Languages:} C++, GO, Rust, C\\#, Python, Typescript, Lua, HLSL/GLSL \\newline
+                              \\textbf{AR/VR:} Unity, Vive, HoloLens, Quest, Unity XR Interation Tool Kit  \\newline
+                              \\textbf{Frameworks:} Vulkan, OpenGL, JUCE, Skia, Dear ImGui, GLFW, GLM, Kubernetes, WebRTC  \\newline
+                              \\textbf{General:} OOP, Functional, Git, Docker, CI/CD (Terraform, GitHub Actions), SQL, AWS \\newline`
 
-        // TemplateTable.insert({
-        //   "id": 2,
-        //   "name": "skills template",
-        //   "description": "this is a s template",
-        //   "section_type": "header",
-        //   "created_at" : Date.now().toString(),
-        //   "content": skillsLatex
-        // })
+        TemplateTable.insert({
+          "id": 2,
+          "name": "skills template",
+          "description": "this is a s template",
+          "section_type": "header",
+          "created_at" : Date.now().toString(),
+          "content": skillsLatex
+        })
       }
       init();
     }, []
@@ -133,7 +135,9 @@ function App() {
  return (
     <ResumeProvider resumeId={1}>
       <DndContext onDragEnd={handleDragEnd}>
+        <Header />
         <ResumeView />
+        <Footer />
       </DndContext>
     </ResumeProvider>
  )
