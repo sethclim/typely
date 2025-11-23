@@ -4,7 +4,7 @@ export interface DataItemTypeRow {
 }
 
 export interface DataItemRow {
-    id: number;
+    id?: number;
     type_id: number; // FK → DataItemType.id
     title?: string;
     description?: string;

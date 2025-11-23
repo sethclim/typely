@@ -44,7 +44,7 @@ export function mapRowToDataItem(
 ): DataItem {
    const d : DataItemType = {id: 14, name: "TODO"}
     return {
-        id: row.id,
+        id: row.id!,
         type:  d,
         title: row.title,
         description: row.description,
@@ -97,7 +97,6 @@ const AddDetailsModal = (props : AddDetailsModalProps) => {
             return;
 
         ResumeDataItemTable.insert({
-            "id": 1,
             title: title,
             description: "some disc",
             data: JSON.stringify(items),

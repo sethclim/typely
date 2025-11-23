@@ -15,12 +15,15 @@ const DataItemDisplay = (props : DataItemDisplayProps) => {
         id: `dataitem-${props.section_id}`,
     });
 
-    const style = {
-        color: isOver ? 'bg-green-500' : undefined,
-    };
+    const [bgColor, setBGColor] = useState('bg-orange-500');
+
+    useEffect(()=>{
+        console.log("isOver " + isOver)
+        isOver ? setBGColor('bg-green-800/80') : setBGColor('')
+    },[isOver])
 
     return(
-        <div ref={setNodeRef} className={clsx("flex flex-col items-start w-200 flex", style)}>
+        <div ref={setNodeRef} className={clsx(["flex flex-col items-start w-full flex min-h-20", bgColor])}>
         {
             props.data?.map((component : any, index : number) => {
                 return (
@@ -28,11 +31,11 @@ const DataItemDisplay = (props : DataItemDisplayProps) => {
                         {/* <h1 className="text-black text-sm">{component.title}</h1> */}
                     {component.data && typeof component.data === "object" && !Array.isArray(component.data) ? (
                         Object.entries(component.data).map(([key, value]) => (
-                            <div className="flex flex-row gap-4">
-                                    <p key={key} className="text-red">
+                            <div key={key} className="flex flex-row gap-4">
+                                    <p  className="text-red">
                                         {key}
                                     </p>
-                                    <p key={key} className="text-black">
+                                    <p  className="text-black">
                                         {value as string}
                                     </p>
                                 </div>
@@ -40,7 +43,6 @@ const DataItemDisplay = (props : DataItemDisplayProps) => {
                         ) : (
                             <p className="text-black">{component.data}</p>
                         )}
-                        {/* <p  className="text-black">{component.data}</p> */}
                     </div>
                 ) 
             })
@@ -82,7 +84,6 @@ export const ResumeTemplateDisplay = (props : ResumeTemplateDisplayProps) => {
                     {props.resumeSection.template?.content}
                 </SyntaxHighlighter>
             </pre>
-            {/* <p  className="text-black text-sm">{props.resumeSection.template?.content}</p> */}
             <p className="text-black text-md">Data Items:</p>
             <DataItemDisplay data={data} section_id={props.resumeSection.id} />
         </div>

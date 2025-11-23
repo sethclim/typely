@@ -3,7 +3,6 @@ import './App.css'
 
 import { openTextFile, saveTextFile } from './services/FileSystem'
 import { ResumeTemplateDisplay } from './components/ResumeTemplateDisplay'
-// import { ComponentLibrary } from './components/ComponentLibrary'
 
 import { DB } from "./db";
 import { useResume } from './context/resume/ResumeContext'
@@ -48,58 +47,17 @@ const ResumeView = () => {
     setIsOpen(false);
   }
 
-  // const readLatexHandler = async() => {
-  //   const res = await openLatexFile()
-  //   if (res != undefined)
-  //   {
-  //     const temp = [...latexComps]
-  //     temp.push(res)
-  //     setLatexComps(temp)
-  //   }
-  // }
-
-  // const addLatexComp = async() => {
-
-  //   const res = await openLatexFile()
-  //   if (res != undefined)
-  //   {
-
-  //     const newBlock : Block = {
-  //       name : newCompName,
-  //       content : res
-  //     }
-
-  //     const temp = [...latexComps]
-  //     temp.push(newBlock)
-  //     setLatexComps(temp)
-  //   }
-
-  // }
-
   return (
     <>
       <div className='flex flex-row w-lvw justify-start bg-white'>
         {/* <FileListDisplay files={files} /> */}
         <ComponentLibrary />
-        {/* <div>
-          <textarea
-            style={{ width: "100%", height: "300px", marginTop: "1rem" }}
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            placeholder="File content appears here..."
-          />
-          <input onChange={(e) => setNewCompName(e.target.value)} />
-          <button onClick={() => readFileHandler()}>OPEN</button>
-          <button onClick={() => addLatexComp()}>OPEN Laxtex</button>
-          <button onClick={() => saveTextFile(content)}>SAVE</button>
-          <button onClick={() => saveJSONFile(JSON.stringify(resumeTemplate))}>SAVE Template</button>
-        </div> */}
         <div className='bg-black'>
           <h3 className='text-4xl font-extrabold text-white'>{myResume?.name}</h3>
           <div className='flex flex-col gap-4 w-150 p-4'>
           {
             myResume?.sections.map((section) => {
-              return <ResumeTemplateDisplay resumeSection={section} /> 
+              return <ResumeTemplateDisplay key={section.id} resumeSection={section} /> 
             })
           }
           <button onClick={() => setIsOpen(true)}>Add New Component</button>
@@ -133,20 +91,19 @@ const ResumeView = () => {
 
 function App() {
 
-  const [isDropped, setIsDropped] = useState(false);
-
   function handleDragEnd(event : DragEndEvent) {
+    console.log("DRAG ENDED!!! " +  event.over?.id)
     if (event.over && event.over.id.toString().startsWith("dataitem-")) {
-      console.log("DRAG ENDED!!! " +  event.over.id)
 
       const [, section_id] = event.over.id.toString().split('-');
+
+      console.log("DRAG dataitem event id" +  section_id + " active id " + event.active.id.toString())
+
 
       ResumeSectionDataTable.insert({
         section_id: parseInt(section_id),
         data_item_id: parseInt(event.active.id.toString())
       })
-
-      setIsDropped(true);
     }
   }
 
@@ -154,94 +111,94 @@ function App() {
       const init = async () => {
         await DB.ready;
 
-        ResumeConfigTable.insert({
-          "id": 1,
-          "name" : "Resume_1",
-          "created_at" : Date.now().toString(),
-          "updated_at" : Date.now().toString(),
-        })
+        // ResumeConfigTable.insert({
+        //   "id": 1,
+        //   "name" : "Resume_1",
+        //   "created_at" : Date.now().toString(),
+        //   "updated_at" : Date.now().toString(),
+        // })
 
-        ResumeSectionConfigTable.insert({
-          "id": 1,
-          "resume_id": 1,
-          "template_id": 1,
-          "section_order": 0,
-          "section_type": "header"
-        })
+        // ResumeSectionConfigTable.insert({
+        //   "id": 1,
+        //   "resume_id": 1,
+        //   "template_id": 1,
+        //   "section_order": 0,
+        //   "section_type": "header"
+        // })
 
-        ResumeSectionConfigTable.insert({
-          "id": 2,
-          "resume_id": 1,
-          "template_id": 2,
-          "section_order": 1,
-          "section_type": "skills"
-        })
+        // ResumeSectionConfigTable.insert({
+        //   "id": 2,
+        //   "resume_id": 1,
+        //   "template_id": 2,
+        //   "section_order": 1,
+        //   "section_type": "skills"
+        // })
 
-        ResumeSectionDataTable.insert({
-          section_id: 1,
-          data_item_id: 1
-        })
+        // ResumeSectionDataTable.insert({
+        //   section_id: 1,
+        //   data_item_id: 1
+        // })
 
-        ResumeSectionDataTable.insert({
-          section_id: 2,
-          data_item_id: 2
-        })
+        // ResumeSectionDataTable.insert({
+        //   section_id: 2,
+        //   data_item_id: 2
+        // })
 
-        ResumeDataItemTable.insert({
-          "id": 1,
-          title: "email",
-          description: "my email",
-          data: '{"email": "sethclim@gmail.com"}',
-          type_id: 1,
-          "created_at" : Date.now().toString(),
-          "updated_at" : Date.now().toString(),
-        })
+        // ResumeDataItemTable.insert({
+        //   "id": 1,
+        //   title: "email",
+        //   description: "my email",
+        //   data: '{"email": "sethclim@gmail.com"}',
+        //   type_id: 1,
+        //   "created_at" : Date.now().toString(),
+        //   "updated_at" : Date.now().toString(),
+        // })
 
-        ResumeDataItemTypeTable.insert({
-          "id": 1,
-          name : "email"
-        })
+        // ResumeDataItemTypeTable.insert({
+        //   "id": 1,
+        //   name : "email"
+        // })
 
-        ResumeDataItemTypeTable.insert({
-          "id": 2,
-          name : "skill"
-        })
+        // ResumeDataItemTypeTable.insert({
+        //   "id": 2,
+        //   name : "skill"
+        // })
 
-        const headerLaTeX = `\\newcommand{\\AND}{\\unskip
-          \\cleaders\\copy\\ANDbox\\hskip\\wd\\ANDbox
-          \\ignorespaces
-          }
-          \\newsavebox\\ANDbox
-          \\sbox\\ANDbox{$|$}
+        // const headerLaTeX = `\\newcommand{\\AND}{\\unskip
+        //   \\cleaders\\copy\\ANDbox\\hskip\\wd\\ANDbox
+        //   \\ignorespaces
+        //   }
+        //   \\newsavebox\\ANDbox
+        //   \\sbox\\ANDbox{$|$}
 
-          \\begin{header}
-              \\fontsize{31 pt}{31 pt}\\selectfont Seth Climenhaga
-          \\end{header}
-          `;
+        //   \\begin{header}
+        //       \\fontsize{31 pt}{31 pt}\\selectfont Seth Climenhaga
+        //   \\end{header}
+        //   `;
 
 
-        TemplateTable.insert({
-          "id": 1,
-          "name": "header template",
-          "description": "this is a header template",
-          "section_type": "header",
-          "created_at" : Date.now().toString(),
-          "content": headerLaTeX
-        })
+        // TemplateTable.insert({
+        //   "id": 1,
+        //   "name": "header template",
+        //   "description": "this is a header template",
+        //   "section_type": "header",
+        //   "created_at" : Date.now().toString(),
+        //   "content": headerLaTeX
+        // })
 
-        const skillsLatex = `\\textbf{Languages:} C++, GO, Rust, C\\#, Python, Typescript, Lua, HLSL/GLSL \\newline
-                              \\textbf{AR/VR:} Unity, Vive, HoloLens, Quest, Unity XR Interation Tool Kit  \\newline
-                              \\textbf{Frameworks:} Vulkan, OpenGL, JUCE, Skia, Dear ImGui, GLFW, GLM, Kubernetes, WebRTC  \\newline
-                              \\textbf{General:} OOP, Functional, Git, Docker, CI/CD (Terraform, GitHub Actions), SQL, AWS \\newline`
+        // const skillsLatex = `\\textbf{Languages:} C++, GO, Rust, C\\#, Python, Typescript, Lua, HLSL/GLSL \\newline
+        //                       \\textbf{AR/VR:} Unity, Vive, HoloLens, Quest, Unity XR Interation Tool Kit  \\newline
+        //                       \\textbf{Frameworks:} Vulkan, OpenGL, JUCE, Skia, Dear ImGui, GLFW, GLM, Kubernetes, WebRTC  \\newline
+        //                       \\textbf{General:} OOP, Functional, Git, Docker, CI/CD (Terraform, GitHub Actions), SQL, AWS \\newline`
 
-        TemplateTable.insert({
-          "id": 2,
-          "name": "skills template",
-          "description": "this is a s template",
-          "section_type": "header",
-          "created_at" : Date.now().toString(),
-          "content": skillsLatex
-        })
+        // TemplateTable.insert({
+        //   "id": 2,
+        //   "name": "skills template",
+        //   "description": "this is a s template",
+        //   "section_type": "header",
+        //   "created_at" : Date.now().toString(),
+        //   "content": skillsLatex
+        // })
       }
       init();
     }, []
