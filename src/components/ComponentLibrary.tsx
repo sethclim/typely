@@ -8,9 +8,34 @@ import ThreeWaySlider from "./ThreeWaySlider";
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { nord } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import Modal from "./Modal";
+import { useDraggable } from "@dnd-kit/core";
 
 type componentLibraryProps = {
     // latex_comps : Array<Block>
+}
+
+type DataItemsProps = {
+    dataItem : DataItem
+}
+
+const DataItemComponent = (props : DataItemsProps) => {
+
+    const {attributes, listeners, setNodeRef, transform} = useDraggable({
+        id: props.dataItem.id,
+    });
+    
+    const style = transform ? {
+        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+    } : undefined;
+
+    return(
+        <button ref={setNodeRef} style={style} {...listeners} {...attributes}>
+            <div className="max-h-20 text-black text-ellipsis overflow-hidden bg-black/20 m-2">
+                <h3 className="text-xl text-bold">{props.dataItem.title}</h3>
+                <p className="max-h-40 text-ellipsis">{props.dataItem.data}</p>
+            </div>
+        </button>
+    )
 }
 
 export function mapRowToDataItem(
@@ -50,7 +75,7 @@ interface AddDetailsModalProps {
 const AddDetailsModal = (props : AddDetailsModalProps) => {
     const [items, setItems] = useState<Record<string, string>>({});
     const [title, setTitle] = useState<string>()
-    const [key, setKey]     = useState<string>()
+    const [key,   setKey]   = useState<string>()
     const [value, setValue] = useState<string>()
 
     const addItem = (e : React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -141,7 +166,6 @@ export const ComponentLibrary = (props : componentLibraryProps) => {
     const [level, setLevel] = useState("DataItems");
     const [isOpen, setIsOpen] = useState(false);
 
-
     const fetchDataForLib = async () => {
         await DB.ready;
         const data = ResumeDataItemTable.getAll();
@@ -175,18 +199,14 @@ export const ComponentLibrary = (props : componentLibraryProps) => {
                 <p className="text-white">Add Item</p>
                 <button onClick={() => setIsOpen(true)}>Add</button>
             </div>
-
             {
                 (level == "DataItems") ?  
                     (
                     <div className="flex flex-col gap-4">
                     {
-                        dataItems?.map((comp) => {
+                        dataItems?.map((data_item) => {
                             return (
-                                <div className="max-h-20 text-black text-ellipsis overflow-hidden bg-black/20 m-2">
-                                    <h3 className="text-xl text-bold">{comp.title}</h3>
-                                    <p className="max-h-40 text-ellipsis">{comp.data}</p>
-                                </div>
+                                <DataItemComponent key={data_item.id} dataItem={data_item} />
                             )
                         })
                     }

@@ -2,6 +2,52 @@ import { useEffect, useState } from "react";
 import { ResumeSection } from "../types"
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { nord } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import { useDroppable } from "@dnd-kit/core";
+import clsx from "clsx";
+
+type DataItemDisplayProps = {
+    data : any
+    section_id : number
+}
+
+const DataItemDisplay = (props : DataItemDisplayProps) => {
+    const {isOver, setNodeRef} = useDroppable({
+        id: `dataitem-${props.section_id}`,
+    });
+
+    const style = {
+        color: isOver ? 'bg-green-500' : undefined,
+    };
+
+    return(
+        <div ref={setNodeRef} className={clsx("flex flex-col items-start w-200 flex", style)}>
+        {
+            props.data?.map((component : any, index : number) => {
+                return (
+                    <div key={index} className="flex flex-col items-start  w-200 flex ">
+                        {/* <h1 className="text-black text-sm">{component.title}</h1> */}
+                    {component.data && typeof component.data === "object" && !Array.isArray(component.data) ? (
+                        Object.entries(component.data).map(([key, value]) => (
+                            <div className="flex flex-row gap-4">
+                                    <p key={key} className="text-red">
+                                        {key}
+                                    </p>
+                                    <p key={key} className="text-black">
+                                        {value as string}
+                                    </p>
+                                </div>
+                            ))
+                        ) : (
+                            <p className="text-black">{component.data}</p>
+                        )}
+                        {/* <p  className="text-black">{component.data}</p> */}
+                    </div>
+                ) 
+            })
+        }
+        </div>
+    )
+}
 
 type ResumeTemplateDisplayProps = {
     resumeSection : ResumeSection
@@ -9,9 +55,7 @@ type ResumeTemplateDisplayProps = {
 
 export const ResumeTemplateDisplay = (props : ResumeTemplateDisplayProps) => {
 
-
     const [data, setData] = useState<any>()
-
 
     useEffect(()=>{
         const d : any = []
@@ -40,32 +84,7 @@ export const ResumeTemplateDisplay = (props : ResumeTemplateDisplayProps) => {
             </pre>
             {/* <p  className="text-black text-sm">{props.resumeSection.template?.content}</p> */}
             <p className="text-black text-md">Data Items:</p>
-            <div className="flex flex-col items-start  w-200 flex ">
-            {
-                data?.map((component : any, index : number) => {
-                    return (
-                        <div key={index} className="flex flex-col items-start  w-200 flex ">
-                            {/* <h1 className="text-black text-sm">{component.title}</h1> */}
-                           {component.data && typeof component.data === "object" && !Array.isArray(component.data) ? (
-                                Object.entries(component.data).map(([key, value]) => (
-                                    <div className="flex flex-row gap-4">
-                                        <p key={key} className="text-red">
-                                            {key}
-                                        </p>
-                                        <p key={key} className="text-black">
-                                            {value as string}
-                                        </p>
-                                    </div>
-                                ))
-                            ) : (
-                                <p className="text-black">{component.data}</p>
-                            )}
-                            {/* <p  className="text-black">{component.data}</p> */}
-                        </div>
-                    ) 
-                })
-            }
-            </div>
+            <DataItemDisplay data={data} section_id={props.resumeSection.id} />
         </div>
     )
 }

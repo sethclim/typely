@@ -14,12 +14,13 @@ import Modal from "./components/Modal";
 import ComboBox from './components/ComboBox';
 import { ComponentLibrary } from './components/ComponentLibrary';
 
+import {DndContext, DragEndEvent} from '@dnd-kit/core';
+
 const ResumeView = () => {
   const { resume: myResume } = useResume();
   
   const [newCompName, setNewCompName] = useState("")
   const [content, setContent] = useState("")
-
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -132,6 +133,23 @@ const ResumeView = () => {
 
 function App() {
 
+  const [isDropped, setIsDropped] = useState(false);
+
+  function handleDragEnd(event : DragEndEvent) {
+    if (event.over && event.over.id.toString().startsWith("dataitem-")) {
+      console.log("DRAG ENDED!!! " +  event.over.id)
+
+      const [, section_id] = event.over.id.toString().split('-');
+
+      ResumeSectionDataTable.insert({
+        section_id: parseInt(section_id),
+        data_item_id: parseInt(event.active.id.toString())
+      })
+
+      setIsDropped(true);
+    }
+  }
+
   useEffect(() => {
       const init = async () => {
         await DB.ready;
@@ -231,7 +249,9 @@ function App() {
 
  return (
     <ResumeProvider resumeId={1}>
-      <ResumeView />
+      <DndContext onDragEnd={handleDragEnd}>
+        <ResumeView />
+      </DndContext>
     </ResumeProvider>
  )
 }
