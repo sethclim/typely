@@ -1,5 +1,5 @@
 // Modal.tsx
-import { Fragment, ReactNode, useEffect } from "react";
+import { ReactNode, useEffect } from "react";
 import { createPortal } from "react-dom";
 
 interface ModalProps {

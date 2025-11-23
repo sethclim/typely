@@ -5,15 +5,17 @@ import { DB } from "../db";
 import { DataItem, DataItemType, Template } from "../types";
 import ThreeWaySlider from "./ThreeWaySlider";
 
+// @ts-ignore
 import SyntaxHighlighter from 'react-syntax-highlighter';
+// @ts-ignore
 import { nord } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
 import { useDraggable } from "@dnd-kit/core";
 import { AddDetailsModal } from "./AddDataItemModal";
 
-type componentLibraryProps = {
-    // latex_comps : Array<Block>
-}
+// type componentLibraryProps = {
+//     // latex_comps : Array<Block>
+// }
 
 type DataItemsProps = {
     dataItem : DataItem
@@ -69,7 +71,7 @@ export function mapRowToTemplate(
 }
 
 
-export const ComponentLibrary = (props : componentLibraryProps) => {
+export const ComponentLibrary = () => {
 
     const [dataItems, setDataItems] = useState<Array<DataItem>>();
     const [templates, setTemplates] = useState<Array<Template>>();

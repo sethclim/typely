@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { ResumeSection } from "../types"
+// @ts-ignore
 import SyntaxHighlighter from 'react-syntax-highlighter';
+// @ts-ignore
 import { nord } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import { useDroppable } from "@dnd-kit/core";
 import clsx from "clsx";
