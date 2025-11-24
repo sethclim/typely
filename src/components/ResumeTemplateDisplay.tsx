@@ -26,7 +26,7 @@ const DataItemDisplay = (props : DataItemDisplayProps) => {
 
     return(
         <div ref={setNodeRef} className={clsx(["flex flex-col w-full items-start justify-start  min-h-5 ", bgColor])}>
- 
+            <p className="text-black text-md">Data Items: ({props.data? props.data.length : 0})</p>
             {
                 props.data?.map((component : any, index : number) => {
                     return (
@@ -34,7 +34,6 @@ const DataItemDisplay = (props : DataItemDisplayProps) => {
                             {/* <h1 className="text-black text-sm">{component.title}</h1> */}
                         {component.data && typeof component.data === "object" && !Array.isArray(component.data) ? (
                             <>
-                                <p className="text-black text-md">Data Items: ({Object.entries(component.data).length})</p>
                                 {
                                     Object.entries(component.data).map(([key, value]) => (
                                         <div key={key} className="flex flex-row gap-4">
@@ -50,7 +49,7 @@ const DataItemDisplay = (props : DataItemDisplayProps) => {
                             </>
                             ) : (
                                 <>
-                                    <p className="text-black text-md">Data Items: (1)</p>
+                                    
                                     <p className="text-black">{component.data}</p>
                                 </>
                             )}
