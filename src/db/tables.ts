@@ -132,6 +132,9 @@ export const ResumeSectionConfigTable = {
 
 export const ResumeSectionDataTable = {
     insert: ({ section_id, data_item_id }: ResumeSectionDataRow) => {
+        console.log(
+            `[ResumeSectionConfigTable] section_id: ${section_id} data_item_id: ${data_item_id}`
+        );
         DB.runAndSave(
             `INSERT INTO ${RESUME_SECTION_DATA_TABLE} (section_id, data_item_id) VALUES (?, ?)`,
             [section_id, data_item_id]
