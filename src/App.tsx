@@ -27,7 +27,7 @@ function App() {
     if (overPrefix === "dataitem" && activePrefix === "dataitem") {
       ResumeSectionDataTable.insert({
         section_id: parseInt(section_id),
-        data_item_id: parseInt(event.active.id.toString())
+        data_item_id: parseInt(active_id)
       })
     }
     else if (overPrefix === "template" && activePrefix === "template"){
