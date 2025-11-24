@@ -155,11 +155,9 @@ export const ResumeView = () => {
 
       if(activePrefix === "dataitem")
       {
-        console.log("WGSHIJTEROOJIOG " + JSON.stringify(active.data.current as unknown as DataItem))
         setDraggingDataItem(active.data.current as unknown as DataItem)
       }
       else if(activePrefix === "template"){
-        console.log("agae " + JSON.stringify(active.data as unknown as Template))
         setDraggingDataTemplate(active.data.current as unknown as Template)
       }
 

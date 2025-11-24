@@ -39,19 +39,8 @@ type TemplateItemComponentProps = {
 }
 
 const TemplateItemComponent = (props : TemplateItemComponentProps) => {
-
-    // const {attributes, listeners, setNodeRef, transform} = useDraggable({
-    //     id:  `template-${props.template.id}`,
-    // });
-    
-    // const style = transform ? {
-    //     transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-    // } : undefined;
-
-    const dragId =`template-${props.template.id}`
-
     const [isOpen, setIsOpen] = useState(false);
-
+    const dragId =`template-${props.template.id}`
 
     const edit = (e : React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.stopPropagation();
