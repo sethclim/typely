@@ -1,6 +1,6 @@
 
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useResume } from '../context/resume/ResumeContext'
 import { ResumeSectionConfigTable } from '../db/tables';
@@ -30,7 +30,7 @@ const PDFView = (props : PDFViewProps) => {
   const compileLatex = async () => {
     console.log(props.resume?.sections[0].template?.content)
 
-    let latex_string = `\\documentclass{article}\\begin{document}`
+    let latex_string = `\\documentclass[10pt, letterpaper]{article}\\usepackage{config}\\begin{document}`
     
     props.resume?.sections.map((section) => {
       latex_string += section.template?.content
@@ -62,9 +62,14 @@ const PDFView = (props : PDFViewProps) => {
     setPdfUrl(url);
   };
 
+  useEffect(()=>{
+    if (props.resume != null)
+      compileLatex()
+  },[props.resume])
+
   return (
     <div>
-      <button className='text-white bg-red-500' onClick={compileLatex}>Compile LaTeX</button>
+      {/* <button className='text-white bg-red-500' onClick={compileLatex}>Compile LaTeX</button> */}
 
     {pdfUrl && (
       <Document file={pdfUrl}>
