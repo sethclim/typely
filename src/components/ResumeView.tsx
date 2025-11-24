@@ -108,19 +108,23 @@ export const ResumeView = () => {
         <ComponentLibrary />
         <div className='bg-black'>
           <h3 className='text-4xl font-extrabold text-white'>{myResume?.name}</h3>
-          <div className='flex flex-col gap-4 w-150 p-4'>
-          {
-            myResume?.sections.map((section) => {
-              return <ResumeTemplateDisplay key={section.id} resumeSection={section} /> 
-            })
-          }
-          <button onClick={() => setIsOpen(true)}>Add New Component</button>
+          <div className='flex flex-row'>
+            <div className='flex flex-col gap-4 w-150 p-4'>
+            {
+              myResume?.sections.map((section) => {
+                return <ResumeTemplateDisplay key={section.id} resumeSection={section} /> 
+              })
+            }
+              <button onClick={() => setIsOpen(true)}>Add New Component</button>
+            </div>
+            <div className='p-4'>
+              <PDFView resume={myResume} />
+            </div>
           </div>
         </div>
         
-        <PDFView resume={myResume} />
 
-         <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
+         <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} width='w-80'>
           <h2 className="text-xl font-bold mb-4 text-black">New Resume Block</h2>uik
           <form>
             <p className="text-black">Type</p>

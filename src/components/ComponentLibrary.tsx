@@ -73,8 +73,10 @@ const TemplateItemComponent = (props : TemplateItemComponentProps) => {
         <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
             <div className="text-black text-ellipsis overflow-hidden bg-white/40">
                 {/* <p>{JSON.stringify(template)}</p> */}
-                <h3 className="text-xl text-bold">{props.template.name}</h3>
-                <button className="bg-red-500" onClick={() => edit()}>EDIT</button>
+                <div className="flex flex-row gap-4 p-2">
+                    <h3 className="text-xl text-bold">{props.template.name}</h3>
+                    <button className="bg-black text-white px-2" onClick={() => edit()}>EDIT</button>
+                </div>
                 <SyntaxHighlighter language="latex" style={nord} >
                     {props.template.content}
                 </SyntaxHighlighter>
