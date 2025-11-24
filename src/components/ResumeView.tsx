@@ -115,7 +115,7 @@ export const ResumeView = () => {
                 return <ResumeTemplateDisplay key={section.id} resumeSection={section} /> 
               })
             }
-              <button onClick={() => setIsOpen(true)}>Add New Component</button>
+              <button className='bg-white text-black rounded-lg' onClick={() => setIsOpen(true)}>Add New Component +</button>
             </div>
             <div className='p-4'>
               <PDFView resume={myResume} />

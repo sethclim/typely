@@ -6,6 +6,7 @@ import SyntaxHighlighter from 'react-syntax-highlighter';
 import { nord } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import { useDroppable } from "@dnd-kit/core";
 import clsx from "clsx";
+import { Toggle } from "./Toggle";
 
 type DataItemDisplayProps = {
     data : any
@@ -24,34 +25,40 @@ const DataItemDisplay = (props : DataItemDisplayProps) => {
     },[isOver])
 
     return(
-        <>
-            <p className="text-black text-md">Data Items:</p>
-            <div ref={setNodeRef} className={clsx(["flex flex-col items-start w-full flex min-h-20", bgColor])}>
+        <div ref={setNodeRef} className={clsx(["flex flex-col w-full items-start justify-start  min-h-5 ", bgColor])}>
+ 
             {
                 props.data?.map((component : any, index : number) => {
                     return (
                         <div key={index} className="flex flex-col items-start  w-200 flex ">
                             {/* <h1 className="text-black text-sm">{component.title}</h1> */}
                         {component.data && typeof component.data === "object" && !Array.isArray(component.data) ? (
-                            Object.entries(component.data).map(([key, value]) => (
-                                <div key={key} className="flex flex-row gap-4">
-                                        <p  className="text-red">
-                                            {key}
-                                        </p>
-                                        <p  className="text-black">
-                                            {value as string}
-                                        </p>
-                                    </div>
-                                ))
+                            <>
+                                <p className="text-black text-md">Data Items: ({Object.entries(component.data).length})</p>
+                                {
+                                    Object.entries(component.data).map(([key, value]) => (
+                                        <div key={key} className="flex flex-row gap-4">
+                                            <p  className="text-red">
+                                                {key}
+                                            </p>
+                                            <p  className="text-black">
+                                                {value as string}
+                                            </p>
+                                        </div>
+                                    ))
+                                }
+                            </>
                             ) : (
-                                <p className="text-black">{component.data}</p>
+                                <>
+                                    <p className="text-black text-md">Data Items: (1)</p>
+                                    <p className="text-black">{component.data}</p>
+                                </>
                             )}
                         </div>
                     ) 
                 })
             }
-            </div>
-        </>
+        </div>
     )
 }
 
@@ -74,14 +81,16 @@ const TemplateItemDisplay = (props : TemplateItemDisplayProps) => {
     },[isOver])
 
     return (
-        <>
-            <p className="text-black text-md">template:</p>
-            <div ref={setNodeRef} className={clsx(["w-full bg-black min-h-20 p-2", bgColor])}>
-                <SyntaxHighlighter language="latex" style={nord} >
-                    {props.template?.content}
-                </SyntaxHighlighter>
-            </div>
-        </>
+        <div ref={setNodeRef} className={clsx(["flex flex-col w-full items-start justify-start  min-h-5 ", bgColor])}>
+            <p className="text-black text-md">template: {props.template?.name}</p>
+            <Toggle text="Show Template">
+                <div className={clsx(["w-full bg-black min-h-20 p-2", bgColor])}>
+                    <SyntaxHighlighter language="latex" style={nord} >
+                        {props.template?.content}
+                    </SyntaxHighlighter>
+                </div>
+            </Toggle>
+        </div>
     )
 }
 
