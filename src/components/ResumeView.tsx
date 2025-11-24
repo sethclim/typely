@@ -102,10 +102,10 @@ export const ResumeView = () => {
       <div className='flex flex-1 flex-row  w-lvw justify-start bg-white p-4 gap-2'>
         {/* <FileListDisplay files={files} /> */}
         <ComponentLibrary />
-        <div className='bg-black'>
+        <div className='bg-black w-full'>
           <h3 className='text-4xl font-extrabold text-white'>{myResume?.name}</h3>
-          <div className='flex flex-row'>
-            <div className='flex flex-col gap-4 w-150 p-4'>
+          <div className='flex flex-row w-full'>
+            <div className='flex flex-col gap-4 w-200 p-4'>
             {
               myResume?.sections.map((section) => {
                 return <ResumeTemplateDisplay key={section.id} resumeSection={section} /> 
@@ -113,7 +113,7 @@ export const ResumeView = () => {
             }
               <button className='bg-white text-black rounded-lg' onClick={() => setIsOpen(true)}>Add New Component +</button>
             </div>
-            <div className='p-4'>
+            <div className='p-4 bg-white '>
               <PDFView resume={myResume} />
             </div>
           </div>
