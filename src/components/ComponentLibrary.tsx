@@ -20,31 +20,19 @@ import { Draggable } from "./Draggable";
 //     // latex_comps : Array<Block>
 // }
 
-type DataItemsProps = {
+export type DataItemsProps = {
     dataItem : DataItem
 }
 
-const DataItemComponent = (props : DataItemsProps) => {
-
-    // const {attributes, listeners, setNodeRef, transform} = useDraggable({
-    //     id: `dataitem-${props.dataItem.id}`,
-    // });
-
-    const dragId =`dataitem-${props.dataItem.id}`
-    
-    // const style = transform ? {
-    //     transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-    // } : undefined;
-
+export const DataItemComponent = (props : DataItemsProps) => {
     return(
-        <Draggable dragId={dragId} >
-            <div className="max-h-20 text-black text-ellipsis overflow-hidden bg-black/20 m-2">
-                <h3 className="text-xl text-bold">{props.dataItem.title}</h3>
-                <p className="max-h-40 text-ellipsis">{props.dataItem.data}</p>
-            </div>
-        </Draggable>
+        <div className="max-h-20 text-black text-ellipsis overflow-hidden bg-black/20 m-2">
+            <h3 className="text-xl text-bold">{props.dataItem.title}</h3>
+            <p className="max-h-40 text-ellipsis">{props.dataItem.data}</p>
+        </div>
     )
 }
+
 
 type TemplateItemComponentProps = {
     template: Template
@@ -52,13 +40,13 @@ type TemplateItemComponentProps = {
 
 const TemplateItemComponent = (props : TemplateItemComponentProps) => {
 
-    const {attributes, listeners, setNodeRef, transform} = useDraggable({
-        id:  `template-${props.template.id}`,
-    });
+    // const {attributes, listeners, setNodeRef, transform} = useDraggable({
+    //     id:  `template-${props.template.id}`,
+    // });
     
-    const style = transform ? {
-        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-    } : undefined;
+    // const style = transform ? {
+    //     transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+    // } : undefined;
 
     const dragId =`template-${props.template.id}`
 
@@ -85,7 +73,7 @@ const TemplateItemComponent = (props : TemplateItemComponentProps) => {
                     <h3 className="text-xl text-bold text-white">{props.template.name}</h3>
                     <button className="bg-white text-black px-2" onClick={(e) => edit(e)}>EDIT</button>
                 </div>
-                <Draggable dragId={dragId} >
+                <Draggable<Template> dragId={dragId} data={props.template} >
                     <SyntaxHighlighter className="z-50" language="latex" style={nord} >
                         {props.template.content}
                     </SyntaxHighlighter>
@@ -178,7 +166,9 @@ export const ComponentLibrary = () => {
                             {
                                 dataItems?.map((data_item) => {
                                     return (
-                                        <DataItemComponent key={data_item.id} dataItem={data_item} />
+                                        <Draggable key={data_item.id} dragId={`dataitem-${data_item.id}`} data={data_item} >
+                                            <DataItemComponent dataItem={data_item} />
+                                        </Draggable>
                                     )
                                 })
                             }

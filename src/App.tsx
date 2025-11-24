@@ -13,28 +13,6 @@ import { Footer } from './components/Footer';
 
 function App() {
 
-  function handleDragEnd(event : DragEndEvent) {
-    const over = event.over
-    const active = event.active
-
-    if(!over || !active)
-      return;
-
-    const [overPrefix, section_id] = over.id.toString().split('-');
-    const [activePrefix, active_id] = active.id.toString().split('-');
-    console.log("On Droppable overPrefix:" + overPrefix + " section_id " + section_id + " activePrefix " +  activePrefix  + " active id " + active_id)
-    
-    if (overPrefix === "dataitem" && activePrefix === "dataitem") {
-      ResumeSectionDataTable.insert({
-        section_id: parseInt(section_id),
-        data_item_id: parseInt(active_id)
-      })
-    }
-    else if (overPrefix === "template" && activePrefix === "template"){
-      ResumeSectionConfigTable.updateTemplate(section_id, active_id)
-    }
-  }
-
   useEffect(() => {
       const init = async () => {
         await DB.ready;
@@ -134,11 +112,9 @@ function App() {
 
  return (
     <ResumeProvider resumeId={1}>
-      <DndContext onDragEnd={handleDragEnd}>
         <Header />
         <ResumeView />
         <Footer />
-      </DndContext>
     </ResumeProvider>
  )
 }
