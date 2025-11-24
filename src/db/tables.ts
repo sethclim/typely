@@ -104,15 +104,14 @@ export const ResumeConfigTable = {
 
 export const ResumeSectionConfigTable = {
     insert: ({
-        id,
         resume_id,
         section_type,
         template_id,
         section_order,
     }: ResumeSectionConfigRow) => {
         DB.runAndSave(
-            `INSERT INTO ${RESUME_SECTION_CONFIG_TABLE} (id, resume_id, section_type, template_id, section_order) VALUES (?, ?, ?, ?, ?)`,
-            [id, resume_id, section_type, template_id, section_order]
+            `INSERT INTO ${RESUME_SECTION_CONFIG_TABLE} (resume_id, section_type, template_id, section_order) VALUES (?, ?, ?, ?)`,
+            [resume_id, section_type, template_id, section_order]
         );
 
         DB.notifyTable(RESUME_CONFIG_TABLE);

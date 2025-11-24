@@ -95,7 +95,7 @@ export class DBService {
         `);
     }
 
-    run(sql: string, params : any = []) {
+    run(sql: string, params: any = []) {
         this.db.run(sql, params);
     }
 

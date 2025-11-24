@@ -101,7 +101,6 @@ export const ResumeView = () => {
       return;
 
     ResumeSectionConfigTable.insert({
-      "id": 3,
       "resume_id": myResume!.id,
       "template_id": -1,
       "section_order": 0, //TODO needs to be the last one in the list
