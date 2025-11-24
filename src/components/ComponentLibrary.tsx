@@ -8,9 +8,8 @@ import ThreeWaySlider from "./ThreeWaySlider";
 // @ts-ignore
 import SyntaxHighlighter from 'react-syntax-highlighter';
 // @ts-ignore
-import { nord } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
-import { useDraggable } from "@dnd-kit/core";
 import { AddDetailsModal } from "./AddDataItemModal";
 import { LatexEditor } from "./LatexEditor";
 import { AddTemplateModal } from "./AddTemplateModal";
@@ -26,9 +25,9 @@ export type DataItemsProps = {
 
 export const DataItemComponent = (props : DataItemsProps) => {
     return(
-        <div className="max-h-20 text-black text-ellipsis overflow-hidden bg-black/20 m-2">
-            <h3 className="text-xl text-bold">{props.dataItem.title}</h3>
-            <p className="max-h-40 text-ellipsis">{props.dataItem.data}</p>
+        <div className="flex flex-col items-start p-2 text-black text-ellipsis overflow-hidden bg-black mt-2">
+            <h3 className="text-white text-xl text-bold">{props.dataItem.title}</h3>
+            <p className="text-white max-h-40 text-ellipsis">{props.dataItem.data}</p>
         </div>
     )
 }
@@ -63,7 +62,7 @@ const TemplateItemComponent = (props : TemplateItemComponentProps) => {
                     <button className="bg-white text-black px-2" onClick={(e) => edit(e)}>EDIT</button>
                 </div>
                 <Draggable<Template> dragId={dragId} data={props.template} >
-                    <SyntaxHighlighter className="z-50" language="latex" style={nord} >
+                    <SyntaxHighlighter className="z-50" language="latex" style={atomOneDark} >
                         {props.template.content}
                     </SyntaxHighlighter>
                 </Draggable>
@@ -151,7 +150,7 @@ export const ComponentLibrary = () => {
                                 <p className="text-white">Add Item</p>
                                 <button onClick={() => setIsOpenDataItemModal(true)}>Add</button>
                             </div>
-                            <div className="flex flex-col gap-4">
+                            <div className="flex flex-col gap-1">
                             {
                                 dataItems?.map((data_item) => {
                                     return (

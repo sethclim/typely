@@ -3,7 +3,7 @@ import { ResumeSection, Template } from "../types"
 // @ts-ignore
 import SyntaxHighlighter from 'react-syntax-highlighter';
 // @ts-ignore
-import { nord } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import { useDroppable } from "@dnd-kit/core";
 import clsx from "clsx";
 import { Toggle } from "./Toggle";
@@ -25,8 +25,8 @@ const DataItemDisplay = (props : DataItemDisplayProps) => {
     },[isOver])
 
     return(
-        <div ref={setNodeRef} className={clsx(["flex flex-col w-full items-start justify-start  min-h-5 p-2", bgColor])}>
-            <p className="text-black text-md">Data Items: ({props.data? props.data.length : 0})</p>
+        <div ref={setNodeRef} className={clsx(["flex flex-col w-full items-start justify-start  min-h-5 pt-2", bgColor])}>
+            <p className="text-black text-md font-bold">Data Items: ({props.data? props.data.length : 0})</p>
             {
                 props.data?.map((component : any, index : number) => {
                     return (
@@ -37,7 +37,7 @@ const DataItemDisplay = (props : DataItemDisplayProps) => {
                                 {
                                     Object.entries(component.data).map(([key, value]) => (
                                         <div key={key} className="flex flex-row gap-4">
-                                            <p  className="text-red">
+                                            <p  className="text-black">
                                                 {key}
                                             </p>
                                             <p  className="text-black">
@@ -80,14 +80,17 @@ const TemplateItemDisplay = (props : TemplateItemDisplayProps) => {
     },[isOver])
 
     return (
-        <div ref={setNodeRef} className={clsx(["flex flex-col w-full items-start justify-start  min-h-5 p-2", bgColor])}>
-            <p className="text-black text-md">template: {props.template?.name}</p>
+        <div ref={setNodeRef} className={clsx(["flex flex-col w-full items-start justify-start  min-h-5 pt-2", bgColor])}>
+            <div className="flex flex-row">
+                <p className="text-black text-md font-bold mr-2">Template:</p>
+                <p className="text-black text-md">{props.template?.name}</p>
+            </div>
             <Toggle text="Show Template">
-                <div className={clsx(["w-full bg-black min-h-20 p-2", bgColor])}>
-                    <SyntaxHighlighter language="latex" style={nord} >
+
+                    <SyntaxHighlighter language="latex" style={atomOneDark} >
                         {props.template?.content}
                     </SyntaxHighlighter>
-                </div>
+
             </Toggle>
         </div>
     )
@@ -118,8 +121,9 @@ export const ResumeTemplateDisplay = (props : ResumeTemplateDisplayProps) => {
     }, [props.resumeSection.items])
 
     return(
-        <div className="flex flex-col items-start gap-4 bg-gray-300 p-4 rounded-lg">
-            <h3 className="text-black text-lg">SectionType: {props.resumeSection.sectionType}</h3>
+        <div className="flex flex-col items-start bg-white p-4 rounded-lg">
+            <h3 className="text-black text-lg ">Title: {props.resumeSection.id}</h3>
+            <h3 className="text-black">Type: {props.resumeSection.sectionType}</h3>
             <TemplateItemDisplay template={props.resumeSection.template}  section_id={props.resumeSection.id} />
             <DataItemDisplay data={data} section_id={props.resumeSection.id} />
         </div>

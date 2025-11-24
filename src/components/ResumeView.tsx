@@ -23,7 +23,7 @@ import { DndContext, DragEndEvent, DragOverlay, DragStartEvent } from '@dnd-kit/
 // @ts-ignore
 import SyntaxHighlighter from 'react-syntax-highlighter';
 // @ts-ignore
-import { nord } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
 
 type PDFViewProps = {
@@ -214,7 +214,7 @@ export const ResumeView = () => {
           <DataItemComponent dataItem={draggingDataItem} />
         ): null}
         {(isDragging && draggingDataTemplate)? (
-          <SyntaxHighlighter className="z-50" language="latex" style={nord} >
+          <SyntaxHighlighter className="z-50" language="latex" style={atomOneDark} >
               {draggingDataTemplate.content}
           </SyntaxHighlighter>
         ): null}
