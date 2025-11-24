@@ -46,7 +46,7 @@ export const AddDetailsModal = (props : AddDetailsModalProps) => {
     }
 
     return (
-        <Modal isOpen={props.isOpen} onClose={() => props.setIsOpen(false)}>
+        <Modal isOpen={props.isOpen} onClose={() => props.setIsOpen(false)} width="w-100">
             <h2 className="text-xl font-bold mb-4 text-black">Add DataItem</h2>
             <form>
                 <p className="text-black">Title</p>

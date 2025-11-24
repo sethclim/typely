@@ -12,6 +12,8 @@ import { nord } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
 import { useDraggable } from "@dnd-kit/core";
 import { AddDetailsModal } from "./AddDataItemModal";
+import { LatexEditor } from "./LatexEditor";
+import { AddTemplateModal } from "./AddTemplateModal";
 
 // type componentLibraryProps = {
 //     // latex_comps : Array<Block>
@@ -55,17 +57,39 @@ const TemplateItemComponent = (props : TemplateItemComponentProps) => {
         transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
     } : undefined;
 
+    const [isOpen, setIsOpen] = useState(false);
+
+
+    const edit = (e : React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        e.stopPropagation();
+        console.log("EDIT")
+        setIsOpen(true)
+    }
+
+    const saveChange = (text : string) => {
+        console.log("saveChange")
+        TemplateTable.update(props.template.id, text)
+    }
+
     return (
-        <button ref={setNodeRef} style={style} {...listeners} {...attributes}>
-            <div className="text-black text-ellipsis overflow-hidden bg-white/40">
+    
+        <div className="p-2 bg-black my-2">
+            <div className="text-black text-ellipsis overflow-hidden ">
                 {/* <p>{JSON.stringify(template)}</p> */}
-                <h3 className="text-xl text-bold">{props.template.name}</h3>
-                <SyntaxHighlighter language="latex" style={nord} >
-                    {props.template.content}
-                </SyntaxHighlighter>
+                <div className="flex flex-row gap-4 p-2">
+                    <h3 className="text-xl text-bold text-white">{props.template.name}</h3>
+                    <button className="bg-white text-black px-2" onClick={(e) => edit(e)}>EDIT</button>
+                </div>
+                <div className="z-50" ref={setNodeRef} style={style} {...listeners} {...attributes}>
+                    <SyntaxHighlighter language="latex" style={nord} >
+                        {props.template.content}
+                    </SyntaxHighlighter>
+                </div>
                 {/* <p className="max-h-40 text-ellipsis">{template.content}</p> */}
             </div>
-        </button>
+            <LatexEditor isOpen={isOpen} setIsOpen={setIsOpen} latex={props.template.content} saveChange={saveChange} />
+        </div>
+    
     )
 }
 
@@ -90,7 +114,7 @@ export function mapRowToTemplate(
 ): Template {
 //    const d : DataItemType = {id: 14, name: "TODO"}
     return {
-        id: row.id,
+        id: row.id!,
         name: row.name,
         sectionType: row.section_type,
         content: row.content,
@@ -105,7 +129,8 @@ export const ComponentLibrary = () => {
     const [templates, setTemplates] = useState<Array<Template>>();
 
     const [level, setLevel] = useState("DataItems");
-    const [isOpen, setIsOpen] = useState(false);
+    const [isDataItemModalOpen, setIsOpenDataItemModal] = useState(false);
+    const [isTemplateModalOpen, setIsOpenTemplateModal] = useState(false);
 
     const fetchDataForLib = async () => {
         await DB.ready;
@@ -136,27 +161,34 @@ export const ComponentLibrary = () => {
                 className="w-full"
             />
 
-            <div className="bg-black flex flex-row justify-between items-center p-2">
-                <p className="text-white">Add Item</p>
-                <button onClick={() => setIsOpen(true)}>Add</button>
-            </div>
             {
                 (level == "DataItems") ?  
                     (
-                    <div className="flex flex-col gap-4">
-                    {
-                        dataItems?.map((data_item) => {
-                            return (
-                                <DataItemComponent key={data_item.id} dataItem={data_item} />
-                            )
-                        })
-                    }
-                    </div> 
+                        <>
+                            <div className="bg-black flex flex-row justify-between items-center p-2">
+                                <p className="text-white">Add Item</p>
+                                <button onClick={() => setIsOpenDataItemModal(true)}>Add</button>
+                            </div>
+                            <div className="flex flex-col gap-4">
+                            {
+                                dataItems?.map((data_item) => {
+                                    return (
+                                        <DataItemComponent key={data_item.id} dataItem={data_item} />
+                                    )
+                                })
+                            }
+                            </div> 
+                        </>
                     )
                 : null
             }
             {
                  (level == "Templates") ?  
+                 <>
+                    <div className="bg-black flex flex-row justify-between items-center p-2">
+                        <p className="text-white">Add Template</p>
+                        <button onClick={() => setIsOpenTemplateModal(true)}>Add</button>
+                    </div>
                     <div className="flex flex-col gap-4">
                     {
                         templates?.map((template) => {
@@ -164,10 +196,12 @@ export const ComponentLibrary = () => {
                         })
                     }
                     </div> 
+                 </>
                 : null
             }
 
-            <AddDetailsModal isOpen={isOpen} setIsOpen={setIsOpen}  />
+            <AddDetailsModal isOpen={isDataItemModalOpen} setIsOpen={setIsOpenDataItemModal}  />
+            <AddTemplateModal isOpen={isTemplateModalOpen} setIsOpen={setIsOpenTemplateModal}  />
         </div>
     )
 }

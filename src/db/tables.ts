@@ -171,10 +171,10 @@ export const ResumeDataItemTypeTable = {
 };
 
 export const TemplateTable = {
-    insert: ({ id, name, section_type, content, description }: TemplateRow) => {
+    insert: ({ name, section_type, content, description }: TemplateRow) => {
         DB.runAndSave(
-            `INSERT INTO ${RESUME_TEMPLATE_TABLE} (id, name, section_type, content, description) VALUES (?, ?, ?, ?, ?)`,
-            [id, name, section_type, content, description]
+            `INSERT INTO ${RESUME_TEMPLATE_TABLE} (name, section_type, content, description) VALUES (?, ?, ?, ?)`,
+            [name, section_type, content, description]
         );
 
         DB.notifyTable(RESUME_CONFIG_TABLE);
@@ -184,5 +184,14 @@ export const TemplateTable = {
         const rows = mapRows<TemplateRow>(res[0].columns, res[0].values);
         console.log("template rows!! " + JSON.stringify(rows));
         return rows;
+    },
+    update: (id: number, content: string) => {
+        console.log(`[RESUME_CONFIG_TABLE] id: ${id}`);
+        DB.runAndSave(
+            `UPDATE ${RESUME_TEMPLATE_TABLE} SET content = ? WHERE id = ?`,
+            [content, id]
+        );
+
+        DB.notifyTable(RESUME_TEMPLATE_TABLE);
     },
 };
