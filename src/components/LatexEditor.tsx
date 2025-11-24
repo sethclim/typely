@@ -22,7 +22,11 @@ export const LatexEditor = (props : LatexEditorProps) => {
     const save = () => {
         console.log(text)
         if (text == null)
+        {
+            props.setIsOpen(false);
             return
+        }
+
         console.log("save")
         props.saveChange(text);
         props.setIsOpen(false);
@@ -31,8 +35,10 @@ export const LatexEditor = (props : LatexEditorProps) => {
     return(
         <Modal isOpen={props.isOpen} onClose={() => {}} width=''>
             <div className='w-300'>
-                <button className='text-black' onClick={() => save()}>SAVE</button>
-                <button className='text-black' onClick={() => props.setIsOpen(false)}>CLOSE</button>
+                <div className='flex flex-row gap-4'>
+                    <button className='bg-black text-white px-2' onClick={() => save()}>SAVE</button>
+                    <button className='bg-black text-white px-2' onClick={() => props.setIsOpen(false)}>CLOSE</button>
+                </div>
                 <div className=' p-4'>
                     <Editor 
                         height="50vh" 

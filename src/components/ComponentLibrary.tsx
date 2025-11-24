@@ -59,7 +59,8 @@ const TemplateItemComponent = (props : TemplateItemComponentProps) => {
     const [isOpen, setIsOpen] = useState(false);
 
 
-    const edit = () => {
+    const edit = (e : React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        e.stopPropagation();
         console.log("EDIT")
         setIsOpen(true)
     }
@@ -70,20 +71,24 @@ const TemplateItemComponent = (props : TemplateItemComponentProps) => {
     }
 
     return (
-        <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
-            <div className="text-black text-ellipsis overflow-hidden bg-white/40">
+    
+        <div className="p-2 bg-black my-2">
+            <div className="text-black text-ellipsis overflow-hidden ">
                 {/* <p>{JSON.stringify(template)}</p> */}
                 <div className="flex flex-row gap-4 p-2">
-                    <h3 className="text-xl text-bold">{props.template.name}</h3>
-                    <button className="bg-black text-white px-2" onClick={() => edit()}>EDIT</button>
+                    <h3 className="text-xl text-bold text-white">{props.template.name}</h3>
+                    <button className="bg-white text-black px-2" onClick={(e) => edit(e)}>EDIT</button>
                 </div>
-                <SyntaxHighlighter language="latex" style={nord} >
-                    {props.template.content}
-                </SyntaxHighlighter>
+                <div className="z-50" ref={setNodeRef} style={style} {...listeners} {...attributes}>
+                    <SyntaxHighlighter language="latex" style={nord} >
+                        {props.template.content}
+                    </SyntaxHighlighter>
+                </div>
                 {/* <p className="max-h-40 text-ellipsis">{template.content}</p> */}
             </div>
             <LatexEditor isOpen={isOpen} setIsOpen={setIsOpen} latex={props.template.content} saveChange={saveChange} />
         </div>
+    
     )
 }
 
