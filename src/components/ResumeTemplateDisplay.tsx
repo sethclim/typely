@@ -18,14 +18,14 @@ const DataItemDisplay = (props : DataItemDisplayProps) => {
         id: `dataitem-${props.section_id}`,
     });
 
-    const [bgColor, setBGColor] = useState('bg-orange-500');
+    const [bgColor, setBGColor] = useState('');
 
     useEffect(()=>{
-        (isOver && active?.id.toString().startsWith("dataitem-"))  ? setBGColor('bg-green-800/80') : setBGColor('')
+        (isOver && active?.id.toString().startsWith("dataitem-"))  ? setBGColor('outline-2 outline-solid outline-green-100') : setBGColor('')
     },[isOver])
 
     return(
-        <div ref={setNodeRef} className={clsx(["flex flex-col w-full items-start justify-start  min-h-5 ", bgColor])}>
+        <div ref={setNodeRef} className={clsx(["flex flex-col w-full items-start justify-start  min-h-5 p-2", bgColor])}>
             <p className="text-black text-md">Data Items: ({props.data? props.data.length : 0})</p>
             {
                 props.data?.map((component : any, index : number) => {
@@ -71,16 +71,16 @@ const TemplateItemDisplay = (props : TemplateItemDisplayProps) => {
         id: `template-${props.section_id}`,
     });
 
-    const [bgColor, setBGColor] = useState('bg-orange-500');
+    const [bgColor, setBGColor] = useState('');
 
     useEffect(()=>{
         // console.log("isOver " + isOver)
 
-        (isOver && active?.id.toString().startsWith("template-"))  ? setBGColor('bg-green-800/80') : setBGColor('')
+        (isOver && active?.id.toString().startsWith("template-"))  ? setBGColor('tline-2 outline-solid outline-green-100 ') : setBGColor('')
     },[isOver])
 
     return (
-        <div ref={setNodeRef} className={clsx(["flex flex-col w-full items-start justify-start  min-h-5 ", bgColor])}>
+        <div ref={setNodeRef} className={clsx(["flex flex-col w-full items-start justify-start  min-h-5 p-2", bgColor])}>
             <p className="text-black text-md">template: {props.template?.name}</p>
             <Toggle text="Show Template">
                 <div className={clsx(["w-full bg-black min-h-20 p-2", bgColor])}>

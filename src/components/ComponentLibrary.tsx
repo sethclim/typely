@@ -14,51 +14,33 @@ import { useDraggable } from "@dnd-kit/core";
 import { AddDetailsModal } from "./AddDataItemModal";
 import { LatexEditor } from "./LatexEditor";
 import { AddTemplateModal } from "./AddTemplateModal";
+import { Draggable } from "./Draggable";
 
 // type componentLibraryProps = {
 //     // latex_comps : Array<Block>
 // }
 
-type DataItemsProps = {
+export type DataItemsProps = {
     dataItem : DataItem
 }
 
-const DataItemComponent = (props : DataItemsProps) => {
-
-    const {attributes, listeners, setNodeRef, transform} = useDraggable({
-        id: `dataitem-${props.dataItem.id}`,
-    });
-    
-    const style = transform ? {
-        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-    } : undefined;
-
+export const DataItemComponent = (props : DataItemsProps) => {
     return(
-        <button ref={setNodeRef} style={style} {...listeners} {...attributes}>
-            <div className="max-h-20 text-black text-ellipsis overflow-hidden bg-black/20 m-2">
-                <h3 className="text-xl text-bold">{props.dataItem.title}</h3>
-                <p className="max-h-40 text-ellipsis">{props.dataItem.data}</p>
-            </div>
-        </button>
+        <div className="max-h-20 text-black text-ellipsis overflow-hidden bg-black/20 m-2">
+            <h3 className="text-xl text-bold">{props.dataItem.title}</h3>
+            <p className="max-h-40 text-ellipsis">{props.dataItem.data}</p>
+        </div>
     )
 }
+
 
 type TemplateItemComponentProps = {
     template: Template
 }
 
 const TemplateItemComponent = (props : TemplateItemComponentProps) => {
-
-    const {attributes, listeners, setNodeRef, transform} = useDraggable({
-        id:  `template-${props.template.id}`,
-    });
-    
-    const style = transform ? {
-        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-    } : undefined;
-
     const [isOpen, setIsOpen] = useState(false);
-
+    const dragId =`template-${props.template.id}`
 
     const edit = (e : React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.stopPropagation();
@@ -80,11 +62,11 @@ const TemplateItemComponent = (props : TemplateItemComponentProps) => {
                     <h3 className="text-xl text-bold text-white">{props.template.name}</h3>
                     <button className="bg-white text-black px-2" onClick={(e) => edit(e)}>EDIT</button>
                 </div>
-                <div className="z-50" ref={setNodeRef} style={style} {...listeners} {...attributes}>
-                    <SyntaxHighlighter language="latex" style={nord} >
+                <Draggable<Template> dragId={dragId} data={props.template} >
+                    <SyntaxHighlighter className="z-50" language="latex" style={nord} >
                         {props.template.content}
                     </SyntaxHighlighter>
-                </div>
+                </Draggable>
                 {/* <p className="max-h-40 text-ellipsis">{template.content}</p> */}
             </div>
             <LatexEditor isOpen={isOpen} setIsOpen={setIsOpen} latex={props.template.content} saveChange={saveChange} />
@@ -173,7 +155,9 @@ export const ComponentLibrary = () => {
                             {
                                 dataItems?.map((data_item) => {
                                     return (
-                                        <DataItemComponent key={data_item.id} dataItem={data_item} />
+                                        <Draggable key={data_item.id} dragId={`dataitem-${data_item.id}`} data={data_item} >
+                                            <DataItemComponent dataItem={data_item} />
+                                        </Draggable>
                                     )
                                 })
                             }
