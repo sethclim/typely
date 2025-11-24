@@ -99,7 +99,7 @@ export const ResumeView = () => {
 
   return (
     <DndContext onDragStart={handleDragStart}  onDragEnd={handleDragEnd}>
-      <div className='flex flex-row w-lvw justify-start bg-white p-4 gap-2'>
+      <div className='flex flex-1 flex-row  w-lvw justify-start bg-white p-4 gap-2'>
         {/* <FileListDisplay files={files} /> */}
         <ComponentLibrary />
         <div className='bg-black'>

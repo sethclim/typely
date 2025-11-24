@@ -1,5 +1,22 @@
+html, body {
+  height: 100%;   /* NOT vh */
+  margin: 0;
+  /* background-color: red; */
+} 
+
+body {
+  display: flex;
+  flex-direction: column;  /* make header/middle/footer stack vertically */
+}
+
+
 #root {
   margin: 0 0;
   padding: 0;
   text-align: center;
+
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
 }
