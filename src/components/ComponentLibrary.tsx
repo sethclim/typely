@@ -12,6 +12,7 @@ import { nord } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
 import { useDraggable } from "@dnd-kit/core";
 import { AddDetailsModal } from "./AddDataItemModal";
+import { LatexEditor } from "./LatexEditor";
 
 // type componentLibraryProps = {
 //     // latex_comps : Array<Block>
@@ -55,17 +56,32 @@ const TemplateItemComponent = (props : TemplateItemComponentProps) => {
         transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
     } : undefined;
 
+    const [isOpen, setIsOpen] = useState(false);
+
+
+    const edit = () => {
+        console.log("EDIT")
+        setIsOpen(true)
+    }
+
+    const saveChange = (text : string) => {
+        console.log("saveChange")
+        TemplateTable.update(props.template.id, text)
+    }
+
     return (
-        <button ref={setNodeRef} style={style} {...listeners} {...attributes}>
+        <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
             <div className="text-black text-ellipsis overflow-hidden bg-white/40">
                 {/* <p>{JSON.stringify(template)}</p> */}
                 <h3 className="text-xl text-bold">{props.template.name}</h3>
+                <button className="bg-red-500" onClick={() => edit()}>EDIT</button>
                 <SyntaxHighlighter language="latex" style={nord} >
                     {props.template.content}
                 </SyntaxHighlighter>
                 {/* <p className="max-h-40 text-ellipsis">{template.content}</p> */}
             </div>
-        </button>
+            <LatexEditor isOpen={isOpen} setIsOpen={setIsOpen} latex={props.template.content} saveChange={saveChange} />
+        </div>
     )
 }
 

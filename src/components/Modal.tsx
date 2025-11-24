@@ -1,4 +1,5 @@
 // Modal.tsx
+import clsx from "clsx";
 import { ReactNode, useEffect } from "react";
 import { createPortal } from "react-dom";
 
@@ -6,9 +7,10 @@ interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   children: ReactNode;
+  width: string
 }
 
-export default function Modal({ isOpen, onClose, children }: ModalProps) {
+export default function Modal({ isOpen, onClose, children, width }: ModalProps) {
   // Create a div for the portal if it doesn't exist
   const modalRoot = document.getElementById("modal-root")!;
   
@@ -28,7 +30,7 @@ export default function Modal({ isOpen, onClose, children }: ModalProps) {
       onClick={onClose} // click on overlay closes modal
     >
       <div
-        className="bg-white p-6 rounded shadow-lg max-w-lg w-full"
+        className={clsx(["bg-white p-6 rounded shadow-lg ", width])}
         onClick={(e) => e.stopPropagation()} // prevent closing when clicking inside modal
       >
         {children}
