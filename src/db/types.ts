@@ -14,7 +14,7 @@ export interface DataItemRow {
 }
 
 export interface TemplateRow {
-    id: number;
+    id?: number;
     name: string;
     section_type: string; // e.g. "project", "skills"
     content: string; // LaTeX or mustache template

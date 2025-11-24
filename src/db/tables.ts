@@ -171,10 +171,10 @@ export const ResumeDataItemTypeTable = {
 };
 
 export const TemplateTable = {
-    insert: ({ id, name, section_type, content, description }: TemplateRow) => {
+    insert: ({ name, section_type, content, description }: TemplateRow) => {
         DB.runAndSave(
-            `INSERT INTO ${RESUME_TEMPLATE_TABLE} (id, name, section_type, content, description) VALUES (?, ?, ?, ?, ?)`,
-            [id, name, section_type, content, description]
+            `INSERT INTO ${RESUME_TEMPLATE_TABLE} (name, section_type, content, description) VALUES (?, ?, ?, ?)`,
+            [name, section_type, content, description]
         );
 
         DB.notifyTable(RESUME_CONFIG_TABLE);

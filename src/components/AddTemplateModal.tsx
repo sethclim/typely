@@ -1,0 +1,53 @@
+import { Dispatch, SetStateAction, useState } from "react"
+import { TemplateTable } from '../db/tables';
+
+import Modal from "./Modal";
+
+interface AddTemplateModalProps {
+  isOpen: boolean;
+  setIsOpen : Dispatch<SetStateAction<boolean>>
+}
+
+export const AddTemplateModal = (props : AddTemplateModalProps) => {
+    const [title, setTitle] = useState<string>()
+
+    const AddTemplate = () => {
+        if (title == "" || title == null)
+            return;
+
+        TemplateTable.insert({
+            "name": title,
+            "description": "this is a header template",
+            "section_type": "header",
+            "created_at" : Date.now().toString(),
+            "content": "//begin template"
+        })
+
+        // setSelected(null);
+        props.setIsOpen(false);
+    }
+
+    return (
+        <Modal isOpen={props.isOpen} onClose={() => props.setIsOpen(false)} width="w-100">
+            <h2 className="text-xl font-bold mb-4 text-black">Add Template</h2>
+            <form>
+                <p className="text-black">Title</p>
+                <input className="text-black" value={title} onChange={(e) => setTitle(e.target.value)} />
+            </form>
+            <div className='flex flex-row gap-4'>
+            <button
+                className="mt-4 px-4 py-2 bg-black text-white rounded"
+                onClick={() => AddTemplate()}
+            >
+                Add
+            </button>
+            <button
+                className="mt-4 px-4 py-2 bg-black text-white rounded"
+                onClick={() => props.setIsOpen(false)}
+            >
+                Cancel
+            </button>
+            </div>
+        </Modal>
+    )
+}

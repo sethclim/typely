@@ -13,6 +13,7 @@ import { nord } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import { useDraggable } from "@dnd-kit/core";
 import { AddDetailsModal } from "./AddDataItemModal";
 import { LatexEditor } from "./LatexEditor";
+import { AddTemplateModal } from "./AddTemplateModal";
 
 // type componentLibraryProps = {
 //     // latex_comps : Array<Block>
@@ -113,7 +114,7 @@ export function mapRowToTemplate(
 ): Template {
 //    const d : DataItemType = {id: 14, name: "TODO"}
     return {
-        id: row.id,
+        id: row.id!,
         name: row.name,
         sectionType: row.section_type,
         content: row.content,
@@ -128,7 +129,8 @@ export const ComponentLibrary = () => {
     const [templates, setTemplates] = useState<Array<Template>>();
 
     const [level, setLevel] = useState("DataItems");
-    const [isOpen, setIsOpen] = useState(false);
+    const [isDataItemModalOpen, setIsOpenDataItemModal] = useState(false);
+    const [isTemplateModalOpen, setIsOpenTemplateModal] = useState(false);
 
     const fetchDataForLib = async () => {
         await DB.ready;
@@ -159,27 +161,34 @@ export const ComponentLibrary = () => {
                 className="w-full"
             />
 
-            <div className="bg-black flex flex-row justify-between items-center p-2">
-                <p className="text-white">Add Item</p>
-                <button onClick={() => setIsOpen(true)}>Add</button>
-            </div>
             {
                 (level == "DataItems") ?  
                     (
-                    <div className="flex flex-col gap-4">
-                    {
-                        dataItems?.map((data_item) => {
-                            return (
-                                <DataItemComponent key={data_item.id} dataItem={data_item} />
-                            )
-                        })
-                    }
-                    </div> 
+                        <>
+                            <div className="bg-black flex flex-row justify-between items-center p-2">
+                                <p className="text-white">Add Item</p>
+                                <button onClick={() => setIsOpenDataItemModal(true)}>Add</button>
+                            </div>
+                            <div className="flex flex-col gap-4">
+                            {
+                                dataItems?.map((data_item) => {
+                                    return (
+                                        <DataItemComponent key={data_item.id} dataItem={data_item} />
+                                    )
+                                })
+                            }
+                            </div> 
+                        </>
                     )
                 : null
             }
             {
                  (level == "Templates") ?  
+                 <>
+                    <div className="bg-black flex flex-row justify-between items-center p-2">
+                        <p className="text-white">Add Template</p>
+                        <button onClick={() => setIsOpenTemplateModal(true)}>Add</button>
+                    </div>
                     <div className="flex flex-col gap-4">
                     {
                         templates?.map((template) => {
@@ -187,10 +196,12 @@ export const ComponentLibrary = () => {
                         })
                     }
                     </div> 
+                 </>
                 : null
             }
 
-            <AddDetailsModal isOpen={isOpen} setIsOpen={setIsOpen}  />
+            <AddDetailsModal isOpen={isDataItemModalOpen} setIsOpen={setIsOpenDataItemModal}  />
+            <AddTemplateModal isOpen={isTemplateModalOpen} setIsOpen={setIsOpenTemplateModal}  />
         </div>
     )
 }
