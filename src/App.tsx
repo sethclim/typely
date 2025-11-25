@@ -6,7 +6,6 @@ import { DB } from "./db";
 import { ResumeProvider } from './context/resume/ResumeProvider'
 import { ResumeConfigTable, ResumeDataItemTable, ResumeDataItemTypeTable, ResumeSectionConfigTable, ResumeSectionDataTable, TemplateTable } from './db/tables';
 
-import {DndContext, DragEndEvent} from '@dnd-kit/core';
 import { ResumeView } from './components/ResumeView';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';

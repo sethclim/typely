@@ -13,7 +13,7 @@ export const LatexEditor = (props : LatexEditorProps) => {
 
     const [text, setText] = useState<string | null>(null)
 
-    function handleEditorChange(value : any, event : any) {
+    function handleEditorChange(value : any) {
         // here is the current value
         console.log("value " + value)
         setText(value)
