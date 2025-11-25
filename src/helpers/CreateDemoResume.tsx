@@ -24,6 +24,33 @@ export const CreateDemoResume = () =>{
         "section_type": "skills"
     })
 
+    ResumeSectionConfigTable.insert({
+        "id": 3,
+        "resume_id": 1,
+        "template_id": 3,
+        "section_order": 2,
+        "section_type": "experience"
+    })
+
+    ResumeSectionConfigTable.insert({
+        "id": 4,
+        "resume_id": 1,
+        "template_id": 3,
+        "section_order": 3,
+        "section_type": "experience"
+    })
+
+
+
+    ResumeSectionConfigTable.insert({
+        "id": 5,
+        "resume_id": 1,
+        "template_id": 3,
+        "section_order": 4,
+        "section_type": "experience"
+    })
+
+
     ResumeSectionDataTable.insert({
         section_id: 1,
         data_item_id: 1
@@ -34,12 +61,93 @@ export const CreateDemoResume = () =>{
         data_item_id: 2
     })
 
+    ResumeSectionDataTable.insert({
+        section_id: 3,
+        data_item_id: 4
+    })
+
+    ResumeSectionDataTable.insert({
+        section_id: 4,
+        data_item_id: 4
+    })
+
+    ResumeSectionDataTable.insert({
+        section_id: 5,
+        data_item_id: 4
+    })
+
+
     ResumeDataItemTable.insert({
         "id": 1,
         title: "email",
         description: "my email",
         data: '[["email", "sethclim@gmail.com"]]',
         type_id: 1,
+        "created_at" : Date.now().toString(),
+        "updated_at" : Date.now().toString(),
+    })
+
+    const cplusSkills = [
+        ["LANGUAGES", "C++, GO, Rust, C\\#, Python, Typescript, Lua, HLSL/GLSL"],
+        ["VR","Unity, Vive, HoloLens, Quest, Unity XR Interation Tool Kit"],
+        ["FRAMEWORKS", "Vulkan, OpenGL, JUCE, Skia, Dear ImGui, GLFW, GLM, Kubernetes, WebRTC"],
+        ["GENERAL", "OOP, Functional, Git, Docker, CI/CD (Terraform, GitHub Actions), SQL, AWS"]
+    ]
+
+    ResumeDataItemTable.insert({
+        "id": 2,
+        title: "C++ Skills",
+        description: "my c++ skills",
+        data: JSON.stringify(cplusSkills),
+        type_id: 2,
+        "created_at" : Date.now().toString(),
+        "updated_at" : Date.now().toString(),
+    })
+
+    ResumeDataItemTable.insert({
+        "id": 3,
+        title: "My Name",
+        description: "name",
+        data: '[["NAME", "Seth Climenhaga"]]',
+        type_id: 1,
+        "created_at" : Date.now().toString(),
+        "updated_at" : Date.now().toString(),
+    })
+
+    const job1 = [
+        ["TITLE", "Software Developer"], 
+        ["COMPANY", "SpeakSynk Technology"], 
+        ["POINT1", "HEHE haha HEHE"],
+        ["POINT2", "HEHE haha HEHE"],
+        ["POINT3", "HEHE haha HEHE"],
+        ["POINT4", "HEHE haha HEHE"]
+    ]
+
+    ResumeDataItemTable.insert({
+        "id": 4,
+        title: "SpeakSynk Job",
+        description: "current job",
+        data: JSON.stringify(job1),
+        type_id: 3,
+        "created_at" : Date.now().toString(),
+        "updated_at" : Date.now().toString(),
+    })
+
+     const job2 = [
+        ["TITLE", "Game Developer"], 
+        ["COMPANY", "Game Company"], 
+        ["POINT1", "We Working Hard"],
+        ["POINT2", "We Working Hard 2"],
+        ["POINT3", "We Working Hard 3"],
+        ["POINT4", "We Working Hard 4"]
+    ]
+
+    ResumeDataItemTable.insert({
+        "id": 4,
+        title: "Arbelos Job",
+        description: "old job",
+        data: JSON.stringify(job2),
+        type_id: 3,
         "created_at" : Date.now().toString(),
         "updated_at" : Date.now().toString(),
     })
@@ -54,7 +162,13 @@ export const CreateDemoResume = () =>{
         name : "skill"
     })
 
-    const headerLaTeX = `\\newcommand{\\AND}{\\unskip\\cleaders\\copy\\ANDbox\\hskip\\wd\\ANDbox\\ignorespaces}\\newsavebox\\ANDbox\\sbox\\ANDbox{$|$}\n\\begin{header}\n\\fontsize{31 pt}{31 pt}\\selectfont Seth Climenhaga\n\\end{header}`;
+    ResumeDataItemTypeTable.insert({
+        "id": 3,
+        name : "experience"
+    })
+
+
+    const headerLaTeX = `\\newcommand{\\AND}{\\unskip\\cleaders\\copy\\ANDbox\\hskip\\wd\\ANDbox\\ignorespaces}\\newsavebox\\ANDbox\\sbox\\ANDbox{$|$}\n\\begin{header}\n\\fontsize{31 pt}{31 pt}\\selectfont {{NAME}} \n\\end{header}`;
 
     TemplateTable.insert({
         "id": 1,
@@ -65,7 +179,7 @@ export const CreateDemoResume = () =>{
         "content": headerLaTeX
     })
 
-    const skillsLatex = `\\textbf{Languages:} C++, GO, Rust, C\\#, Python, Typescript, Lua, HLSL/GLSL \\newline\n\\textbf{AR/VR:} Unity, Vive, HoloLens, Quest, Unity XR Interation Tool Kit  \\newline\n\\textbf{Frameworks:} Vulkan, OpenGL, JUCE, Skia, Dear ImGui, GLFW, GLM, Kubernetes, WebRTC  \\newline\n\\textbf{General:} OOP, Functional, Git, Docker, CI/CD (Terraform, GitHub Actions), SQL, AWS \\newline`
+    const skillsLatex = `\\textbf{Languages:} {{LANGUAGES}} \\newline\n\\textbf{AR/VR:} {{VR}} \\newline\n\\textbf{Frameworks:} {{FRAMEWORKS}}  \\newline\n\\textbf{General:} {{GENERAL}} \\newline`
 
     TemplateTable.insert({
         "id": 2,
@@ -74,5 +188,31 @@ export const CreateDemoResume = () =>{
         "section_type": "header",
         "created_at" : Date.now().toString(),
         "content": skillsLatex
+    })
+
+     const expLatex = `
+        \\begin{twocolentry}{
+            05/2022 – 04/2023
+        }
+        \\fontsize{11 pt}{11 pt}\\textbf{ {{TITLE}} }, {{COMPANY}} - Toronto ON, CA\\end{twocolentry}
+
+        \\vspace{0.10 cm}
+        \\begin{onecolentry}
+            \\begin{highlights}
+                \\item {{POINT1}}
+                \\item {{POINT2}}
+                \\item {{POINT3}}
+                \\item {{POINT4}}
+            \\end{highlights}
+        \\end{onecolentry}
+     `
+
+    TemplateTable.insert({
+        "id": 3,
+        "name": "Exp template",
+        "description": "this show's my experience",
+        "section_type": "experience",
+        "created_at" : Date.now().toString(),
+        "content": expLatex
     })
 }
