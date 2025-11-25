@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ResumeSection, Template } from "../types"
+import { DataItem, ResumeSection, Template } from "../types"
 // @ts-ignore
 import SyntaxHighlighter from 'react-syntax-highlighter';
 // @ts-ignore
@@ -7,9 +7,10 @@ import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import { useDroppable } from "@dnd-kit/core";
 import clsx from "clsx";
 import { Toggle } from "./Toggle";
+import GroupedTable from "./GroupedDataTable";
 
 type DataItemDisplayProps = {
-    data : any
+    data : DataItem[]
     section_id : number
 }
 
@@ -28,34 +29,8 @@ const DataItemDisplay = (props : DataItemDisplayProps) => {
         <div ref={setNodeRef} className={clsx(["flex flex-col w-full items-start justify-start  min-h-5 pt-2", bgColor])}>
             <p className="text-black text-md font-bold">Data Items: ({props.data? props.data.length : 0})</p>
             {
-                props.data?.map((component : any, index : number) => {
-                    return (
-                        <div key={index} className="flex flex-col items-start  w-200 flex ">
-                            {/* <h1 className="text-black text-sm">{component.title}</h1> */}
-                        {component.data && typeof component.data === "object" && !Array.isArray(component.data) ? (
-                            <>
-                                {
-                                    Object.entries(component.data).map(([key, value]) => (
-                                        <div key={key} className="flex flex-row gap-4">
-                                            <p  className="text-black">
-                                                {key}
-                                            </p>
-                                            <p  className="text-black">
-                                                {value as string}
-                                            </p>
-                                        </div>
-                                    ))
-                                }
-                            </>
-                            ) : (
-                                <>
-                                    
-                                    <p className="text-black">{component.data}</p>
-                                </>
-                            )}
-                        </div>
-                    ) 
-                })
+                <GroupedTable dataItems={props.data} />
+               
             }
         </div>
     )
@@ -125,7 +100,7 @@ export const ResumeTemplateDisplay = (props : ResumeTemplateDisplayProps) => {
             <h3 className="text-black text-lg ">Title: {props.resumeSection.id}</h3>
             <h3 className="text-black">Type: {props.resumeSection.sectionType}</h3>
             <TemplateItemDisplay template={props.resumeSection.template}  section_id={props.resumeSection.id} />
-            <DataItemDisplay data={data} section_id={props.resumeSection.id} />
+            <DataItemDisplay data={props.resumeSection.items} section_id={props.resumeSection.id} />
         </div>
     )
 }
