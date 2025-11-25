@@ -149,7 +149,7 @@ export const ResumeView = () => {
 
       setIsDragging(true);
 
-      const [activePrefix, active_id] = active.id.toString().split('-');
+      const [activePrefix, _] = active.id.toString().split('-');
 
       console.log("activePrefix " + activePrefix)
 

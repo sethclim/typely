@@ -16,6 +16,7 @@ export const Toggle = (props : ToggleProps) => {
           <>
             <DisclosureButton className="flex justify-between px-2 py-1 text-sm font-medium text-left text-white bg-black rounded-lg">
               <span>{props.text}</span>
+              <p>{open}</p>
               {/* <ChevronUpIcon
                 className={`${
                   open ? 'transform rotate-180' : ''

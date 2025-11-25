@@ -10,7 +10,6 @@ import SyntaxHighlighter from 'react-syntax-highlighter';
 // @ts-ignore
 import { nord } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
-import { useDraggable } from "@dnd-kit/core";
 import { AddDetailsModal } from "./AddDataItemModal";
 import { LatexEditor } from "./LatexEditor";
 import { AddTemplateModal } from "./AddTemplateModal";
