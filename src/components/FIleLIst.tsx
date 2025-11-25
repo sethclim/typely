@@ -10,7 +10,7 @@ export const FileListDisplay = (props : FileListProps) => {
                 Hello world!
             </h1>
             {
-                props.files.map((file, index) => {
+                props.files.map((file) => {
                     return <h3>{file}</h3>
                 })
             }
