@@ -24,29 +24,6 @@ export type DataItemsProps = {
 }
 
 export const DataItemComponent = (props : DataItemsProps) => {
-//    const [data, setData] =  useState<Record<string, string> | null>(null);
-    // useEffect(() => {
-    //     if (props.dataItem.data == undefined)
-    //         return
-
-    //     let raw = props.dataItem.data;
-
-    //     // Remove outer quotes if they exist
-    //     if (raw.startsWith('"') && raw.endsWith('"')) {
-    //         raw = raw.slice(1, -1);
-    //     }
-
-
-    //     const dstr = raw.replace(/'/g, '"')
-    //     const unescaped = dstr.replace(/\\"/g, '"');
-
-    //     console.log("YOYO ", unescaped)
-    //     const s = JSON.parse(unescaped) as Record<string, string>;
-    //     console.log("parsed", s, typeof s); 
-
-    //     setData(s)
-    // }, [props.dataItem.data])
-
     return(
         <div className="flex flex-col items-start p-2 text-black text-ellipsis overflow-hidden bg-black mt-2">
             <h3 className="text-white text-xl text-bold">{props.dataItem.title}</h3>

@@ -27,11 +27,11 @@ const DataItemDisplay = (props : DataItemDisplayProps) => {
 
     return(
         <div ref={setNodeRef} className={clsx(["flex flex-col w-full items-start justify-start  min-h-5 pt-2", bgColor])}>
-            <p className="text-black text-md font-bold">Data Items: ({props.data? props.data.length : 0})</p>
-            {
+            <Toggle barContents={
+                <p className="text-white text-md font-bold">Data Items: ({props.data? props.data.length : 0})</p>
+            }>
                 <GroupedTable dataItems={props.data} />
-               
-            }
+            </Toggle>
         </div>
     )
 }
@@ -49,18 +49,18 @@ const TemplateItemDisplay = (props : TemplateItemDisplayProps) => {
     const [bgColor, setBGColor] = useState('');
 
     useEffect(()=>{
-        // console.log("isOver " + isOver)
-
         (isOver && active?.id.toString().startsWith("template-"))  ? setBGColor('tline-2 outline-solid outline-green-100 ') : setBGColor('')
     },[isOver])
 
     return (
         <div ref={setNodeRef} className={clsx(["flex flex-col w-full items-start justify-start  min-h-5 pt-2", bgColor])}>
-            <div className="flex flex-row">
-                <p className="text-black text-md font-bold mr-2">Template:</p>
-                <p className="text-black text-md">{props.template?.name}</p>
-            </div>
-            <Toggle text="Show Template">
+            <Toggle barContents={
+                <div className="flex flex-row">
+                    <p className="text-white text-md font-bold mr-2">Template:</p>
+                    <p className="text-white text-md">{props.template?.name}</p>
+                </div>
+            }
+            >
 
                     <SyntaxHighlighter language="latex" style={atomOneDark} >
                         {props.template?.content}
@@ -76,25 +76,6 @@ type ResumeTemplateDisplayProps = {
 }
 
 export const ResumeTemplateDisplay = (props : ResumeTemplateDisplayProps) => {
-
-    // const [data, setData] = useState<any>()
-
-    // useEffect(()=>{
-    //     const d : any = []
-    //     props.resumeSection.items.map((comp)=>{
-    //         let c = comp;
-        
-    //         if (comp.data != undefined && typeof comp?.data === "string"){
-    //             let data = comp?.data.replace(/'/g, '"');
-    //             // console.log("data " + data)
-    //             c.data = comp.data ? JSON.parse(data) : null
-    //         }
-           
-    //         d.push(c)
-    //     })
-    //     setData(d)
-    // }, [props.resumeSection.items])
-
     return(
         <div className="flex flex-col w-full items-start bg-white p-4 rounded-lg">
             <h3 className="text-black text-lg ">Title: {props.resumeSection.id}</h3>
