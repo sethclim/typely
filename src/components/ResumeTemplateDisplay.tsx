@@ -77,23 +77,23 @@ type ResumeTemplateDisplayProps = {
 
 export const ResumeTemplateDisplay = (props : ResumeTemplateDisplayProps) => {
 
-    const [data, setData] = useState<any>()
+    // const [data, setData] = useState<any>()
 
-    useEffect(()=>{
-        const d : any = []
-        props.resumeSection.items.map((comp)=>{
-            let c = comp;
+    // useEffect(()=>{
+    //     const d : any = []
+    //     props.resumeSection.items.map((comp)=>{
+    //         let c = comp;
         
-            if (comp.data != undefined && typeof comp?.data === "string"){
-                let data = comp?.data.replace(/'/g, '"');
-                // console.log("data " + data)
-                c.data = comp.data ? JSON.parse(data) : null
-            }
+    //         if (comp.data != undefined && typeof comp?.data === "string"){
+    //             let data = comp?.data.replace(/'/g, '"');
+    //             // console.log("data " + data)
+    //             c.data = comp.data ? JSON.parse(data) : null
+    //         }
            
-            d.push(c)
-        })
-        setData(d)
-    }, [props.resumeSection.items])
+    //         d.push(c)
+    //     })
+    //     setData(d)
+    // }, [props.resumeSection.items])
 
     return(
         <div className="flex flex-col w-full items-start bg-white p-4 rounded-lg">

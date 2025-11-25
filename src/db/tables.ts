@@ -147,7 +147,7 @@ export const ResumeDataItemTable = {
     insert: ({ title, description, data, type_id }: DataItemRow) => {
         DB.runAndSave(
             `INSERT INTO ${RESUME_DATA_ITEM_TABLE} (type_id, title, description, data) VALUES (?, ?, ?, ?)`,
-            [type_id, title, description, JSON.stringify(data)]
+            [type_id, title, description, data]
         );
         DB.notifyTable(RESUME_DATA_ITEM_TABLE);
         DB.notifyTable(RESUME_CONFIG_TABLE);

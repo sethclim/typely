@@ -7,7 +7,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/b
 
 import 'react-pdf/dist/Page/TextLayer.css';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
-import { ResumeConfig } from '../types';
+import { ResumeConfig, ResumeSection } from '../types';
 
 // @ts-ignore
 import SyntaxHighlighter from 'react-syntax-highlighter';
@@ -18,6 +18,23 @@ type PDFViewProps = {
   resume : ResumeConfig | null
 }
 
+const ReplaceVariables = (section: ResumeSection) => {
+  let str = section.template?.content || "";
+  const dict = Object.fromEntries(section.items.flatMap(item => item.data));
+  console.log("dict", dict);
+
+  // Replace all {{KEY}} in one pass
+  str = str.replace(/\{\{(.*?)\}\}/g, (_, key) => {
+    key = key.trim();
+    const data = dict[key];
+    console.log("Replacing", key, "with", data);
+    return data ?? "";
+  });
+
+  console.log("Final str:", str);
+  return str;
+};
+
 export const PDFView = (props : PDFViewProps) => {
 
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
@@ -27,10 +44,12 @@ export const PDFView = (props : PDFViewProps) => {
 
     let latex_string = `\\documentclass[10pt, letterpaper]{article}\\usepackage{config}\\begin{document}`
     
-    props.resume?.sections.map((section) => {
-      latex_string += section.template?.content
-    })
+    if(props.resume?.sections[1])
+      ReplaceVariables(props.resume?.sections[1])
 
+    props.resume?.sections.map((section) => {
+      latex_string += ReplaceVariables(section)
+    })
     latex_string += `\\end{document}`
     
     const latexData = { latex: latex_string };

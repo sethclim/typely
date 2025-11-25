@@ -24,34 +24,34 @@ export type DataItemsProps = {
 }
 
 export const DataItemComponent = (props : DataItemsProps) => {
-   const [data, setData] =  useState<Record<string, string> | null>(null);
-    useEffect(() => {
-        if (props.dataItem.data == undefined)
-            return
+//    const [data, setData] =  useState<Record<string, string> | null>(null);
+    // useEffect(() => {
+    //     if (props.dataItem.data == undefined)
+    //         return
 
-        let raw = props.dataItem.data;
+    //     let raw = props.dataItem.data;
 
-        // Remove outer quotes if they exist
-        if (raw.startsWith('"') && raw.endsWith('"')) {
-            raw = raw.slice(1, -1);
-        }
+    //     // Remove outer quotes if they exist
+    //     if (raw.startsWith('"') && raw.endsWith('"')) {
+    //         raw = raw.slice(1, -1);
+    //     }
 
 
-        const dstr = raw.replace(/'/g, '"')
-        const unescaped = dstr.replace(/\\"/g, '"');
+    //     const dstr = raw.replace(/'/g, '"')
+    //     const unescaped = dstr.replace(/\\"/g, '"');
 
-        console.log("YOYO ", unescaped)
-        const s = JSON.parse(unescaped) as Record<string, string>;
-        console.log("parsed", s, typeof s); 
+    //     console.log("YOYO ", unescaped)
+    //     const s = JSON.parse(unescaped) as Record<string, string>;
+    //     console.log("parsed", s, typeof s); 
 
-        setData(s)
-    }, [props.dataItem.data])
+    //     setData(s)
+    // }, [props.dataItem.data])
 
     return(
         <div className="flex flex-col items-start p-2 text-black text-ellipsis overflow-hidden bg-black mt-2">
             <h3 className="text-white text-xl text-bold">{props.dataItem.title}</h3>
             {
-                (data !== null) ? (
+                (props.dataItem.data !== null) ? (
                     <table className="min-w-full divide-y divide-white border border-white">
                         <thead className="">
                             <tr>
@@ -60,7 +60,7 @@ export const DataItemComponent = (props : DataItemsProps) => {
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-white border border-white">
-                          {Object.entries(data).map(([key, value]) => (
+                          {props.dataItem.data.map(([key, value]) => (
                             <tr key={key} className="hover:bg-gray-50">
                                 <th className="px-2 py-2 text-left font-medium text-gray-700">{key}</th>
                                 <td className="px-2 py-2 text-left text-gray-900">{value}</td>
@@ -127,7 +127,7 @@ export function mapRowToDataItem(
         type:  d,
         title: row.title,
         description: row.description,
-        data: row.data,
+        data: row.data ? JSON.parse(row.data) : [],
         created_at: row.created_at,
         updated_at: row.updated_at
     };

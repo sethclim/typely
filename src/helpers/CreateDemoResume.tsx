@@ -38,7 +38,7 @@ export const CreateDemoResume = () =>{
         "id": 1,
         title: "email",
         description: "my email",
-        data: '{"email": "sethclim@gmail.com"}',
+        data: '[["email", "sethclim@gmail.com"]]',
         type_id: 1,
         "created_at" : Date.now().toString(),
         "updated_at" : Date.now().toString(),

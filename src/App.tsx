@@ -23,9 +23,6 @@ function App() {
  return (
     <ResumeProvider resumeId={1}>
         <Header />
-        {/* <div className='flex flex-col flex-1 bg-cyan-500'>
-hi
-        </div> */}
         <ResumeView />
         <Footer />
     </ResumeProvider>

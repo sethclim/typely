@@ -8,7 +8,7 @@ export interface DataItem {
     type: DataItemType;
     title?: string;
     description?: string;
-    data?: string; // stored as JSON text in DB
+    data: Array<[string, string]>; // stored as JSON text in DB
     created_at: string; // ISO timestamp
     updated_at: string;
 }
