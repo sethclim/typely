@@ -125,7 +125,7 @@ export const CreateDemoResume = () =>{
         ["POINT1", "Developed new APIs and wrote MySQL"],
         ["POINT2", "Improved key KPIs by 130%."],
         ["POINT3", "Regularly attended standups"],
-        ["POINT4", "Saved corp 300,000$ a year"]
+        ["POINT4", "Saved corp \\$300,000 a year"]
     ]
 
     ResumeDataItemTable.insert({

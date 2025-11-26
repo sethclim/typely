@@ -154,6 +154,8 @@ export const ResumeDataItemTable = {
     },
     getAll: () => {
         const res = DB.exec(`SELECT * FROM ${RESUME_DATA_ITEM_TABLE}`);
+        console.log(`[${RESUME_DATA_ITEM_TABLE}] ${JSON.stringify(res)}`);
+        if (res.length === 0) return [];
         const rows = mapRows<DataItemRow>(res[0].columns, res[0].values);
         console.log("rows!! " + JSON.stringify(rows));
         return rows;
