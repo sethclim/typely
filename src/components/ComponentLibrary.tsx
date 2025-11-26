@@ -8,7 +8,7 @@ import ThreeWaySlider from "./ThreeWaySlider";
 // @ts-ignore
 import SyntaxHighlighter from 'react-syntax-highlighter';
 // @ts-ignore
-import { nord } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
 import { AddDetailsModal } from "./AddDataItemModal";
 import { LatexEditor } from "./LatexEditor";
@@ -25,9 +25,29 @@ export type DataItemsProps = {
 
 export const DataItemComponent = (props : DataItemsProps) => {
     return(
-        <div className="max-h-20 text-black text-ellipsis overflow-hidden bg-black/20 m-2">
-            <h3 className="text-xl text-bold">{props.dataItem.title}</h3>
-            <p className="max-h-40 text-ellipsis">{props.dataItem.data}</p>
+        <div className="flex flex-col items-start p-2 text-black text-ellipsis overflow-hidden bg-black mt-2">
+            <h3 className="text-white text-xl text-bold">{props.dataItem.title}</h3>
+            {
+                (props.dataItem.data !== null) ? (
+                    <table className="min-w-full divide-y divide-white border border-white">
+                        <thead className="">
+                            <tr>
+                            <th className="px-2 py-2 text-left font-medium text-white">Key</th>
+                            <th className="px-2 py-2 text-left font-medium text-white">Value</th>
+                            </tr>
+                        </thead>
+                        <tbody className="bg-white divide-y divide-white border border-white">
+                          {props.dataItem.data.map(([key, value]) => (
+                            <tr key={key} className="hover:bg-gray-50">
+                                <th className="px-2 py-2 text-left font-medium text-gray-700">{key}</th>
+                                <td className="px-2 py-2 text-left text-gray-900">{value}</td>
+                            </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                    // <p className="text-white max-h-40 text-ellipsis">{props.dataItem.data}</p>
+                ):null
+            }
         </div>
     )
 }
@@ -62,7 +82,7 @@ const TemplateItemComponent = (props : TemplateItemComponentProps) => {
                     <button className="bg-white text-black px-2" onClick={(e) => edit(e)}>EDIT</button>
                 </div>
                 <Draggable<Template> dragId={dragId} data={props.template} >
-                    <SyntaxHighlighter className="z-50" language="latex" style={nord} >
+                    <SyntaxHighlighter className="z-50" language="latex" style={atomOneDark} >
                         {props.template.content}
                     </SyntaxHighlighter>
                 </Draggable>
@@ -84,7 +104,7 @@ export function mapRowToDataItem(
         type:  d,
         title: row.title,
         description: row.description,
-        data: row.data,
+        data: row.data ? JSON.parse(row.data) : [],
         created_at: row.created_at,
         updated_at: row.updated_at
     };
@@ -150,7 +170,7 @@ export const ComponentLibrary = () => {
                                 <p className="text-white">Add Item</p>
                                 <button onClick={() => setIsOpenDataItemModal(true)}>Add</button>
                             </div>
-                            <div className="flex flex-col gap-4">
+                            <div className="flex flex-col gap-1">
                             {
                                 dataItems?.map((data_item) => {
                                     return (

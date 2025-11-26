@@ -3,7 +3,7 @@ import { ResumeContext } from "./ResumeContext";
 import { ResumeConfigTable } from "../../db/tables";
 import { DB } from "../../db";
 import { ResumeConfig } from "../../types";
-import { hydrateResume } from "../../hooks/ResumeHydrator";
+import { hydrateResume } from "../../helpers/ResumeHydrator";
 
 type ResumeProviderProps = {
   resumeId: number;

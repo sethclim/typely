@@ -30,7 +30,7 @@ export interface ResumeConfigRow {
 }
 
 export interface ResumeSectionConfigRow {
-    id: number;
+    id?: number;
     resume_id: number; // FK → ResumeConfig.id
     section_type: string; // "project", "skills", etc.
     template_id: number; // FK → Template.id

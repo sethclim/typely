@@ -1,6 +1,6 @@
 
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import { useResume } from '../context/resume/ResumeContext'
 import { ResumeSectionConfigTable, ResumeSectionDataTable } from '../db/tables';
@@ -11,81 +11,16 @@ import ComboBox from './ComboBox';
 import { ResumeTemplateDisplay } from './ResumeTemplateDisplay'
 import { ComponentLibrary, DataItemComponent } from './ComponentLibrary';
 
-import { Document, Page, pdfjs } from "react-pdf";
-
-pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
-
 import 'react-pdf/dist/Page/TextLayer.css';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
-import { DataItem, ResumeConfig, Template } from '../types';
+import { DataItem, Template } from '../types';
 import { DndContext, DragEndEvent, DragOverlay, DragStartEvent } from '@dnd-kit/core';
 
 // @ts-ignore
 import SyntaxHighlighter from 'react-syntax-highlighter';
 // @ts-ignore
-import { nord } from 'react-syntax-highlighter/dist/esm/styles/hljs';
-
-
-type PDFViewProps = {
-  resume : ResumeConfig | null
-}
-
-const PDFView = (props : PDFViewProps) => {
-
-  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
-
-  const compileLatex = async () => {
-    console.log(props.resume?.sections[0].template?.content)
-
-    let latex_string = `\\documentclass[10pt, letterpaper]{article}\\usepackage{config}\\begin{document}`
-    
-    props.resume?.sections.map((section) => {
-      latex_string += section.template?.content
-    })
-
-    latex_string += `\\end{document}`
-    
-    const latexData = { latex: latex_string };
-    const api_url = `${import.meta.env.VITE_BE_URL}/${import.meta.env.VITE_COMPILE_ENDPOINT}`
-    console.log("api_url " + api_url)
-    const response = await fetch(api_url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(latexData),
-    });
-
-    if (!response.ok) {
-      console.error("Failed to compile LaTeX", await response.text());
-      return;
-    }
-
-    // Get PDF as Blob
-    const blob = await response.blob();
-
-    // Create an object URL
-    const url = URL.createObjectURL(blob);
-    setPdfUrl(url);
-  };
-
-  useEffect(()=>{
-    if (props.resume != null)
-      compileLatex()
-  },[props.resume])
-
-  return (
-    <div>
-      {/* <button className='text-white bg-red-500' onClick={compileLatex}>Compile LaTeX</button> */}
-
-    {pdfUrl && (
-      <Document file={pdfUrl}>
-        <Page pageNumber={1} width={600} />
-      </Document>
-    )}
-    </div>
-  );
-}
+import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import { PDFView } from './PDFView';
 
 export const ResumeView = () => {
   const { resume: myResume } = useResume();
@@ -101,7 +36,6 @@ export const ResumeView = () => {
       return;
 
     ResumeSectionConfigTable.insert({
-      "id": 3,
       "resume_id": myResume!.id,
       "template_id": -1,
       "section_order": 0, //TODO needs to be the last one in the list
@@ -125,7 +59,7 @@ export const ResumeView = () => {
   
       const [overPrefix, section_id] = over.id.toString().split('-');
       const [activePrefix, active_id] = active.id.toString().split('-');
-      console.log("On Droppable overPrefix:" + overPrefix + " section_id " + section_id + " activePrefix " +  activePrefix  + " active id " + active_id)
+      // console.log("On Droppable overPrefix:" + overPrefix + " section_id " + section_id + " activePrefix " +  activePrefix  + " active id " + active_id)
       
       if (overPrefix === "dataitem" && activePrefix === "dataitem") {
         ResumeSectionDataTable.insert({
@@ -151,7 +85,7 @@ export const ResumeView = () => {
 
       const [activePrefix, _] = active.id.toString().split('-');
 
-      console.log("activePrefix " + activePrefix)
+      // console.log("activePrefix " + activePrefix)
 
       if(activePrefix === "dataitem")
       {
@@ -165,13 +99,13 @@ export const ResumeView = () => {
 
   return (
     <DndContext onDragStart={handleDragStart}  onDragEnd={handleDragEnd}>
-      <div className='flex flex-row w-lvw justify-start bg-white p-4 gap-2'>
+      <div className='flex flex-1 flex-row  w-lvw justify-start bg-white p-4 gap-2'>
         {/* <FileListDisplay files={files} /> */}
         <ComponentLibrary />
-        <div className='bg-black'>
+        <div className='bg-black w-full'>
           <h3 className='text-4xl font-extrabold text-white'>{myResume?.name}</h3>
-          <div className='flex flex-row'>
-            <div className='flex flex-col gap-4 w-150 p-4'>
+          <div className='flex flex-row w-full'>
+            <div className='flex flex-col gap-4 w-200 p-4'>
             {
               myResume?.sections.map((section) => {
                 return <ResumeTemplateDisplay key={section.id} resumeSection={section} /> 
@@ -179,7 +113,7 @@ export const ResumeView = () => {
             }
               <button className='bg-white text-black rounded-lg' onClick={() => setIsOpen(true)}>Add New Component +</button>
             </div>
-            <div className='p-4'>
+            <div className='p-4 bg-white '>
               <PDFView resume={myResume} />
             </div>
           </div>
@@ -214,7 +148,7 @@ export const ResumeView = () => {
           <DataItemComponent dataItem={draggingDataItem} />
         ): null}
         {(isDragging && draggingDataTemplate)? (
-          <SyntaxHighlighter className="z-50" language="latex" style={nord} >
+          <SyntaxHighlighter className="z-50" language="latex" style={atomOneDark} >
               {draggingDataTemplate.content}
           </SyntaxHighlighter>
         ): null}

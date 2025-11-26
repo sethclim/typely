@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
-import { ResumeSection, Template } from "../types"
+import { DataItem, ResumeSection, Template } from "../types"
 // @ts-ignore
 import SyntaxHighlighter from 'react-syntax-highlighter';
 // @ts-ignore
-import { nord } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import { useDroppable } from "@dnd-kit/core";
 import clsx from "clsx";
 import { Toggle } from "./Toggle";
+import GroupedTable from "./GroupedDataTable";
 
 type DataItemDisplayProps = {
-    data : any
+    data : DataItem[]
     section_id : number
 }
 
@@ -25,38 +26,12 @@ const DataItemDisplay = (props : DataItemDisplayProps) => {
     },[isOver])
 
     return(
-        <div ref={setNodeRef} className={clsx(["flex flex-col w-full items-start justify-start  min-h-5 p-2", bgColor])}>
-            <p className="text-black text-md">Data Items: ({props.data? props.data.length : 0})</p>
-            {
-                props.data?.map((component : any, index : number) => {
-                    return (
-                        <div key={index} className="flex flex-col items-start  w-200 flex ">
-                            {/* <h1 className="text-black text-sm">{component.title}</h1> */}
-                        {component.data && typeof component.data === "object" && !Array.isArray(component.data) ? (
-                            <>
-                                {
-                                    Object.entries(component.data).map(([key, value]) => (
-                                        <div key={key} className="flex flex-row gap-4">
-                                            <p  className="text-red">
-                                                {key}
-                                            </p>
-                                            <p  className="text-black">
-                                                {value as string}
-                                            </p>
-                                        </div>
-                                    ))
-                                }
-                            </>
-                            ) : (
-                                <>
-                                    
-                                    <p className="text-black">{component.data}</p>
-                                </>
-                            )}
-                        </div>
-                    ) 
-                })
-            }
+        <div ref={setNodeRef} className={clsx(["flex flex-col w-full items-start justify-start  min-h-5 pt-2", bgColor])}>
+            <Toggle barContents={
+                <p className="text-white text-md font-bold">Data Items: ({props.data? props.data.length : 0})</p>
+            }>
+                <GroupedTable dataItems={props.data} />
+            </Toggle>
         </div>
     )
 }
@@ -74,20 +49,23 @@ const TemplateItemDisplay = (props : TemplateItemDisplayProps) => {
     const [bgColor, setBGColor] = useState('');
 
     useEffect(()=>{
-        // console.log("isOver " + isOver)
-
         (isOver && active?.id.toString().startsWith("template-"))  ? setBGColor('tline-2 outline-solid outline-green-100 ') : setBGColor('')
     },[isOver])
 
     return (
-        <div ref={setNodeRef} className={clsx(["flex flex-col w-full items-start justify-start  min-h-5 p-2", bgColor])}>
-            <p className="text-black text-md">template: {props.template?.name}</p>
-            <Toggle text="Show Template">
-                <div className={clsx(["w-full bg-black min-h-20 p-2", bgColor])}>
-                    <SyntaxHighlighter language="latex" style={nord} >
+        <div ref={setNodeRef} className={clsx(["flex flex-col w-full items-start justify-start  min-h-5 pt-2", bgColor])}>
+            <Toggle barContents={
+                <div className="flex flex-row">
+                    <p className="text-white text-md font-bold mr-2">Template:</p>
+                    <p className="text-white text-md">{props.template?.name}</p>
+                </div>
+            }
+            >
+
+                    <SyntaxHighlighter language="latex" style={atomOneDark} >
                         {props.template?.content}
                     </SyntaxHighlighter>
-                </div>
+
             </Toggle>
         </div>
     )
@@ -98,30 +76,12 @@ type ResumeTemplateDisplayProps = {
 }
 
 export const ResumeTemplateDisplay = (props : ResumeTemplateDisplayProps) => {
-
-    const [data, setData] = useState<any>()
-
-    useEffect(()=>{
-        const d : any = []
-        props.resumeSection.items.map((comp)=>{
-            let c = comp;
-        
-            if (comp.data != undefined && typeof comp?.data === "string"){
-                let data = comp?.data.replace(/'/g, '"');
-                // console.log("data " + data)
-                c.data = comp.data ? JSON.parse(data) : null
-            }
-           
-            d.push(c)
-        })
-        setData(d)
-    }, [props.resumeSection.items])
-
     return(
-        <div className="flex flex-col items-start gap-4 bg-gray-300 p-4 rounded-lg">
-            <h3 className="text-black text-lg">SectionType: {props.resumeSection.sectionType}</h3>
+        <div className="flex flex-col w-full items-start bg-white p-4 rounded-lg">
+            <h3 className="text-black text-lg ">Title: {props.resumeSection.id}</h3>
+            <h3 className="text-black">Type: {props.resumeSection.sectionType}</h3>
             <TemplateItemDisplay template={props.resumeSection.template}  section_id={props.resumeSection.id} />
-            <DataItemDisplay data={data} section_id={props.resumeSection.id} />
+            <DataItemDisplay data={props.resumeSection.items} section_id={props.resumeSection.id} />
         </div>
     )
 }

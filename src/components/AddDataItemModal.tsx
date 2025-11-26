@@ -9,7 +9,7 @@ interface AddDetailsModalProps {
 }
 
 export const AddDetailsModal = (props : AddDetailsModalProps) => {
-    const [items, setItems] = useState<Record<string, string>>({});
+    const [items, setItems] = useState<[string,string][]>([]);
     const [title, setTitle] = useState<string>()
     const [key,   setKey]   = useState<string>()
     const [value, setValue] = useState<string>()
@@ -19,10 +19,10 @@ export const AddDetailsModal = (props : AddDetailsModalProps) => {
         if (key == undefined || value == undefined || key == "" || value == "")
             return;
 
-        setItems(prev => ({
+        setItems(prev => ([
             ...prev,
-            [key]: value,
-        }));
+            [key, value]
+        ]));
 
         setKey("")
         setValue("")
