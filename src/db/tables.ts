@@ -158,6 +158,21 @@ export const ResumeDataItemTable = {
         console.log("rows!! " + JSON.stringify(rows));
         return rows;
     },
+    update: ({
+        id,
+        title,
+        description,
+        data,
+        type_id,
+        updated_at,
+    }: DataItemRow) => {
+        DB.runAndSave(
+            `UPDATE ${RESUME_DATA_ITEM_TABLE} SET type_id = ?, title = ?, description = ?, data = ?, updated_at = ? WHERE id = ?`,
+            [type_id, title, description, data, updated_at, id]
+        );
+        DB.notifyTable(RESUME_DATA_ITEM_TABLE);
+        DB.notifyTable(RESUME_CONFIG_TABLE);
+    },
     subscribe: (cb: () => void) => DB.subscribe(RESUME_DATA_ITEM_TABLE, cb),
 };
 

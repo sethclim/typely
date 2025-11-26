@@ -2,15 +2,17 @@ import { Dispatch, SetStateAction, useState } from "react"
 import { ResumeDataItemTable,  } from '../db/tables';
 
 import Modal from "./Modal";
+import { DataItem } from "../types";
 
 interface AddDetailsModalProps {
   isOpen: boolean;
   setIsOpen : Dispatch<SetStateAction<boolean>>
+  dataItem? : DataItem 
 }
 
 export const AddDetailsModal = (props : AddDetailsModalProps) => {
-    const [items, setItems] = useState<[string,string][]>([]);
-    const [title, setTitle] = useState<string>()
+    const [items, setItems] = useState<[string,string][]>(props.dataItem ? props.dataItem.data : []);
+    const [title, setTitle] = useState<string>(props.dataItem?.title ?? "")
     const [key,   setKey]   = useState<string>()
     const [value, setValue] = useState<string>()
 
@@ -23,34 +25,36 @@ export const AddDetailsModal = (props : AddDetailsModalProps) => {
 
     const addItem = (e : React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
-        // if (key == undefined || value == undefined || key == "" || value == "")
-        //     return;
-
-        // console.log("KEY " + key + " Value " + value)
 
         setItems(prev => ([
             ...prev,
             ["", ""]
         ]));
-
-        // setKey("")
-        // setValue("")
     }
 
     const AddDataItem = () => {
         if (Object.keys(items).length === 0 || title == "" || title == null)
             return;
 
-        ResumeDataItemTable.insert({
-            title: title,
-            description: "some disc",
-            data: JSON.stringify(items),
-            type_id: 55,
-            "created_at" : Date.now().toString(),
-            "updated_at" : Date.now().toString(),
-        })
-
-        // setSelected(null);
+        if(!props.dataItem){
+            ResumeDataItemTable.insert({
+                title: title,
+                description: "some disc",
+                data: JSON.stringify(items),
+                type_id: 55,
+                "created_at" : Date.now().toString(),
+                "updated_at" : Date.now().toString(),
+            })
+        }else{
+            ResumeDataItemTable.update({
+                id : props.dataItem.id,
+                title: title,
+                description: "some disc",
+                data: JSON.stringify(items),
+                type_id: 55,
+                "updated_at" : Date.now().toString(),
+            })
+        }
         props.setIsOpen(false);
     }
 
@@ -86,7 +90,7 @@ export const AddDetailsModal = (props : AddDetailsModalProps) => {
                 className="mt-4 px-4 py-2 bg-black text-white rounded"
                 onClick={() => AddDataItem()}
             >
-                Add
+                {props.dataItem ? "Update" : "Add"}
             </button>
             <button
                 className="mt-4 px-4 py-2 bg-black text-white rounded"

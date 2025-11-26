@@ -24,9 +24,12 @@ export type DataItemsProps = {
 }
 
 export const DataItemComponent = (props : DataItemsProps) => {
+    const [isEditDataItemModalOpen, setIsOpenEditDataItemModal] = useState(false);
+
     return(
         <div className="flex flex-col items-start p-2 text-black text-ellipsis overflow-hidden bg-black mt-2">
             <h3 className="text-white text-xl text-bold">{props.dataItem.title}</h3>
+            <button className="text-white" onClick={() => setIsOpenEditDataItemModal(true)}>Edit</button>
             {
                 (props.dataItem.data !== null) ? (
                     <table className="min-w-full divide-y divide-white border border-white">
@@ -48,6 +51,7 @@ export const DataItemComponent = (props : DataItemsProps) => {
                     // <p className="text-white max-h-40 text-ellipsis">{props.dataItem.data}</p>
                 ):null
             }
+            <AddDetailsModal isOpen={isEditDataItemModalOpen} setIsOpen={setIsOpenEditDataItemModal} dataItem={props.dataItem} />
         </div>
     )
 }
@@ -105,7 +109,7 @@ export function mapRowToDataItem(
         title: row.title,
         description: row.description,
         data: row.data ? JSON.parse(row.data) : [],
-        created_at: row.created_at,
+        created_at: row.created_at!,
         updated_at: row.updated_at
     };
 }
@@ -174,9 +178,9 @@ export const ComponentLibrary = () => {
                             {
                                 dataItems?.map((data_item) => {
                                     return (
-                                        <Draggable key={data_item.id} dragId={`dataitem-${data_item.id}`} data={data_item} >
+                                        // <Draggable key={data_item.id} dragId={`dataitem-${data_item.id}`} data={data_item} >
                                             <DataItemComponent dataItem={data_item} />
-                                        </Draggable>
+                                        // </Draggable>
                                     )
                                 })
                             }
