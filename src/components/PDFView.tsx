@@ -53,7 +53,7 @@ export const PDFView = (props : PDFViewProps) => {
     latex_string += `\\end{document}`
     
     const latexData = { latex: latex_string };
-    const api_url = `https://api.typely-vps.uk/compile/`
+    const api_url = `https://api.typely-vps.uk/compile`
     console.log("api_url " + api_url)
     const response = await fetch(api_url, {
       method: "POST",
