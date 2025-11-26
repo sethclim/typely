@@ -29,7 +29,6 @@ export const DataItemComponent = (props : DataItemsProps) => {
 
     return(
         <>
-
             <Toggle barContents={
                 <div className="flex flex-1 justify-between pr-4">
                     <h3 className="text-white text-xl text-bold">{props.dataItem.title}</h3>
@@ -62,19 +61,17 @@ export const DataItemComponent = (props : DataItemsProps) => {
             }
             </Toggle>
             <AddDetailsModal isOpen={isEditDataItemModalOpen} setIsOpen={setIsOpenEditDataItemModal} dataItem={props.dataItem} />
-
         </>
     )
 }
 
 
-type TemplateItemComponentProps = {
+export type TemplateItemComponentProps = {
     template: Template
 }
 
-const TemplateItemComponent = (props : TemplateItemComponentProps) => {
+export const TemplateItemComponent = (props : TemplateItemComponentProps) => {
     const [isOpen, setIsOpen] = useState(false);
-    const dragId =`template-${props.template.id}`
 
     const edit = (e : React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.stopPropagation();
@@ -88,24 +85,19 @@ const TemplateItemComponent = (props : TemplateItemComponentProps) => {
     }
 
     return (
-    
-        <div className="p-2 bg-black my-2">
-            <div className="text-black text-ellipsis overflow-hidden ">
-                {/* <p>{JSON.stringify(template)}</p> */}
-                <div className="flex flex-row gap-4 p-2">
+        <>
+            <Toggle barContents={
+                <div className="flex flex-row justify-between items-center gap-4 p-2 w-full h-full">
                     <h3 className="text-xl text-bold text-white">{props.template.name}</h3>
-                    <button className="bg-white text-black px-2" onClick={(e) => edit(e)}>EDIT</button>
+                    <button className="text-white px-2" onClick={(e) => edit(e)}>EDIT</button>
                 </div>
-                <Draggable<Template> dragId={dragId} data={props.template} >
-                    <SyntaxHighlighter className="z-50" language="latex" style={atomOneDark} >
-                        {props.template.content}
-                    </SyntaxHighlighter>
-                </Draggable>
-                {/* <p className="max-h-40 text-ellipsis">{template.content}</p> */}
-            </div>
+            }>
+                <SyntaxHighlighter className="z-50" language="latex" style={atomOneDark} >
+                    {props.template.content}
+                </SyntaxHighlighter>
+            </Toggle>
             <LatexEditor isOpen={isOpen} setIsOpen={setIsOpen} latex={props.template.content} saveChange={saveChange} />
-        </div>
-    
+        </>
     )
 }
 
@@ -207,10 +199,14 @@ export const ComponentLibrary = () => {
                         <p className="text-white">Add Template</p>
                         <button onClick={() => setIsOpenTemplateModal(true)}>Add</button>
                     </div>
-                    <div className="flex flex-col gap-4">
+                    <div className="flex flex-col gap-2 mt-2">
                     {
                         templates?.map((template) => {
-                            return <TemplateItemComponent template={template} />
+                            return (
+                                <Draggable<Template> key={template.id} dragId={`template-${template.id}`} data={template} >
+                                    <TemplateItemComponent template={template} />
+                                </Draggable>
+                            )
                         })
                     }
                     </div> 
