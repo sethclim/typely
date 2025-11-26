@@ -23,7 +23,7 @@ export const Toggle = (props : ToggleProps) => {
                 } w-5 h-5 text-purple-500`}
               />
             </DisclosureButton>
-            <DisclosurePanel className="pt-4">
+            <DisclosurePanel className="pt-4 bg-black p-2">
               {props.children}
             </DisclosurePanel>
           </>

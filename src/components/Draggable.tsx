@@ -13,6 +13,7 @@ export function Draggable<T extends Data>(props : DraggableProps<T>) {
     data: props.data
   });
 
+
 //   const style = transform ? {
 //     transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
 //   } : undefined;
