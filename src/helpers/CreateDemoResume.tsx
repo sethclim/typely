@@ -3,7 +3,7 @@ import { ResumeConfigTable, ResumeSectionConfigTable, ResumeSectionDataTable, Re
 export const CreateDemoResume = () =>{
     ResumeConfigTable.insert({
         "id": 1,
-        "name" : "Resume_1",
+        "name" : "Demo Resume",
         "created_at" : Date.now().toString(),
         "updated_at" : Date.now().toString(),
     })
@@ -57,6 +57,11 @@ export const CreateDemoResume = () =>{
     })
 
     ResumeSectionDataTable.insert({
+        section_id: 1,
+        data_item_id: 3
+    })
+
+    ResumeSectionDataTable.insert({
         section_id: 2,
         data_item_id: 2
     })
@@ -79,9 +84,9 @@ export const CreateDemoResume = () =>{
 
     ResumeDataItemTable.insert({
         "id": 1,
-        title: "email",
+        title: "Email",
         description: "my email",
-        data: '[["email", "sethclim@gmail.com"]]',
+        data: '[["EMAIL", "somebody@gmail.com"]]',
         type_id: 1,
         "created_at" : Date.now().toString(),
         "updated_at" : Date.now().toString(),
@@ -108,7 +113,7 @@ export const CreateDemoResume = () =>{
         "id": 3,
         title: "My Name",
         description: "name",
-        data: '[["NAME", "Seth Climenhaga"]]',
+        data: '[["NAME", "John Doe"]]',
         type_id: 1,
         "created_at" : Date.now().toString(),
         "updated_at" : Date.now().toString(),
@@ -116,16 +121,16 @@ export const CreateDemoResume = () =>{
 
     const job1 = [
         ["TITLE", "Software Developer"], 
-        ["COMPANY", "SpeakSynk Technology"], 
-        ["POINT1", "HEHE haha HEHE"],
-        ["POINT2", "HEHE haha HEHE"],
-        ["POINT3", "HEHE haha HEHE"],
-        ["POINT4", "HEHE haha HEHE"]
+        ["COMPANY", "Acme Corp"], 
+        ["POINT1", "Developed new APIs and wrote MySQL"],
+        ["POINT2", "Improved key KPIs by 130%."],
+        ["POINT3", "Regularly attended standups"],
+        ["POINT4", "Saved corp 300,000$ a year"]
     ]
 
     ResumeDataItemTable.insert({
         "id": 4,
-        title: "SpeakSynk Job",
+        title: "Acme Corp",
         description: "current job",
         data: JSON.stringify(job1),
         type_id: 3,
@@ -136,15 +141,15 @@ export const CreateDemoResume = () =>{
      const job2 = [
         ["TITLE", "Game Developer"], 
         ["COMPANY", "Game Company"], 
-        ["POINT1", "We Working Hard"],
-        ["POINT2", "We Working Hard 2"],
-        ["POINT3", "We Working Hard 3"],
-        ["POINT4", "We Working Hard 4"]
+        ["POINT1", "Created multiplayer game with Unity Engine"],
+        ["POINT2", "Developed character movement system."],
+        ["POINT3", "Created an abstract networking layer"],
+        ["POINT4", "Regularly collaborated with other team members"]
     ]
 
     ResumeDataItemTable.insert({
         "id": 4,
-        title: "Arbelos Job",
+        title: "XYZ Interactive",
         description: "old job",
         data: JSON.stringify(job2),
         type_id: 3,
