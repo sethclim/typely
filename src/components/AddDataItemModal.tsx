@@ -11,10 +11,8 @@ interface AddDetailsModalProps {
 }
 
 export const AddDetailsModal = (props : AddDetailsModalProps) => {
-    const [items, setItems] = useState<[string,string][]>(props.dataItem ? props.dataItem.data : []);
+    const [items, setItems] = useState<[string,string][]>(props.dataItem ? props.dataItem.data : [["", ""]]);
     const [title, setTitle] = useState<string>(props.dataItem?.title ?? "")
-    const [key,   setKey]   = useState<string>()
-    const [value, setValue] = useState<string>()
 
     const updateItem = (index : number, newtext : string, type : number) => {
         const items_clone = [...items] 
@@ -79,8 +77,8 @@ export const AddDetailsModal = (props : AddDetailsModalProps) => {
                         )
                     }
                     </div>
-                    <div className="flex  justify-end p-2 pt-4">
-                        <button className="text-sm bg-green-500 px-4" onClick={(e) => addItem(e)}>Add</button>
+                    <div className="flex justify-end p-2 pt-4">
+                        <button className="bg-black px-4" onClick={(e) => addItem(e)}>Add</button>
                     </div>
                 </div>
     

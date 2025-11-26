@@ -14,7 +14,7 @@ import { ComponentLibrary, DataItemComponent } from './ComponentLibrary';
 import 'react-pdf/dist/Page/TextLayer.css';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import { DataItem, Template } from '../types';
-import { DndContext, DragEndEvent, DragOverlay, DragStartEvent } from '@dnd-kit/core';
+import { DndContext, DragEndEvent, DragOverlay, DragStartEvent, MouseSensor, useSensor, useSensors } from '@dnd-kit/core';
 
 // @ts-ignore
 import SyntaxHighlighter from 'react-syntax-highlighter';
@@ -97,8 +97,16 @@ export const ResumeView = () => {
 
     }
 
+    const activationConstraint={
+      delay: 250,
+      tolerance: 5,
+    }
+
+  const mouseSensor = useSensor(MouseSensor, { activationConstraint });
+  const sensors = useSensors(mouseSensor);
+
   return (
-    <DndContext onDragStart={handleDragStart}  onDragEnd={handleDragEnd}>
+    <DndContext onDragStart={handleDragStart}  onDragEnd={handleDragEnd} sensors={sensors} >
       <div className='flex flex-1 flex-row  w-lvw justify-start bg-white p-4 gap-2'>
         {/* <FileListDisplay files={files} /> */}
         <ComponentLibrary />
