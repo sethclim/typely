@@ -64,19 +64,31 @@ export const AddDetailsModal = (props : AddDetailsModalProps) => {
                 <input className="text-black bg-gray-200 p-1" value={title} onChange={(e) => setTitle(e.target.value)} />
                 <p className="text-black">Items</p>
                 <div className="flex flex-col border-solid border-black">
-                    <div className="flex flex-col min-h-10 gap-2">
-                    {
-                        items.map(([key, value], index) => (
-                                <div className="flex flex-row">
-                                    <p className="text-black pr-2">Key</p>
-                                    <input className="text-black bg-gray-200 p-1" value={key} onChange={(e) => updateItem(index, e.target.value, 0)} />
-                                    <p className="text-black px-2">Value</p>
-                                    <input className="text-black bg-gray-200 p-1 mr-2 w-full" value={value} onChange={(e) => updateItem(index, e.target.value, 1)} />
-                                </div>
+                    <table className="min-w-full divide-y divide-white border border-white bg-black">
+                        <thead className="">
+                            <tr>
+                                <th className="px-2 py-2 text-left font-medium text-white w-50">Key</th>
+                                <th className="px-2 py-2 text-left font-medium text-white">Value</th>
+                            </tr>
+                        </thead>
+                        <tbody className="bg-white divide-y divide-white border border-white">
+                        {
+                            items.map(([key, value], index) => (
+                                     <tr key={index}>
+                                        {/* <p className="text-black pr-2">Key</p> */}
+                                        <td>
+                                            <input className="text-black bg-gray-200 p-1 w-full" value={key} onChange={(e) => updateItem(index, e.target.value, 0)} />
+                                        </td>
+                                        {/* <p className="text-black px-2">Value</p> */}
+                                        <td>
+                                            <input className="text-black bg-gray-200 p-1 mr-2 w-full" value={value} onChange={(e) => updateItem(index, e.target.value, 1)} />
+                                        </td>
+                                    </tr>
+                                )
                             )
-                        )
-                    }
-                    </div>
+                        }
+                        </tbody>
+                    </table>
                     <div className="flex justify-end p-2 pt-4">
                         <button className="bg-black px-4" onClick={(e) => addItem(e)}>Add</button>
                     </div>
