@@ -9,7 +9,7 @@ import Modal from "./Modal";
 import ComboBox from './ComboBox';
 
 import { ResumeTemplateDisplay } from './ResumeTemplateDisplay'
-import { ComponentLibrary, DataItemComponent } from './ComponentLibrary';
+import { ComponentLibrary, DataItemComponent, TemplateItemComponent } from './ComponentLibrary';
 
 import 'react-pdf/dist/Page/TextLayer.css';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
@@ -156,9 +156,7 @@ export const ResumeView = () => {
           <DataItemComponent dataItem={draggingDataItem} />
         ): null}
         {(isDragging && draggingDataTemplate)? (
-          <SyntaxHighlighter className="z-50" language="latex" style={atomOneDark} >
-              {draggingDataTemplate.content}
-          </SyntaxHighlighter>
+          <TemplateItemComponent template={draggingDataTemplate} />
         ): null}
       </DragOverlay>
     </DndContext>
