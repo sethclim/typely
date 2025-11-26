@@ -14,18 +14,27 @@ export const AddDetailsModal = (props : AddDetailsModalProps) => {
     const [key,   setKey]   = useState<string>()
     const [value, setValue] = useState<string>()
 
+    const updateItem = (index : number, newtext : string, type : number) => {
+        const items_clone = [...items] 
+        items_clone[index][type] = newtext
+
+        setItems(items_clone);
+    }
+
     const addItem = (e : React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
-        if (key == undefined || value == undefined || key == "" || value == "")
-            return;
+        // if (key == undefined || value == undefined || key == "" || value == "")
+        //     return;
+
+        // console.log("KEY " + key + " Value " + value)
 
         setItems(prev => ([
             ...prev,
-            [key, value]
+            ["", ""]
         ]));
 
-        setKey("")
-        setValue("")
+        // setKey("")
+        // setValue("")
     }
 
     const AddDataItem = () => {
@@ -46,34 +55,31 @@ export const AddDetailsModal = (props : AddDetailsModalProps) => {
     }
 
     return (
-        <Modal isOpen={props.isOpen} onClose={() => props.setIsOpen(false)} width="w-100">
+        <Modal isOpen={props.isOpen} onClose={() => props.setIsOpen(false)} width="w-300">
             <h2 className="text-xl font-bold mb-4 text-black">Add DataItem</h2>
             <form>
                 <p className="text-black">Title</p>
-                <input className="text-black" value={title} onChange={(e) => setTitle(e.target.value)} />
+                <input className="text-black bg-gray-200 p-1" value={title} onChange={(e) => setTitle(e.target.value)} />
                 <p className="text-black">Items</p>
                 <div className="flex flex-col border-solid border-black">
+                    <div className="flex flex-col min-h-10 gap-2">
                     {
-                        Object.entries(items).map(([key, value]) => (
+                        items.map(([key, value], index) => (
                                 <div className="flex flex-row">
                                     <p className="text-black pr-2">Key</p>
-                                    <p className="text-black">{key}</p>
+                                    <input className="text-black bg-gray-200 p-1" value={key} onChange={(e) => updateItem(index, e.target.value, 0)} />
                                     <p className="text-black px-2">Value</p>
-                                    <p className="text-black">{value}</p>
+                                    <input className="text-black bg-gray-200 p-1 mr-2 w-full" value={value} onChange={(e) => updateItem(index, e.target.value, 1)} />
                                 </div>
                             )
                         )
                     }
-                    <div className="flex flex-row">
-                        <p className="text-black pr-2">Key</p>
-                        <input className="text-black" value={key} onChange={(e) => setKey(e.target.value)} />
-                        <p className="text-black px-2">Value</p>
-                        <input className="text-black" value={value} onChange={(e) => setValue(e.target.value)} />
+                    </div>
+                    <div className="flex  justify-end p-2 pt-4">
+                        <button className="text-sm bg-green-500 px-4" onClick={(e) => addItem(e)}>Add</button>
                     </div>
                 </div>
-                <div className="flex justify-end">
-                    <button className="text-sm bg-green-500 px-4" onClick={(e) => addItem(e)}>Add</button>
-                </div>
+    
             </form>
             <div className='flex flex-row gap-4'>
             <button
