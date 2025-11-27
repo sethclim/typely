@@ -24,6 +24,7 @@ import { PDFView } from './PDFView';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 
 import { ArrowsRightLeftIcon } from "@heroicons/react/24/solid";
+import { OutputView } from './OutputView';
 
 export const ResumeView = () => {
   const { resume: myResume } = useResume();
@@ -111,7 +112,6 @@ export const ResumeView = () => {
   return (
     <DndContext onDragStart={handleDragStart}  onDragEnd={handleDragEnd} sensors={sensors} >
       <div className='flex flex-1 flex-row w-lvw justify-start bg-white p-4 gap-2'>
-
         <PanelGroup direction="horizontal">
           <Panel defaultSize={30} minSize={20}>
               <ComponentLibrary />
@@ -143,22 +143,13 @@ export const ResumeView = () => {
                     />
                   </PanelResizeHandle>
                   <Panel minSize={45}>
-                    <div className='p-4 bg-black flex justify-center'>
-                      <PDFView resume={myResume} />
-                    </div>
+                    <OutputView resume={myResume} />
                   </Panel>
                 </PanelGroup>
               </div>
             </div>
-
           </Panel>
         </PanelGroup>
-
-
-
-
-
-        
 
          <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} width='w-80'>
           <h2 className="text-xl font-bold mb-4 text-black">New Resume Block</h2>uik
