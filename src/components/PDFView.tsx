@@ -34,16 +34,8 @@ export const ReplaceVariables = (section: ResumeSection) => {
 
 export const PDFView = (props : PDFViewProps) => {
 
-
-  // useEffect(()=>{
-  //   if (props.resume_string != null)
-  //     compileLatex()
-  // },[props.resume_string])
-
   return (
     <div>
-      {/* <button className='text-white bg-red-500' onClick={compileLatex}>Compile LaTeX</button> */}
-
     {props.pdfUrl && (
       <Document className="bg-black" file={props.pdfUrl}>
         <Page pageNumber={1} width={600} />

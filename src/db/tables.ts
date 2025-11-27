@@ -84,10 +84,10 @@ export function getFullResumeQuery(resumeIdParam = "?"): string {
 //LEFT JOIN ${TEMPLATE_TABLE} t ON t.id = rs.template_id
 
 export const ResumeConfigTable = {
-    insert: ({ id, name, created_at, updated_at }: ResumeConfigRow) => {
+    insert: ({ name, created_at, updated_at }: ResumeConfigRow) => {
         DB.runAndSave(
-            `INSERT INTO ${RESUME_CONFIG_TABLE} (id, name, created_at, updated_at) VALUES (?, ?, ?, ?)`,
-            [id, name, created_at, updated_at]
+            `INSERT INTO ${RESUME_CONFIG_TABLE} (name, created_at, updated_at) VALUES (?, ?, ?)`,
+            [name, created_at, updated_at]
         );
 
         DB.notifyTable(RESUME_CONFIG_TABLE);
@@ -98,6 +98,14 @@ export const ResumeConfigTable = {
         // console.log("RESUME!! " + JSON.stringify(row));
 
         return row;
+    },
+    getAllResumeConfig: () => {
+        const res = DB.exec(`SELECT * FROM ${RESUME_CONFIG_TABLE}`);
+        console.log(`[${RESUME_CONFIG_TABLE}] ${JSON.stringify(res)}`);
+        if (res.length === 0) return [];
+        const rows = mapRows<ResumeConfigRow>(res[0].columns, res[0].values);
+        console.log("getAllResumeConfig rows!! " + JSON.stringify(rows));
+        return rows;
     },
     subscribe: (cb: () => void) => DB.subscribe(RESUME_CONFIG_TABLE, cb),
 };
