@@ -121,9 +121,9 @@ export const ResumeView = () => {
             />
           </PanelResizeHandle>
           <Panel minSize={45}>
-            <div className='bg-black w-full'>
+            <div className='bg-black w-full h-full'>
               <h3 className='text-4xl font-extrabold text-white'>{myResume?.name}</h3>
-              <div className='flex flex-row w-full'>
+              <div className='flex flex-row w-full h-full'>
                 <PanelGroup direction="horizontal">
                   <Panel defaultSize={35} minSize={30}>
                     <div className='flex flex-col gap-4 p-4'>

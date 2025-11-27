@@ -42,7 +42,8 @@ export const OutputView = (props : OutputViewProps) => {
 
     const compileLatex = async (latex : string) => {  
         const latexData = { latex: latex };
-        const api_url = `https://api.typely-vps.uk/compile`
+        // const api_url = `https://api.typely-vps.uk/compile`
+        const api_url = `http://localhost:8080/compile`
         console.log("api_url " + api_url)
         const response = await fetch(api_url, {
             method: "POST",
