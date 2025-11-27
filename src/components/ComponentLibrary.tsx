@@ -159,7 +159,7 @@ export const ComponentLibrary = () => {
     )
 
     return (
-        <div className="flex flex-col w-150">
+        <div className="flex flex-col">
             <h3 className="text-xl text-bold text-black">Component Library</h3>
 
             <ThreeWaySlider

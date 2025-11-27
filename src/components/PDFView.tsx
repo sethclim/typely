@@ -53,7 +53,7 @@ export const PDFView = (props : PDFViewProps) => {
     latex_string += `\\end{document}`
     
     const latexData = { latex: latex_string };
-    const api_url = `https://api.typely-vps.uk/compile`
+    const api_url = `http://localhost:8080/compile`
     console.log("api_url " + api_url)
     const response = await fetch(api_url, {
       method: "POST",
@@ -86,7 +86,7 @@ export const PDFView = (props : PDFViewProps) => {
       {/* <button className='text-white bg-red-500' onClick={compileLatex}>Compile LaTeX</button> */}
 
     {pdfUrl && (
-      <Document file={pdfUrl}>
+      <Document className="bg-black" file={pdfUrl}>
         <Page pageNumber={1} width={600} />
       </Document>
     )}

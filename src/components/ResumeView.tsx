@@ -21,6 +21,9 @@ import SyntaxHighlighter from 'react-syntax-highlighter';
 // @ts-ignore
 import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import { PDFView } from './PDFView';
+import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
+
+import { ArrowsRightLeftIcon } from "@heroicons/react/24/solid";
 
 export const ResumeView = () => {
   const { resume: myResume } = useResume();
@@ -107,25 +110,54 @@ export const ResumeView = () => {
 
   return (
     <DndContext onDragStart={handleDragStart}  onDragEnd={handleDragEnd} sensors={sensors} >
-      <div className='flex flex-1 flex-row  w-lvw justify-start bg-white p-4 gap-2'>
-        {/* <FileListDisplay files={files} /> */}
-        <ComponentLibrary />
-        <div className='bg-black w-full'>
-          <h3 className='text-4xl font-extrabold text-white'>{myResume?.name}</h3>
-          <div className='flex flex-row w-full'>
-            <div className='flex flex-col gap-4 w-200 p-4'>
-            {
-              myResume?.sections.map((section) => {
-                return <ResumeTemplateDisplay key={section.id} resumeSection={section} /> 
-              })
-            }
-              <button className='bg-white text-black rounded-lg' onClick={() => setIsOpen(true)}>Add New Component +</button>
+      <div className='flex flex-1 flex-row w-lvw justify-start bg-white p-4 gap-2'>
+
+        <PanelGroup direction="horizontal">
+          <Panel defaultSize={30} minSize={20}>
+              <ComponentLibrary />
+          </Panel>
+          <PanelResizeHandle className="w-3 bg-white flex flex-col justify-center items-center data-[resize-handle-active]:bg-gray-200">
+            <ArrowsRightLeftIcon
+              className="h-3 w-3 text-black"
+            />
+          </PanelResizeHandle>
+          <Panel minSize={45}>
+            <div className='bg-black w-full'>
+              <h3 className='text-4xl font-extrabold text-white'>{myResume?.name}</h3>
+              <div className='flex flex-row w-full'>
+                <PanelGroup direction="horizontal">
+                  <Panel defaultSize={35} minSize={30}>
+                    <div className='flex flex-col gap-4 p-4'>
+                    {
+                      myResume?.sections.map((section) => {
+                        return <ResumeTemplateDisplay key={section.id} resumeSection={section} /> 
+                      })
+                    }
+                      <button className='bg-white text-black rounded-lg' onClick={() => setIsOpen(true)}>Add New Component +</button>
+                    </div>
+                  </Panel>
+
+                  <PanelResizeHandle className="w-2 mx-2 bg-white flex flex-col justify-center items-center data-[resize-handle-active]:bg-gray-200">
+                    <ArrowsRightLeftIcon
+                      className="h-2 w-2 text-black"
+                    />
+                  </PanelResizeHandle>
+                  <Panel minSize={45}>
+                    <div className='p-4 bg-black flex justify-center'>
+                      <PDFView resume={myResume} />
+                    </div>
+                  </Panel>
+                </PanelGroup>
+              </div>
             </div>
-            <div className='p-4 bg-white '>
-              <PDFView resume={myResume} />
-            </div>
-          </div>
-        </div>
+
+          </Panel>
+        </PanelGroup>
+
+
+
+
+
         
 
          <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} width='w-80'>
