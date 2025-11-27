@@ -49,11 +49,11 @@ const TemplateItemDisplay = (props : TemplateItemDisplayProps) => {
     const [bgColor, setBGColor] = useState('');
 
     useEffect(()=>{
-        (isOver && active?.id.toString().startsWith("template-"))  ? setBGColor('tline-2 outline-solid outline-green-100 ') : setBGColor('')
+        (isOver && active?.id.toString().startsWith("template-"))  ? setBGColor('outline-2 outline-solid outline-green-100 ') : setBGColor('')
     },[isOver])
 
     return (
-        <div ref={setNodeRef} className={clsx(["flex flex-col w-full items-start justify-start  min-h-5 pt-2", bgColor])}>
+        <div ref={setNodeRef} className={clsx(["flex flex-col w-full items-start justify-start min-h-5 pt-2", bgColor])}>
             <Toggle barContents={
                 <div className="flex flex-row">
                     <p className="text-white text-md font-bold mr-2">Template:</p>
@@ -61,11 +61,9 @@ const TemplateItemDisplay = (props : TemplateItemDisplayProps) => {
                 </div>
             }
             >
-
-                    <SyntaxHighlighter language="latex" style={atomOneDark} >
-                        {props.template?.content}
-                    </SyntaxHighlighter>
-
+                <SyntaxHighlighter language="latex" style={atomOneDark} >
+                    {props.template?.content}
+                </SyntaxHighlighter>
             </Toggle>
         </div>
     )

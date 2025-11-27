@@ -1,13 +1,10 @@
-
-
-import { useEffect, useState } from 'react'
 import { Document, Page, pdfjs } from "react-pdf";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 import 'react-pdf/dist/Page/TextLayer.css';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
-import { ResumeConfig, ResumeSection } from '../types';
+import { ResumeSection } from '../types';
 
 // @ts-ignore
 import SyntaxHighlighter from 'react-syntax-highlighter';
