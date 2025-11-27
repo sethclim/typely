@@ -15,10 +15,10 @@ import SyntaxHighlighter from 'react-syntax-highlighter';
 import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
 type PDFViewProps = {
-  resume : ResumeConfig | null
+  pdfUrl? : string | null
 }
 
-const ReplaceVariables = (section: ResumeSection) => {
+export const ReplaceVariables = (section: ResumeSection) => {
   let str = section.template?.content || "";
   const dict = Object.fromEntries(section.items.flatMap(item => item.data));
   console.log("dict", dict);
@@ -37,56 +37,18 @@ const ReplaceVariables = (section: ResumeSection) => {
 
 export const PDFView = (props : PDFViewProps) => {
 
-  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
 
-  const compileLatex = async () => {
-    console.log(props.resume?.sections[0].template?.content)
-
-    let latex_string = `\\documentclass[10pt, letterpaper]{article}\\usepackage{config}\\begin{document}`
-    
-    if(props.resume?.sections[1])
-      ReplaceVariables(props.resume?.sections[1])
-
-    props.resume?.sections.map((section) => {
-      latex_string += ReplaceVariables(section)
-    })
-    latex_string += `\\end{document}`
-    
-    const latexData = { latex: latex_string };
-    const api_url = `http://localhost:8080/compile`
-    console.log("api_url " + api_url)
-    const response = await fetch(api_url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(latexData),
-    });
-
-    if (!response.ok) {
-      console.error("Failed to compile LaTeX", await response.text());
-      return;
-    }
-
-    // Get PDF as Blob
-    const blob = await response.blob();
-
-    // Create an object URL
-    const url = URL.createObjectURL(blob);
-    setPdfUrl(url);
-  };
-
-  useEffect(()=>{
-    if (props.resume != null)
-      compileLatex()
-  },[props.resume])
+  // useEffect(()=>{
+  //   if (props.resume_string != null)
+  //     compileLatex()
+  // },[props.resume_string])
 
   return (
     <div>
       {/* <button className='text-white bg-red-500' onClick={compileLatex}>Compile LaTeX</button> */}
 
-    {pdfUrl && (
-      <Document className="bg-black" file={pdfUrl}>
+    {props.pdfUrl && (
+      <Document className="bg-black" file={props.pdfUrl}>
         <Page pageNumber={1} width={600} />
       </Document>
     )}
