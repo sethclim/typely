@@ -90,7 +90,7 @@ export const TemplateItemComponent = (props : TemplateItemComponentProps) => {
                     <button className="text-white px-2" onClick={(e) => edit(e)}>EDIT</button>
                 </div>
             }>
-                <SyntaxHighlighter className="z-50" language="latex" style={atomOneDark} >
+                <SyntaxHighlighter className="z-50 text-left" language="latex" style={atomOneDark} >
                     {props.template.content}
                 </SyntaxHighlighter>
             </Toggle>
