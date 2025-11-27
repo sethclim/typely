@@ -72,8 +72,6 @@ export const OutputView = (props : OutputViewProps) => {
             const latex = performTemplating()
             compileLatex(latex);
         }
-        else
-            console.log("seth resume null")
       },[props.resume])
 
     return (

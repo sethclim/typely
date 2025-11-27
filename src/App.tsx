@@ -19,7 +19,6 @@ function App() {
 
   useEffect(() => {
       const init = async () => {
-          console.log("seth init ")
         await DB.ready;
         const rows = ResumeConfigTable.getResumeConfig(1);
         if(rows.length == 0)
@@ -31,7 +30,7 @@ function App() {
 
   const fetchResumes = () => {
     const rows = ResumeConfigTable.getAllResumeConfig();
-    console.log("seth rows " + rows.length)
+    console.log("fetchResumes " + rows.length)
     setResumes(rows)
   }
 

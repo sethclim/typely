@@ -5,6 +5,7 @@ import { ResumeConfigTable } from "../db/tables";
 import { DocumentDuplicateIcon, EllipsisVerticalIcon, TrashIcon } from "@heroicons/react/20/solid";
 import { PencilIcon } from "@heroicons/react/20/solid";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
+import { DuplicateResume } from "../db";
 
 type SidebarProps = {
     resumes : Array<ResumeConfigRow>
@@ -21,6 +22,11 @@ export function Sidebar({ resumes, activeId, onSelect } : SidebarProps) {
         "created_at" : Date.now().toString(),
         "updated_at" : Date.now().toString(),
     })
+  }
+
+  const duplicateResume = (id? : number) => {
+    if(id)
+      DuplicateResume(id)
   }
 
   return (
@@ -128,7 +134,7 @@ export function Sidebar({ resumes, activeId, onSelect } : SidebarProps) {
                           className={`${
                             active ? "bg-gray-100" : ""
                           } flex w-full items-center gap-2 px-3 py-2 text-left text-black`}
-                          // onClick={onDuplicate}
+                          onClick={() => duplicateResume(r.id)}
                         >
                           <DocumentDuplicateIcon className="h-4 w-4" />
                           Duplicate

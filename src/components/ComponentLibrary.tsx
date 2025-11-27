@@ -75,12 +75,10 @@ export const TemplateItemComponent = (props : TemplateItemComponentProps) => {
 
     const edit = (e : React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.stopPropagation();
-        console.log("EDIT")
         setIsOpen(true)
     }
 
     const saveChange = (text : string) => {
-        console.log("saveChange")
         TemplateTable.update(props.template.id, text)
     }
 

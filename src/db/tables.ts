@@ -1,4 +1,3 @@
-// import { HeaderInfo } from "../App";
 import { DB } from "./index";
 import {
     DataItemRow,
@@ -104,7 +103,7 @@ export const ResumeConfigTable = {
         console.log(`[${RESUME_CONFIG_TABLE}] ${JSON.stringify(res)}`);
         if (res.length === 0) return [];
         const rows = mapRows<ResumeConfigRow>(res[0].columns, res[0].values);
-        console.log("getAllResumeConfig rows!! " + JSON.stringify(rows));
+        // console.log("getAllResumeConfig rows!! " + JSON.stringify(rows));
         return rows;
     },
     subscribe: (cb: () => void) => DB.subscribe(RESUME_CONFIG_TABLE, cb),
@@ -125,9 +124,9 @@ export const ResumeSectionConfigTable = {
         DB.notifyTable(RESUME_CONFIG_TABLE);
     },
     updateTemplate: (id: string, template_id: string) => {
-        console.log(
-            `[ResumeSectionConfigTable] id: ${id} template_id: ${template_id}`
-        );
+        // console.log(
+        //     `[ResumeSectionConfigTable] id: ${id} template_id: ${template_id}`
+        // );
         DB.runAndSave(
             `UPDATE ${RESUME_SECTION_CONFIG_TABLE} SET template_id = ? WHERE id = ?`,
             [template_id, id]
@@ -139,9 +138,9 @@ export const ResumeSectionConfigTable = {
 
 export const ResumeSectionDataTable = {
     insert: ({ section_id, data_item_id }: ResumeSectionDataRow) => {
-        console.log(
-            `[ResumeSectionConfigTable] section_id: ${section_id} data_item_id: ${data_item_id}`
-        );
+        // console.log(
+        //     `[ResumeSectionConfigTable] section_id: ${section_id} data_item_id: ${data_item_id}`
+        // );
         DB.runAndSave(
             `INSERT INTO ${RESUME_SECTION_DATA_TABLE} (section_id, data_item_id) VALUES (?, ?)`,
             [section_id, data_item_id]
@@ -162,10 +161,10 @@ export const ResumeDataItemTable = {
     },
     getAll: () => {
         const res = DB.exec(`SELECT * FROM ${RESUME_DATA_ITEM_TABLE}`);
-        console.log(`[${RESUME_DATA_ITEM_TABLE}] ${JSON.stringify(res)}`);
+        // console.log(`[${RESUME_DATA_ITEM_TABLE}] ${JSON.stringify(res)}`);
         if (res.length === 0) return [];
         const rows = mapRows<DataItemRow>(res[0].columns, res[0].values);
-        console.log("rows!! " + JSON.stringify(rows));
+        // console.log("rows!! " + JSON.stringify(rows));
         return rows;
     },
     update: ({
@@ -209,11 +208,11 @@ export const TemplateTable = {
     getAll: () => {
         const res = DB.exec(`SELECT * FROM ${RESUME_TEMPLATE_TABLE}`);
         const rows = mapRows<TemplateRow>(res[0].columns, res[0].values);
-        console.log("template rows!! " + JSON.stringify(rows));
+        // console.log("template rows!! " + JSON.stringify(rows));
         return rows;
     },
     update: (id: number, content: string) => {
-        console.log(`[RESUME_CONFIG_TABLE] id: ${id}`);
+        // console.log(`[RESUME_CONFIG_TABLE] id: ${id}`);
         DB.runAndSave(
             `UPDATE ${RESUME_TEMPLATE_TABLE} SET content = ? WHERE id = ?`,
             [content, id]
