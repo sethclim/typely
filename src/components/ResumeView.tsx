@@ -20,7 +20,6 @@ import { DndContext, DragEndEvent, DragOverlay, DragStartEvent, MouseSensor, use
 import SyntaxHighlighter from 'react-syntax-highlighter';
 // @ts-ignore
 import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
-import { PDFView } from './PDFView';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 
 import { ArrowsRightLeftIcon } from "@heroicons/react/24/solid";
