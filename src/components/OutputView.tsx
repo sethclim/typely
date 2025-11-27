@@ -87,7 +87,7 @@ export const OutputView = (props : OutputViewProps) => {
                 {
                     (level == "LATEX" && props.resume !== null) ?  
                         (
-                            <div className="bg-red-600 min-h-200">
+                            <div className="min-h-200">
                                 <SyntaxHighlighter className="min-h-full text-left" language="latex" style={atomOneDark}  >
                                     {latex}
                                 </SyntaxHighlighter>

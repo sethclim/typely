@@ -32,7 +32,7 @@ export function Sidebar({ resumes, activeId, onSelect } : SidebarProps) {
   return (
     <aside
       className={`
-        h-screen border-r bg-gray-50 flex flex-col transition-all duration-200
+        h-full border-r bg-gray-50 flex flex-col transition-all duration-200
         ${expanded ? "w-64" : "w-16"}
       `}
     >
