@@ -1,4 +1,4 @@
-import { createClient, User } from '@supabase/supabase-js';
+// import { User } from '@supabase/supabase-js';
 import { createFileRoute } from '@tanstack/react-router'
 import { useState, useEffect } from 'react';
 import { Footer } from '../components/Footer';
@@ -11,8 +11,7 @@ import { ResumeConfigTable } from '../db/tables';
 import { ResumeConfigRow } from '../db/types';
 import { CreateDemoResume } from '../helpers/CreateDemoResume';
 
-import { UserProvider } from '../context/user/UserProvider';
-import { supabase } from '../helpers/SupabaseClient';
+// import { supabase } from '../helpers/SupabaseClient';
 
 
 export const Route = createFileRoute('/')({
@@ -22,7 +21,7 @@ export const Route = createFileRoute('/')({
 function HomeComponent() {
 
     
-    const [user, setUser] = useState<User>();
+    // const [user, setUser] = useState<User>();
     const [activeId, setActiveId] = useState(1);
     const [resumes, setResumes] = useState<ResumeConfigRow[]>([]);
 
@@ -34,13 +33,13 @@ function HomeComponent() {
             CreateDemoResume();
 
 
-        // Whenever the auth state changes, we receive an event and a session object.
-        // Save the user from the session object to the state.
-        supabase.auth.onAuthStateChange((event, session) => {
-            if (event === "SIGNED_IN") {
-            setUser(session?.user);
-            }
-        });
+        // // Whenever the auth state changes, we receive an event and a session object.
+        // // Save the user from the session object to the state.
+        // supabase.auth.onAuthStateChange((event, session) => {
+        //     if (event === "SIGNED_IN") {
+        //     setUser(session?.user);
+        //     }
+        // });
         }
         init();
     }, []
