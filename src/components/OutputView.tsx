@@ -8,6 +8,7 @@ import SyntaxHighlighter from 'react-syntax-highlighter';
 // @ts-ignore
 import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import { Link } from "@tanstack/react-router";
+import { getToken } from "../helpers/GetToken";
 
 
 export type OutputViewProps = {
@@ -43,12 +44,13 @@ export const OutputView = (props : OutputViewProps) => {
     const compileLatex = async (latex : string) => {  
         const latexData = { latex: latex };
         // const api_url = `https://api.typely-vps.uk/compile`
-        const api_url = `http://localhost:8080/compile`
+        const api_url = `${import.meta.env.VITE_BE_URL}/${import.meta.env.VITE_COMPILE_ENDPOINT}`
         console.log("api_url " + api_url)
         const response = await fetch(api_url, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                Authorization: getToken(),
             },
             body: JSON.stringify(latexData),
         });

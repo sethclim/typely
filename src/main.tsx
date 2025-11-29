@@ -5,7 +5,7 @@ import { routeTree } from './routeTree.gen'
 import './styles.css'
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseProjectId  = import.meta.env.VITE_SUPABASE_PROJECT_ID;
+export const supabaseProjectId  = import.meta.env.VITE_SUPABASE_PROJECT_ID;
 const supabaseUrl = `https://${supabaseProjectId}.supabase.co`;
 const subabasePublishableKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
