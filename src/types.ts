@@ -23,6 +23,7 @@ export interface Template {
 
 export interface ResumeSection {
     id: number;
+    title: string;
     sectionType: string;
     order: number;
     template: Template | undefined;

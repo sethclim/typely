@@ -33,6 +33,7 @@ export function getFullResumeQuery(resumeIdParam = "?"): string {
              json_group_array(
                json_object(
                  'id', rs.id,
+                 'title', rs.title,
                  'sectionType', rs.section_type,
                  'order', rs.section_order,
                  'template',
@@ -112,13 +113,14 @@ export const ResumeConfigTable = {
 export const ResumeSectionConfigTable = {
     insert: ({
         resume_id,
+        title,
         section_type,
         template_id,
         section_order,
     }: ResumeSectionConfigRow) => {
         DB.runAndSave(
-            `INSERT INTO ${RESUME_SECTION_CONFIG_TABLE} (resume_id, section_type, template_id, section_order) VALUES (?, ?, ?, ?)`,
-            [resume_id, section_type, template_id, section_order]
+            `INSERT INTO ${RESUME_SECTION_CONFIG_TABLE} (resume_id, title, section_type, template_id, section_order) VALUES (?, ?, ?, ?, ?)`,
+            [resume_id, title, section_type, template_id, section_order]
         );
 
         DB.notifyTable(RESUME_CONFIG_TABLE);

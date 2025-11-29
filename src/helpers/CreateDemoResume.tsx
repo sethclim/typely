@@ -10,6 +10,7 @@ export const CreateDemoResume = () =>{
     
     ResumeSectionConfigTable.insert({
         "id": 1,
+        "title": "Custom Header",
         "resume_id": 1,
         "template_id": 1,
         "section_order": 0,
@@ -18,6 +19,7 @@ export const CreateDemoResume = () =>{
 
     ResumeSectionConfigTable.insert({
         "id": 2,
+        "title": "C++ Skills",
         "resume_id": 1,
         "template_id": 2,
         "section_order": 1,
@@ -26,6 +28,7 @@ export const CreateDemoResume = () =>{
 
     ResumeSectionConfigTable.insert({
         "id": 3,
+        "title": "Current Job",
         "resume_id": 1,
         "template_id": 3,
         "section_order": 2,
@@ -34,6 +37,7 @@ export const CreateDemoResume = () =>{
 
     ResumeSectionConfigTable.insert({
         "id": 4,
+        "title": "Previous Game Job",
         "resume_id": 1,
         "template_id": 3,
         "section_order": 3,
@@ -44,6 +48,7 @@ export const CreateDemoResume = () =>{
 
     ResumeSectionConfigTable.insert({
         "id": 5,
+        "title": "Old Job",
         "resume_id": 1,
         "template_id": 3,
         "section_order": 4,
