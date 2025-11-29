@@ -7,6 +7,7 @@ import { ResumeConfig } from "../types";
 import SyntaxHighlighter from 'react-syntax-highlighter';
 // @ts-ignore
 import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import { Link } from "@tanstack/react-router";
 
 
 
@@ -75,14 +76,32 @@ export const OutputView = (props : OutputViewProps) => {
       },[props.resume])
 
     return (
-        <div className='p-4 bg-black flex flex-col justify-center'>
+        <div className='p-4 h-full bg-black flex flex-col justify-center'>
             <ThreeWaySlider options={["PDF", "LATEX"]}
                     value={level}
                     onChange={setLevel}
                     className="w-full" />
                 {
-                    (level == "PDF" && props.resume !== null) ?  
-                        <PDFView pdfUrl={pdfUrl} /> : null
+                    (level == "PDF") ? (
+                        <>
+                        {
+                            (true) ? (
+                                <div className="flex h-full w-full justify-center items-center">
+                                    <Link
+                                        to="/login"
+                                        activeProps={{
+                                            className: 'font-bold',
+                                        }}
+                                        >
+                                            <div className="bg-white text-black p-2 ">
+                                                Login To Compile
+                                            </div>
+                                    </Link>
+                                </div>
+                            ):  <PDFView pdfUrl={pdfUrl} />
+                        }
+                        </>
+                    )   : null
                 }
                 {
                     (level == "LATEX" && props.resume !== null) ?  
