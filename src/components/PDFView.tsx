@@ -18,32 +18,24 @@ type PDFViewProps = {
 export const ReplaceVariables = (section: ResumeSection) => {
   let str = section.template?.content || "";
   const dict = Object.fromEntries(section.items.flatMap(item => item.data));
-  console.log("dict", dict);
+  // console.log("dict", dict);
 
   // Replace all {{KEY}} in one pass
   str = str.replace(/\{\{(.*?)\}\}/g, (_, key) => {
     key = key.trim();
     const data = dict[key];
-    console.log("Replacing", key, "with", data);
+    // console.log("Replacing", key, "with", data);
     return data ?? "";
   });
 
-  console.log("Final str:", str);
+  // console.log("Final str:", str);
   return str;
 };
 
 export const PDFView = (props : PDFViewProps) => {
 
-
-  // useEffect(()=>{
-  //   if (props.resume_string != null)
-  //     compileLatex()
-  // },[props.resume_string])
-
   return (
     <div>
-      {/* <button className='text-white bg-red-500' onClick={compileLatex}>Compile LaTeX</button> */}
-
     {props.pdfUrl && (
       <Document className="bg-black" file={props.pdfUrl}>
         <Page pageNumber={1} width={600} />

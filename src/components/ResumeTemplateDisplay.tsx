@@ -61,7 +61,7 @@ const TemplateItemDisplay = (props : TemplateItemDisplayProps) => {
                 </div>
             }
             >
-                <SyntaxHighlighter language="latex" style={atomOneDark} >
+                <SyntaxHighlighter className="text-left" language="latex" style={atomOneDark} >
                     {props.template?.content}
                 </SyntaxHighlighter>
             </Toggle>

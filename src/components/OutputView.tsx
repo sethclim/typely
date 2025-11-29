@@ -42,7 +42,8 @@ export const OutputView = (props : OutputViewProps) => {
 
     const compileLatex = async (latex : string) => {  
         const latexData = { latex: latex };
-        const api_url = `https://api.typely-vps.uk/compile`
+        // const api_url = `https://api.typely-vps.uk/compile`
+        const api_url = `http://localhost:8080/compile`
         console.log("api_url " + api_url)
         const response = await fetch(api_url, {
             method: "POST",
@@ -71,8 +72,6 @@ export const OutputView = (props : OutputViewProps) => {
             const latex = performTemplating()
             compileLatex(latex);
         }
-        else
-            console.log("seth resume null")
       },[props.resume])
 
     return (
@@ -88,8 +87,8 @@ export const OutputView = (props : OutputViewProps) => {
                 {
                     (level == "LATEX" && props.resume !== null) ?  
                         (
-                            <div className="bg-red-600 min-h-200">
-                                <SyntaxHighlighter className="min-h-full" language="latex" style={atomOneDark} >
+                            <div className="min-h-200">
+                                <SyntaxHighlighter className="min-h-full text-left" language="latex" style={atomOneDark}  >
                                     {latex}
                                 </SyntaxHighlighter>
                             </div>

@@ -14,20 +14,15 @@ export const LatexEditor = (props : LatexEditorProps) => {
     const [text, setText] = useState<string | null>(null)
 
     function handleEditorChange(value : any) {
-        // here is the current value
-        console.log("value " + value)
         setText(value)
     }
 
     const save = () => {
-        console.log(text)
         if (text == null)
         {
             props.setIsOpen(false);
             return
         }
-
-        console.log("save")
         props.saveChange(text);
         props.setIsOpen(false);
     }
