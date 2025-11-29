@@ -1,5 +1,6 @@
 import ReactDOM from 'react-dom/client'
 import { RouterProvider, createRouter } from '@tanstack/react-router'
+// @ts-ignore
 import { routeTree } from './routeTree.gen'
 import './styles.css'
 import { createClient } from '@supabase/supabase-js'

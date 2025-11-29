@@ -10,7 +10,6 @@ import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import { Link } from "@tanstack/react-router";
 
 
-
 export type OutputViewProps = {
     resume? : ResumeConfig | null
 }
@@ -93,7 +92,7 @@ export const OutputView = (props : OutputViewProps) => {
                                             className: 'font-bold',
                                         }}
                                         >
-                                            <div className="bg-white text-black p-2 ">
+                                            <div className="bg-purple-500 text-white p-2 rounded-sm">
                                                 Login To Compile
                                             </div>
                                     </Link>
