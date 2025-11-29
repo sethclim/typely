@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FolderIcon, PlusIcon, ChevronDoubleLeftIcon, ChevronDoubleRightIcon, DocumentIcon } from "@heroicons/react/24/outline";
+import { PlusIcon, ChevronDoubleLeftIcon, ChevronDoubleRightIcon, DocumentIcon } from "@heroicons/react/24/outline";
 import { ResumeConfigRow } from "../db/types";
 import { ResumeConfigTable } from "../db/tables";
 import { DocumentDuplicateIcon, EllipsisVerticalIcon, TrashIcon } from "@heroicons/react/20/solid";
@@ -18,7 +18,7 @@ export function Sidebar({ resumes, activeId, onSelect } : SidebarProps) {
 
   const createResume = () => {
     ResumeConfigTable.insert({
-        "name" : "Fill In",
+        "name" : "New Resume",
         "created_at" : Date.now().toString(),
         "updated_at" : Date.now().toString(),
     })
