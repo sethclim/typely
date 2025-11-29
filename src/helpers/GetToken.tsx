@@ -1,4 +1,5 @@
-import { supabaseProjectId } from "../main";
+import { supabaseProjectId } from "./SupabaseClient";
+
 
 
 export const getToken = () => {

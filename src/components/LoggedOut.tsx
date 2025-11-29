@@ -1,6 +1,7 @@
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
-import { supabase } from "../main";
+import { supabase } from "../helpers/SupabaseClient";
+
 
 
 export function LoggedOut() {

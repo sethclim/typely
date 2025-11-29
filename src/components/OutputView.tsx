@@ -9,6 +9,7 @@ import SyntaxHighlighter from 'react-syntax-highlighter';
 import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import { Link } from "@tanstack/react-router";
 import { getToken } from "../helpers/GetToken";
+import { useUser } from "../context/user/UserContext";
 
 
 export type OutputViewProps = {
@@ -22,6 +23,7 @@ export const OutputView = (props : OutputViewProps) => {
     const [latex, setLatex] = useState("");
     const [pdfUrl, setPdfUrl] = useState<string | null>(null);
 
+    const { user } = useUser();
 
     const performTemplating = () => {
 
@@ -66,15 +68,15 @@ export const OutputView = (props : OutputViewProps) => {
         // Create an object URL
         const url = URL.createObjectURL(blob);
         setPdfUrl(url);
-  };
+    };
     
-      useEffect(()=>{
+    useEffect(()=>{
         if (props.resume != null)
         {
             const latex = performTemplating()
             compileLatex(latex);
         }
-      },[props.resume])
+    },[props.resume])
 
     return (
         <div className='p-4 h-full bg-black flex flex-col justify-center'>
@@ -86,7 +88,7 @@ export const OutputView = (props : OutputViewProps) => {
                     (level == "PDF") ? (
                         <>
                         {
-                            (true) ? (
+                            (!user) ? (
                                 <div className="flex h-full w-full justify-center items-center">
                                     <Link
                                         to="/login"

@@ -10,7 +10,9 @@ import { DB } from '../db';
 import { ResumeConfigTable } from '../db/tables';
 import { ResumeConfigRow } from '../db/types';
 import { CreateDemoResume } from '../helpers/CreateDemoResume';
-import { supabase } from '../main';
+
+import { UserProvider } from '../context/user/UserProvider';
+import { supabase } from '../helpers/SupabaseClient';
 
 
 export const Route = createFileRoute('/')({
@@ -62,14 +64,14 @@ function HomeComponent() {
 
   return (
     <ResumeProvider resumeId={activeId}>
-         <Header />
-         <div className='flex flex-row'>
-             <Sidebar
+        <Header />
+        <div className='flex flex-row'>
+            <Sidebar
             resumes={resumes}
             activeId={activeId}
             onSelect={setActiveId}
             />
-         <ResumeView />
+        <ResumeView />
         </div>
         <Footer />
     </ResumeProvider>
