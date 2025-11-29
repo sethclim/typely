@@ -12,8 +12,20 @@ import { Sidebar } from './components/Sidebar';
 import { ResumeConfigTable } from './db/tables';
 import { ResumeConfigRow } from './db/types';
 
+import { Auth } from "@supabase/auth-ui-react";
+import { User, createClient } from "@supabase/supabase-js";
+
+import { ThemeSupa } from "@supabase/auth-ui-shared";
+
+const supabaseProjectId  = import.meta.env.VITE_SUPABASE_PROJECT_ID;
+const supabaseUrl = `https://${supabaseProjectId}.supabase.co`;
+const subabasePublishableKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+
+const supabase = createClient(supabaseUrl, subabasePublishableKey);
+
 function App() {
 
+  const [user, setUser] = useState<User>();
   const [activeId, setActiveId] = useState(1);
   const [resumes, setResumes] = useState<ResumeConfigRow[]>([]);
 
@@ -23,6 +35,15 @@ function App() {
         const rows = ResumeConfigTable.getResumeConfig(1);
         if(rows.length == 0)
           CreateDemoResume();
+
+
+        // Whenever the auth state changes, we receive an event and a session object.
+        // Save the user from the session object to the state.
+        supabase.auth.onAuthStateChange((event, session) => {
+          if (event === "SIGNED_IN") {
+            setUser(session?.user);
+          }
+        });
       }
       init();
     }, []
@@ -47,19 +68,40 @@ function App() {
 
 
  return (
-    <ResumeProvider resumeId={activeId}>
-        <Header />
-        <div className='flex flex-row'>
-          <Sidebar
-            resumes={resumes}
-            activeId={activeId}
-            onSelect={setActiveId}
-          />
-          <ResumeView />
-        </div>
-        <Footer />
-    </ResumeProvider>
+      user ? (
+      <>
+           <ResumeProvider resumeId={activeId}>
+            <Header />
+            <div className='flex flex-row'>
+              <Sidebar
+                resumes={resumes}
+                activeId={activeId}
+                onSelect={setActiveId}
+              />
+              <ResumeView />
+            </div>
+            <Footer />
+        </ResumeProvider>
+      </>
+      )
+      : <LoggedOut />
  )
 }
+
+function LoggedOut() {
+  return (
+    <Auth
+      supabaseClient={supabase}
+      appearance={{
+        theme: ThemeSupa,
+      }}
+      providers={[]}
+      theme="dark"
+      redirectTo="/"
+      showLinks
+    />
+  );
+}
+
 
 export default App
