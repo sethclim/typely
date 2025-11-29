@@ -44,6 +44,8 @@ export const OutputView = (props : OutputViewProps) => {
     };
 
     const compileLatex = async (latex : string) => {  
+        if (!user)
+            return
         const latexData = { latex: latex };
         // const api_url = `https://api.typely-vps.uk/compile`
         const api_url = `${import.meta.env.VITE_BE_URL}/${import.meta.env.VITE_COMPILE_ENDPOINT}`
@@ -79,7 +81,7 @@ export const OutputView = (props : OutputViewProps) => {
     },[props.resume])
 
     return (
-        <div className='p-4 h-full bg-black flex flex-col justify-center'>
+        <div className='p-4 h-full bg-black flex flex-col justify-start'>
             <ThreeWaySlider options={["PDF", "LATEX"]}
                     value={level}
                     onChange={setLevel}
