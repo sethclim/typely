@@ -35,11 +35,13 @@ export const DuplicateResume = (id: number) => {
         // --- Step 2: Duplicate resume_section ---
         for (const row of resume.sections) {
             const sectionType = row.sectionType;
+            const title = row.title;
             const order = row.order;
             const template = row.template;
 
             ResumeSectionConfigTable.insert({
                 resume_id: newResumeId,
+                title: title,
                 section_type: sectionType,
                 template_id: template?.id ?? -1,
                 section_order: order,
