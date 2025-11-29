@@ -76,7 +76,7 @@ type ResumeTemplateDisplayProps = {
 export const ResumeTemplateDisplay = (props : ResumeTemplateDisplayProps) => {
     return(
         <div className="flex flex-col w-full items-start bg-white p-4 rounded-lg">
-            <h3 className="text-black text-lg ">Title: {props.resumeSection.id}</h3>
+            <h3 className="text-black text-lg ">Title: {props.resumeSection.title}</h3>
             <h3 className="text-black">Type: {props.resumeSection.sectionType}</h3>
             <TemplateItemDisplay template={props.resumeSection.template}  section_id={props.resumeSection.id} />
             <DataItemDisplay data={props.resumeSection.items} section_id={props.resumeSection.id} />

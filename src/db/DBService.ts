@@ -48,6 +48,7 @@ export class DBService {
         this.runAndSave(`
             CREATE TABLE IF NOT EXISTS resume_section_config (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
+                title TEXT NOT NULL,
                 resume_id INTEGER NOT NULL,
                 section_type TEXT NOT NULL,
                 template_id INTEGER NOT NULL,

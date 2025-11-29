@@ -13,6 +13,7 @@ export function hydrateResume(raw: any[]): ResumeConfig | null {
     const parsedSections = JSON.parse(sectionsJson) as any[];
     sections = parsedSections.map((s) => ({
       id: s.id,
+      title: s.title,
       sectionType: s.sectionType,
       order: s.order,
       template: s.template
