@@ -87,11 +87,19 @@ export const CreateDemoResume = () =>{
     })
 
 
+    const me = [
+        ["EMAIL", "somebody@gmail.com"],
+        ["PHONE", "111-111-1111"],
+        ["GITHUB", "github.com/me"],
+        ["WEBSITE", "https://about-me.com"],
+        ["LINKEDIN", "https://linkedin/me.com"]
+    ]
+
     ResumeDataItemTable.insert({
         "id": 1,
-        title: "Email",
-        description: "my email",
-        data: '[["EMAIL", "somebody@gmail.com"]]',
+        title: "My Info",
+        description: "about me info",
+        data: JSON.stringify(me),
         type_id: 1,
         "created_at" : Date.now().toString(),
         "updated_at" : Date.now().toString(),
@@ -178,7 +186,35 @@ export const CreateDemoResume = () =>{
     })
 
 
-    const headerLaTeX = `\\newcommand{\\AND}{\\unskip\\cleaders\\copy\\ANDbox\\hskip\\wd\\ANDbox\\ignorespaces}\\newsavebox\\ANDbox\\sbox\\ANDbox{$|$}\n\\begin{header}\n\\fontsize{31 pt}{31 pt}\\selectfont {{NAME}} \n\\end{header}`;
+    const headerLaTeX = `
+    \\newcommand{\\AND}{\\unskip\\cleaders\\copy\\ANDbox\\hskip\\wd\\ANDbox\\ignorespaces}\\newsavebox\\ANDbox\\sbox\\ANDbox{$|$}\n\\begin{header}\n\\fontsize{31 pt}{31 pt}\\selectfont {{NAME}} 
+    \\\\
+    \\vspace{1 pt}
+    \\normalsize
+    \\mbox{Waterloo, ON}%
+    \\kern 5.0 pt%
+    \\AND%
+    \\kern 5.0 pt%
+    \\mbox{\\hrefWithoutArrow{tel:+01-  {{PHONE}} }{+1  {{PHONE}} }}%
+    \\kern 5.0 pt%
+    \\AND%
+    \\kern 5.0 pt%
+    \\mbox{\\hrefWithoutArrow{mailto: {{EMAIL}} }{ {{EMAIL}}} }%
+    \\kern 5.0 pt%
+    \\vspace{-3pt} %
+    \\par
+    \\kern-6pt %
+    \\kern 5.0 pt%
+    \\mbox{\\hrefWithoutArrow{ {{LINKEDIN}} }{\\textcolor[HTML]{0366d6}{ {{LINKEDIN}} }}}%
+    \\kern 5.0 pt%
+    \\AND%
+    \\kern 5.0 pt%
+    \\mbox{\\hrefWithoutArrow{ {{WEBSITE}} }{\\textcolor[HTML]{0366d6}{ {{WEBSITE}} }}}%
+    \\kern 5.0 pt%
+    \\AND%
+    \\kern 5.0 pt%
+    \\mbox{\\hrefWithoutArrow{ {{GITHUB}} }{\\textcolor[HTML]{0366d6}{ {{GITHUB}} }}}%
+    \n\\end{header}`;
 
     TemplateTable.insert({
         "id": 1,
