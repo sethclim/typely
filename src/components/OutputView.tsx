@@ -7,7 +7,9 @@ import { ResumeConfig } from "../types";
 import SyntaxHighlighter from 'react-syntax-highlighter';
 // @ts-ignore
 import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
-
+import { Link } from "@tanstack/react-router";
+import { getToken } from "../helpers/GetToken";
+import { useUser } from "../context/user/UserContext";
 
 
 export type OutputViewProps = {
@@ -21,6 +23,7 @@ export const OutputView = (props : OutputViewProps) => {
     const [latex, setLatex] = useState("");
     const [pdfUrl, setPdfUrl] = useState<string | null>(null);
 
+    const { user } = useUser();
 
     const performTemplating = () => {
 
@@ -43,12 +46,13 @@ export const OutputView = (props : OutputViewProps) => {
     const compileLatex = async (latex : string) => {  
         const latexData = { latex: latex };
         // const api_url = `https://api.typely-vps.uk/compile`
-        const api_url = `http://localhost:8080/compile`
+        const api_url = `${import.meta.env.VITE_BE_URL}/${import.meta.env.VITE_COMPILE_ENDPOINT}`
         console.log("api_url " + api_url)
         const response = await fetch(api_url, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                Authorization: getToken(),
             },
             body: JSON.stringify(latexData),
         });
@@ -64,25 +68,43 @@ export const OutputView = (props : OutputViewProps) => {
         // Create an object URL
         const url = URL.createObjectURL(blob);
         setPdfUrl(url);
-  };
+    };
     
-      useEffect(()=>{
+    useEffect(()=>{
         if (props.resume != null)
         {
             const latex = performTemplating()
             compileLatex(latex);
         }
-      },[props.resume])
+    },[props.resume])
 
     return (
-        <div className='p-4 bg-black flex flex-col justify-center'>
+        <div className='p-4 h-full bg-black flex flex-col justify-center'>
             <ThreeWaySlider options={["PDF", "LATEX"]}
                     value={level}
                     onChange={setLevel}
                     className="w-full" />
                 {
-                    (level == "PDF" && props.resume !== null) ?  
-                        <PDFView pdfUrl={pdfUrl} /> : null
+                    (level == "PDF") ? (
+                        <>
+                        {
+                            (!user) ? (
+                                <div className="flex h-full w-full justify-center items-center">
+                                    <Link
+                                        to="/login"
+                                        activeProps={{
+                                            className: 'font-bold',
+                                        }}
+                                        >
+                                            <div className="bg-purple-500 text-white p-2 rounded-sm">
+                                                Login To Compile
+                                            </div>
+                                    </Link>
+                                </div>
+                            ):  <PDFView pdfUrl={pdfUrl} />
+                        }
+                        </>
+                    )   : null
                 }
                 {
                     (level == "LATEX" && props.resume !== null) ?  
