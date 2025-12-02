@@ -16,7 +16,10 @@ export const UserProvider: React.FC<ResumeProviderProps> = ({ children }) => {
   const navigate = useNavigate()
 
   useEffect(() => {
-      const init = async () => {  
+        supabase.auth.getSession().then(({ data }) => {
+          setUser(data.session?.user ?? null);
+        });
+
         // Whenever the auth state changes, we receive an event and a session object.
         // Save the user from the session object to the state.
         supabase.auth.onAuthStateChange((event, session) => {
@@ -27,8 +30,6 @@ export const UserProvider: React.FC<ResumeProviderProps> = ({ children }) => {
                 })
             }
         });
-      }
-      init();
     }, []
   )
 
