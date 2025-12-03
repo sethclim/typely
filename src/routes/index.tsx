@@ -64,7 +64,7 @@ function HomeComponent() {
   return (
     <ResumeProvider resumeId={activeId}>
         <Header />
-        <div className='flex flex-row'>
+        <div className='flex flex-row h-full'>
             <Sidebar
             resumes={resumes}
             activeId={activeId}
