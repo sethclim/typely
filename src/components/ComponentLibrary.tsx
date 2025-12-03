@@ -15,6 +15,7 @@ import { LatexEditor } from "./LatexEditor";
 import { AddTemplateModal } from "./AddTemplateModal";
 import { Draggable } from "./Draggable";
 import { Toggle } from "./Toggle";
+import { GrabHandle } from "./GrabHandle";
 
 // type componentLibraryProps = {
 //     // latex_comps : Array<Block>
@@ -37,7 +38,13 @@ export const DataItemComponent = (props : DataItemsProps) => {
                         <button className="text-white" onClick={() => setIsOpenEditDataItemModal(true)}>Delete</button>
                     </div>
                 </div>
-                }>
+                }
+                postBarContent={
+                    <div className="pl-2">
+                        <GrabHandle />
+                    </div>
+                }
+                >
             {
                 (props.dataItem.data !== null) ? (
                     <table className="min-w-full divide-y divide-white border border-white bg-black">
@@ -85,11 +92,17 @@ export const TemplateItemComponent = (props : TemplateItemComponentProps) => {
     return (
         <>
             <Toggle barContents={
-                <div className="flex flex-row justify-between items-center gap-4 p-2 w-full h-full">
-                    <h3 className="text-xl text-bold text-white">{props.template.name}</h3>
-                    <button className="text-white px-2" onClick={(e) => edit(e)}>EDIT</button>
-                </div>
-            }>
+                    <div className="flex flex-row justify-between items-center gap-4 p-2 w-full h-full">
+                        <h3 className="text-xl text-bold text-white">{props.template.name}</h3>
+                        <button className="text-white px-2" onClick={(e) => edit(e)}>EDIT</button>
+                    </div>
+                }
+                postBarContent={
+                    <div className="pl-2">
+                        <GrabHandle />
+                    </div>
+                }
+            >
                 <SyntaxHighlighter className="z-50 text-left" language="latex" style={atomOneDark} >
                     {props.template.content}
                 </SyntaxHighlighter>

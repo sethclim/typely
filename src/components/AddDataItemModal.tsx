@@ -90,7 +90,7 @@ export const AddDetailsModal = (props : AddDetailsModalProps) => {
                         </tbody>
                     </table>
                     <div className="flex justify-end p-2 pt-4">
-                        <button className="bg-black px-4" onClick={(e) => addItem(e)}>Add</button>
+                        <button className="bg-black px-4 text-white" onClick={(e) => addItem(e)}>Add</button>
                     </div>
                 </div>
     

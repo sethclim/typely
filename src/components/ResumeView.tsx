@@ -29,17 +29,20 @@ export const ResumeView = () => {
   const { resume: myResume } = useResume();
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState<string | null>(null);
+  const [title, setTitle] = useState<string | null>(null);
+
   const [isDragging, setIsDragging] = useState(false);
 
   const [draggingDataItem, setDraggingDataItem]= useState<DataItem | null>(null);
   const [draggingDataTemplate, setDraggingDataTemplate]= useState<Template | null>(null);
 
   const createResumeComponent = () => {
-    if (myResume === null || selected == null)
+    if (myResume === null || selected == null || title == undefined)
       return;
 
     ResumeSectionConfigTable.insert({
       "resume_id": myResume!.id,
+      "title": title,
       "template_id": -1,
       "section_order": 0, //TODO needs to be the last one in the list
       "section_type": selected!
@@ -127,6 +130,7 @@ export const ResumeView = () => {
                 <PanelGroup direction="horizontal">
                   <Panel defaultSize={35} minSize={30}>
                     <div className='flex flex-col gap-4 p-4'>
+                      <h4 className='text-white text-lg font-bold'>Resume Components</h4>
                     {
                       myResume?.sections.map((section) => {
                         return <ResumeTemplateDisplay key={section.id} resumeSection={section} /> 
@@ -150,21 +154,23 @@ export const ResumeView = () => {
           </Panel>
         </PanelGroup>
 
-         <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} width='w-80'>
-          <h2 className="text-xl font-bold mb-4 text-black">New Resume Block</h2>uik
+         <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} width='w-100'>
+          <h2 className="text-xl font-bold mb-4 text-black">New Resume Block</h2>
           <form>
+            <p className="text-black">Title</p>
+            <input className='bg-gray-200 w-64' value={title ?? ""} onChange={(e) => setTitle(e.target.value)}  />
             <p className="text-black">Type</p>
             <ComboBox selected={selected} onSelectedChange={setSelected} options={["Skills"]} />
           </form>
           <div className='flex flex-row gap-4'>
             <button
-              className="mt-4 px-4 py-2 bg-green-500 text-white rounded"
+              className="mt-4 px-4 py-2 bg-black text-white rounded"
               onClick={() => createResumeComponent()}
             >
               Create
             </button>
             <button
-              className="mt-4 px-4 py-2 bg-red-500 text-white rounded"
+              className="mt-4 px-4 py-2 bg-black text-white rounded"
               onClick={() => setIsOpen(false)}
             >
               Cancel
