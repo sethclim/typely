@@ -194,9 +194,9 @@ export const ComponentLibrary = () => {
                 (level == "DataItems") ?  
                     (
                         <>
-                            <div className="bg-black flex flex-row justify-between items-center p-2">
+                            <div className="bg-black flex flex-row justify-between items-center p-2 h-8">
                                 <p className="text-white">Add Item</p>
-                                <button onClick={() => setIsOpenDataItemModal(true)}>Add</button>
+                                <button className="bg-white my-8 px-2 rounded-sm font-bold text-lg " onClick={() => setIsOpenDataItemModal(true)}>+</button>
                             </div>
                             <div className="flex flex-col gap-1 mt-2">
                             {
@@ -216,9 +216,9 @@ export const ComponentLibrary = () => {
             {
                  (level == "Templates") ?  
                  <>
-                    <div className="bg-black flex flex-row justify-between items-center p-2">
+                    <div className="bg-black flex flex-row justify-between items-center p-2 h-8">
                         <p className="text-white">Add Template</p>
-                        <button onClick={() => setIsOpenTemplateModal(true)}>Add</button>
+                        <button className="bg-white my-8 px-2 rounded-sm font-bold text-lg" onClick={() => setIsOpenTemplateModal(true)}>+</button>
                     </div>
                     <div className="flex flex-col gap-2 mt-2">
                     {
