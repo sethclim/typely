@@ -10,7 +10,7 @@ import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import { Link } from "@tanstack/react-router";
 import { getToken } from "../helpers/GetToken";
 import { useUser } from "../context/user/UserContext";
-
+import { getPDF, savePDF } from "../services/PDFStorageManager";
 
 export type OutputViewProps = {
     resume? : ResumeConfig | null
@@ -43,10 +43,9 @@ export const OutputView = (props : OutputViewProps) => {
     };
 
     const compileLatex = async (latex : string) => {  
-        if (!user)
+        if (!user || !props.resume)
             return
         const latexData = { latex: latex };
-        // const api_url = `https://api.typely-vps.uk/compile`
         const api_url = `${import.meta.env.VITE_BE_URL}/${import.meta.env.VITE_COMPILE_ENDPOINT}`
         console.log("api_url " + api_url)
         const response = await fetch(api_url, {
@@ -66,17 +65,30 @@ export const OutputView = (props : OutputViewProps) => {
         // Get PDF as Blob
         const blob = await response.blob();
 
+        await savePDF(props.resume.name, blob);
+
         // Create an object URL
         const url = URL.createObjectURL(blob);
         setPdfUrl(url);
     };
+
     
     useEffect(()=>{
-        if (props.resume != null)
-        {
-            const latex = performTemplating()
-            compileLatex(latex);
+        async function get(){
+            if (props.resume != null)
+            {
+                const pdfURL = await getPDF(props.resume.name)
+                const latex = performTemplating()
+                if(pdfURL)
+                {
+                    setPdfUrl(pdfURL);
+                }
+                else{
+                    compileLatex(latex);
+                }
+            }
         }
+        get();
     },[props.resume])
 
     return (
