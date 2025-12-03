@@ -37,8 +37,8 @@ export const PDFView = (props : PDFViewProps) => {
   return (
     <div>
     {props.pdfUrl && (
-      <Document className="bg-black" file={props.pdfUrl}>
-        <Page pageNumber={1} width={600} />
+      <Document className="bg-black overflow-hidden" file={props.pdfUrl}>
+        <Page pageNumber={1}  className="overflow-hidden" />
       </Document>
     )}
     </div>
