@@ -13,6 +13,8 @@ import { useUser } from "../context/user/UserContext";
 import { getPDF, savePDF } from "../services/PDFStorageManager";
 import { hashString } from "../helpers/HashString";
 
+import { ArrowDownTrayIcon } from "@heroicons/react/24/solid";
+
 export type OutputViewProps = {
     resume? : ResumeConfig | null
 }
@@ -24,6 +26,38 @@ export const OutputView = (props : OutputViewProps) => {
     const [pdfUrl, setPdfUrl] = useState<string | null>(null);
 
     const { user } = useUser();
+
+    const downloadPDF = () => {
+        if(pdfUrl === null || props.resume === undefined || props.resume === null)
+            return
+        const a = document.createElement('a');
+        a.href = pdfUrl;
+        a.download = `${props.resume.name}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        // Optionally revoke the blob URL to free memory
+        // URL.revokeObjectURL(url);
+    };
+
+    const downloadLatex = () => {
+       if(level === null || props.resume === undefined || props.resume === null)
+            return
+
+        const blob = new Blob([latex], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+
+        // Trigger download
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${props.resume.name}.tex`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        // Revoke blob URL to free memory
+        URL.revokeObjectURL(url);
+    };
 
     const performTemplating = () => {
 
@@ -98,6 +132,24 @@ export const OutputView = (props : OutputViewProps) => {
 
     return (
         <div className='p-4 h-full bg-black flex flex-col justify-start'>
+            <div className="flex justify-end">
+                <button className="bg-white m-2 p-1 px-2 font-bold rounded-sm" onClick={downloadPDF}>
+                    <div className="flex flex-row justify-between items-center">
+                        PDF
+                        <ArrowDownTrayIcon
+                            className="h-3 w-3 ml-2 text-black"
+                        />
+                    </div>
+                </button>
+                <button className="bg-white m-2 p-1 px-2 font-bold rounded-sm" onClick={downloadLatex}>
+                    <div className="flex flex-row justify-between items-center">
+                        LATEX
+                        <ArrowDownTrayIcon
+                            className="h-3 w-3 ml-2 text-black"
+                        />
+                    </div>
+                </button>
+            </div>
             <ThreeWaySlider options={["PDF", "LATEX"]}
                     value={level}
                     onChange={setLevel}
