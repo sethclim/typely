@@ -52,6 +52,12 @@ export function Sidebar({ resumes, activeId, onSelect } : SidebarProps) {
     setRename(-1)
   }
 
+  const onDelete = (id? : number) => {
+    if(!id)
+      return
+    ResumeConfigTable.delete(id)
+  }
+
   return (
     <aside
       className={`
@@ -180,7 +186,7 @@ export function Sidebar({ resumes, activeId, onSelect } : SidebarProps) {
                           className={`${
                             active ? "bg-gray-100" : ""
                           } flex w-full items-center gap-2 px-3 py-2 text-red-600 text-lef text-blackt`}
-                          // onClick={onDelete}
+                          onClick={() => onDelete(r.id)}
                         >
                           <TrashIcon className="h-4 w-4" />
                           Delete

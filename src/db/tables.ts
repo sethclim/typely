@@ -114,6 +114,10 @@ export const ResumeConfigTable = {
         );
         DB.notifyTable(RESUME_CONFIG_TABLE);
     },
+    delete: (id: number) => {
+        DB.runAndSave(`DELETE FROM ${RESUME_CONFIG_TABLE}  WHERE id = ?`, [id]);
+        DB.notifyTable(RESUME_CONFIG_TABLE);
+    },
     subscribe: (cb: () => void) => DB.subscribe(RESUME_CONFIG_TABLE, cb),
 };
 
