@@ -27,6 +27,16 @@ export type DataItemsProps = {
 
 export const DataItemComponent = (props : DataItemsProps) => {
     const [isEditDataItemModalOpen, setIsOpenEditDataItemModal] = useState(false);
+    
+    const onEdit = (e : React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        e.stopPropagation()
+        setIsOpenEditDataItemModal(true)
+    }
+
+    const onDelete = (e : React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        e.stopPropagation()
+        setIsOpenEditDataItemModal(true)
+    }
 
     return(
         <>
@@ -34,8 +44,8 @@ export const DataItemComponent = (props : DataItemsProps) => {
                 <div className="flex flex-1 justify-between pr-4">
                     <h3 className="text-white text-xl text-bold">{props.dataItem.title}</h3>
                     <div className="flex flex-row gap-2">
-                        <button className="text-white" onClick={() => setIsOpenEditDataItemModal(true)}>Edit</button>
-                        <button className="text-white" onClick={() => setIsOpenEditDataItemModal(true)}>Delete</button>
+                        <button className="text-white" onClick={(e) => onEdit(e)}>Edit</button>
+                        <button className="text-white" onClick={(e) => onDelete(e)}>Delete</button>
                     </div>
                 </div>
                 }

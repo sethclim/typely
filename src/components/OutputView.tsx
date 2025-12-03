@@ -16,7 +16,6 @@ export type OutputViewProps = {
     resume? : ResumeConfig | null
 }
 
-
 export const OutputView = (props : OutputViewProps) => {
 
     const [level, setLevel] = useState("PDF");
