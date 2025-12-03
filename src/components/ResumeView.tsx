@@ -124,32 +124,30 @@ export const ResumeView = () => {
             />
           </PanelResizeHandle>
           <Panel minSize={45}>
-            <div className='bg-black w-full h-full'>
+            <div className='bg-black w-full flex flex-col  min-h-full'>
               <h3 className='text-4xl font-extrabold text-white'>{myResume?.name}</h3>
-              <div className='flex flex-row w-full h-full'>
-                <PanelGroup direction="horizontal">
-                  <Panel defaultSize={35} minSize={30}>
-                    <div className='flex flex-col gap-4 p-4'>
-                      <h4 className='text-white text-lg font-bold'>Resume Components</h4>
-                    {
-                      myResume?.sections.map((section) => {
-                        return <ResumeTemplateDisplay key={section.id} resumeSection={section} /> 
-                      })
-                    }
-                      <button className='bg-white text-black rounded-lg' onClick={() => setIsOpen(true)}>Add New Component +</button>
-                    </div>
-                  </Panel>
+                <PanelGroup direction="horizontal" className="flex-1 h-full">
+                    <Panel defaultSize={35} minSize={30}>
+                      <div className='flex flex-col gap-4 p-4'>
+                        <h4 className='text-white text-lg font-bold'>Resume Components</h4>
+                      {
+                        myResume?.sections.map((section) => {
+                          return <ResumeTemplateDisplay key={section.id} resumeSection={section} /> 
+                        })
+                      }
+                        <button className='bg-white text-black rounded-lg' onClick={() => setIsOpen(true)}>Add New Component +</button>
+                      </div>
+                    </Panel>
 
-                  <PanelResizeHandle className="w-2 mx-2 bg-white flex flex-col justify-center items-center data-[resize-handle-active]:bg-gray-200">
-                    <ArrowsRightLeftIcon
-                      className="h-2 w-2 text-black"
-                    />
-                  </PanelResizeHandle>
-                  <Panel minSize={45}>
-                    <OutputView resume={myResume} />
-                  </Panel>
+                    <PanelResizeHandle className="w-2 mx-2 bg-white flex flex-col justify-center items-center data-[resize-handle-active]:bg-gray-200">
+                      <ArrowsRightLeftIcon
+                        className="h-2 w-2 text-black"
+                      />
+                    </PanelResizeHandle>
+                    <Panel minSize={45}>
+                      <OutputView resume={myResume} />
+                    </Panel>
                 </PanelGroup>
-              </div>
             </div>
           </Panel>
         </PanelGroup>
