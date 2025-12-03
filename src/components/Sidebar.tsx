@@ -15,6 +15,8 @@ type SidebarProps = {
 
 export function Sidebar({ resumes, activeId, onSelect } : SidebarProps) {
   const [expanded, setExpanded] = useState(true);
+  const [rename, setRename] = useState(-1)
+  const [newName, setNewName] = useState<string | null>(null)
 
   const createResume = () => {
     ResumeConfigTable.insert({
@@ -27,6 +29,27 @@ export function Sidebar({ resumes, activeId, onSelect } : SidebarProps) {
   const duplicateResume = (id? : number) => {
     if(id)
       DuplicateResume(id)
+  }
+
+  const onRename = (currentName : string, id? : number) => {
+    if (id === undefined)
+      return
+    setRename(id)
+    setNewName(currentName)
+  }
+
+  const onSubmit = () => {
+    if(newName === null)
+      return
+
+    console.log("ON SUBMIT")
+
+    ResumeConfigTable.update({
+        "id": rename,
+        "name" : newName,
+        "updated_at" : Date.now().toString(),
+    })
+    setRename(-1)
   }
 
   return (
@@ -94,8 +117,17 @@ export function Sidebar({ resumes, activeId, onSelect } : SidebarProps) {
             `}
           >
             <DocumentIcon className="h-5 w-5 text-gray-600 flex-shrink-0" />
-            {expanded && <span className="truncate text-black">{r.name}</span>}
-            
+            { expanded ? (
+              (rename !== r.id)  ? <span className="truncate text-black">{r.name}</span> : (
+                <input value={newName!} className="text-black bg-gray-200" onChange={(e) => setNewName(e.target.value)}  onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    onSubmit();
+                  }
+                }} />
+              ) 
+              ) : null
+
+            }
              {/* Right side: permanent layout, only fade in */}
               <div className="
                 flex items-center gap-1
@@ -120,7 +152,7 @@ export function Sidebar({ resumes, activeId, onSelect } : SidebarProps) {
                           className={`${
                             active ? "bg-gray-100" : ""
                           } flex w-full items-center gap-2 px-3 py-2 text-left text-black`}
-                          // onClick={onRename}
+                          onClick={() => onRename(r.name, r.id)}
                         >
                           <PencilIcon className="h-4 w-4" />
                           Rename

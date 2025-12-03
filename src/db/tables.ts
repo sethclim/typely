@@ -107,6 +107,13 @@ export const ResumeConfigTable = {
         // console.log("getAllResumeConfig rows!! " + JSON.stringify(rows));
         return rows;
     },
+    update: ({ id, name, updated_at }: ResumeConfigRow) => {
+        DB.runAndSave(
+            `UPDATE ${RESUME_CONFIG_TABLE} SET name = ?, updated_at = ? WHERE id = ?`,
+            [name, updated_at, id]
+        );
+        DB.notifyTable(RESUME_CONFIG_TABLE);
+    },
     subscribe: (cb: () => void) => DB.subscribe(RESUME_CONFIG_TABLE, cb),
 };
 
