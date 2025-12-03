@@ -127,6 +127,7 @@ export const ResumeView = () => {
                 <PanelGroup direction="horizontal">
                   <Panel defaultSize={35} minSize={30}>
                     <div className='flex flex-col gap-4 p-4'>
+                      <h4 className='text-white text-lg font-bold'>Resume Components</h4>
                     {
                       myResume?.sections.map((section) => {
                         return <ResumeTemplateDisplay key={section.id} resumeSection={section} /> 
