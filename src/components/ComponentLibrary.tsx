@@ -15,6 +15,7 @@ import { LatexEditor } from "./LatexEditor";
 import { AddTemplateModal } from "./AddTemplateModal";
 import { Draggable } from "./Draggable";
 import { Toggle } from "./Toggle";
+import { GrabHandle } from "./GrabHandle";
 
 // type componentLibraryProps = {
 //     // latex_comps : Array<Block>
@@ -37,7 +38,13 @@ export const DataItemComponent = (props : DataItemsProps) => {
                         <button className="text-white" onClick={() => setIsOpenEditDataItemModal(true)}>Delete</button>
                     </div>
                 </div>
-                }>
+                }
+                postBarContent={
+                    <div className="pl-2">
+                        <GrabHandle />
+                    </div>
+                }
+                >
             {
                 (props.dataItem.data !== null) ? (
                     <table className="min-w-full divide-y divide-white border border-white bg-black">
