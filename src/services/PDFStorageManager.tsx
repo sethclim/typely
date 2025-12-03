@@ -8,22 +8,23 @@ export async function getDB() {
   return openDB(DB_NAME, DB_VERSION, {
     upgrade(db) {
       if (!db.objectStoreNames.contains(STORE_NAME)) {
-        db.createObjectStore(STORE_NAME);
+        db.createObjectStore(STORE_NAME, { keyPath: 'id' });
       }
     },
   });
 }
 
-export async function savePDF(name : string, file : Blob) {
+export async function savePDF(id : string, newHash : string, file : Blob) {
   const db = await getDB();
-  await db.put(STORE_NAME, file, name);
+
+  await db.put(STORE_NAME, { id, hash: newHash, blob: file });
 }
 
-export async function getPDF(name : string) {
+export async function getPDF(id : string) {
   const db = await getDB();
-  const file = await db.get(STORE_NAME, name);
-  if (!file) return null;
-  return URL.createObjectURL(file);
+  const res = await db.get(STORE_NAME, id);
+  if (!res) return null;
+  return { hash: res.hash, url: URL.createObjectURL(res.blob) };
 }
 
 // export async function getAllPDFNames() {

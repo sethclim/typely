@@ -11,6 +11,7 @@ import { Link } from "@tanstack/react-router";
 import { getToken } from "../helpers/GetToken";
 import { useUser } from "../context/user/UserContext";
 import { getPDF, savePDF } from "../services/PDFStorageManager";
+import { hashString } from "../helpers/HashString";
 
 export type OutputViewProps = {
     resume? : ResumeConfig | null
@@ -65,7 +66,9 @@ export const OutputView = (props : OutputViewProps) => {
         // Get PDF as Blob
         const blob = await response.blob();
 
-        await savePDF(props.resume.name, blob);
+        const newHash = await hashString(latex);
+
+        await savePDF(props.resume.id.toString(), newHash, blob);
 
         // Create an object URL
         const url = URL.createObjectURL(blob);
@@ -77,11 +80,13 @@ export const OutputView = (props : OutputViewProps) => {
         async function get(){
             if (props.resume != null)
             {
-                const pdfURL = await getPDF(props.resume.name)
+                const pdfData = await getPDF(props.resume.id.toString())
                 const latex = performTemplating()
-                if(pdfURL)
+                const newHash = await hashString(latex);
+                console.log(`pdfData ${JSON.stringify(pdfData)} newHash ${newHash}`)
+                if(pdfData && pdfData.hash === newHash)
                 {
-                    setPdfUrl(pdfURL);
+                    setPdfUrl(pdfData.url);
                 }
                 else{
                     compileLatex(latex);
