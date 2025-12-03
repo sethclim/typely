@@ -64,13 +64,13 @@ function HomeComponent() {
   return (
     <ResumeProvider resumeId={activeId}>
         <Header />
-        <div className='flex flex-row h-full'>
+        <div className='grow flex flex-row'>
             <Sidebar
-            resumes={resumes}
-            activeId={activeId}
-            onSelect={setActiveId}
+                resumes={resumes}
+                activeId={activeId}
+                onSelect={setActiveId}
             />
-        <ResumeView />
+            <ResumeView />
         </div>
         <Footer />
     </ResumeProvider>
