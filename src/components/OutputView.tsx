@@ -36,8 +36,6 @@ export const OutputView = (props : OutputViewProps) => {
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
-        // Optionally revoke the blob URL to free memory
-        // URL.revokeObjectURL(url);
     };
 
     const downloadLatex = () => {
@@ -78,6 +76,7 @@ export const OutputView = (props : OutputViewProps) => {
     };
 
     const compileLatex = async (latex : string) => {  
+        console.log(`!user ${!user} !props.resume ${!props.resume}`)
         if (!user || !props.resume)
             return
         const latexData = { latex: latex };
@@ -118,11 +117,12 @@ export const OutputView = (props : OutputViewProps) => {
                 const latex = performTemplating()
                 const newHash = await hashString(latex);
                 console.log(`pdfData ${JSON.stringify(pdfData)} newHash ${newHash}`)
-                if(pdfData && pdfData.hash === newHash)
+                if(pdfData !== null && pdfData.hash === newHash)
                 {
                     setPdfUrl(pdfData.url);
                 }
                 else{
+                    console.log("calling compile")
                     compileLatex(latex);
                 }
             }
@@ -171,7 +171,7 @@ export const OutputView = (props : OutputViewProps) => {
                                             </div>
                                     </Link>
                                 </div>
-                            ):  <PDFView pdfUrl={pdfUrl} />
+                            ) :  <PDFView pdfUrl={pdfUrl} />
                         }
                         </>
                     )   : null
