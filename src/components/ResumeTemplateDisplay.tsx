@@ -18,6 +18,7 @@ type DataItemDisplayProps = {
 const DataItemDisplay = (props : DataItemDisplayProps) => {
     const {isOver, setNodeRef, active} = useDroppable({
         id: `dataitem-${props.section_id}`,
+        data: props.data
     });
 
     const [bgColor, setBGColor] = useState('');
@@ -49,6 +50,7 @@ type TemplateItemDisplayProps = {
 const TemplateItemDisplay = (props : TemplateItemDisplayProps) => {
     const {isOver, setNodeRef, active} = useDroppable({
         id: `template-${props.section_id}`,
+        data: props.template
     });
 
     const [bgColor, setBGColor] = useState('');
