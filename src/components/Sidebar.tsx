@@ -90,7 +90,7 @@ export function Sidebar({ resumes, activeId, onSelect } : SidebarProps) {
           onClick={createResume}
           className={`
             flex items-center gap-2 w-full py-2 rounded-md
-            bg-blue-600 text-white hover:bg-blue-500 justify-center
+            bg-purple-800 text-white hover:bg-blue-500 justify-center
           `}
         >
           <PlusIcon className="h-5 w-5" />

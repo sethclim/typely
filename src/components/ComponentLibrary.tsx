@@ -16,6 +16,7 @@ import { AddTemplateModal } from "./AddTemplateModal";
 import { Draggable } from "./Draggable";
 import { Toggle } from "./Toggle";
 import { GrabHandle } from "./GrabHandle";
+import { PlusIcon } from "@heroicons/react/20/solid";
 
 // type componentLibraryProps = {
 //     // latex_comps : Array<Block>
@@ -196,7 +197,9 @@ export const ComponentLibrary = () => {
                         <>
                             <div className="bg-black flex flex-row justify-between items-center p-2 h-8">
                                 <p className="text-white">Add Item</p>
-                                <button className="bg-white my-8 px-2 rounded-sm font-bold text-lg " onClick={() => setIsOpenDataItemModal(true)}>+</button>
+                                <button className="bg-white my-8 rounded-sm font-bold text-lg " onClick={() => setIsOpenDataItemModal(true)}>
+                                    <PlusIcon className="h-5 w-5" />
+                                </button>
                             </div>
                             <div className="flex flex-col gap-1 mt-2">
                             {
@@ -218,7 +221,9 @@ export const ComponentLibrary = () => {
                  <>
                     <div className="bg-black flex flex-row justify-between items-center p-2 h-8">
                         <p className="text-white">Add Template</p>
-                        <button className="bg-white my-8 px-2 rounded-sm font-bold text-lg" onClick={() => setIsOpenTemplateModal(true)}>+</button>
+                        <button className="bg-white my-8 rounded-sm font-bold text-lg" onClick={() => setIsOpenTemplateModal(true)}>
+                            <PlusIcon className="h-5 w-5" />
+                        </button>
                     </div>
                     <div className="flex flex-col gap-2 mt-2">
                     {
