@@ -8,6 +8,7 @@ import { useDroppable } from "@dnd-kit/core";
 import clsx from "clsx";
 import { Toggle } from "./Toggle";
 import GroupedTable from "./GroupedDataTable";
+import { ResumeSectionDataTable } from "../db/tables";
 
 type DataItemDisplayProps = {
     data : DataItem[]
@@ -25,12 +26,16 @@ const DataItemDisplay = (props : DataItemDisplayProps) => {
         (isOver && active?.id.toString().startsWith("dataitem-"))  ? setBGColor('outline-2 outline-solid outline-green-100') : setBGColor('')
     },[isOver])
 
+    const RemoveDataItemFromResume = (data_item_id : number) =>{
+        ResumeSectionDataTable.delete({section_id : props.section_id,  data_item_id : data_item_id})
+    }
+
     return(
         <div ref={setNodeRef} className={clsx(["flex flex-col w-full items-start justify-start  min-h-5 pt-2", bgColor])}>
             <Toggle barContents={
                 <p className="text-white text-md font-bold">Data Items: ({props.data? props.data.length : 0})</p>
             }>
-                <GroupedTable dataItems={props.data} />
+                <GroupedTable dataItems={props.data} onRemove={RemoveDataItemFromResume} />
             </Toggle>
         </div>
     )
