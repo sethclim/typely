@@ -25,9 +25,17 @@ import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import { ArrowsRightLeftIcon } from "@heroicons/react/24/solid";
 import { OutputView } from './OutputView';
 
+type ReplaceDataItemInfo = {
+  section_id : string
+  active :  DataItem
+  match : DataItem
+}
+
 export const ResumeView = () => {
   const { resume: myResume } = useResume();
-  const [isOpen, setIsOpen] = useState(false);
+  const [isNewResumeOpen, setIsNewRsumeOpen] = useState(false);
+  const [isReplaceDataItemOpen, setReplaceDataItemOpen] = useState(false);
+  const [replaceDataItemData, setReplaceDataItemData] = useState<ReplaceDataItemInfo | null>(null);
   const [selected, setSelected] = useState<string | null>(null);
   const [title, setTitle] = useState<string | null>(null);
 
@@ -49,64 +57,108 @@ export const ResumeView = () => {
     })
 
     setSelected(null);
-    setIsOpen(false);
+    setIsNewRsumeOpen(false);
   }
 
   function handleDragEnd(event : DragEndEvent) {
-      const over = event.over
-      const active = event.active
-  
-      if(!over || !active)
-      {
-        setDraggingDataItem(null)
-        setDraggingDataTemplate(null)
-        return;
-      }
-  
-      const [overPrefix, section_id] = over.id.toString().split('-');
-      const [activePrefix, active_id] = active.id.toString().split('-');
-      // console.log("On Droppable overPrefix:" + overPrefix + " section_id " + section_id + " activePrefix " +  activePrefix  + " active id " + active_id)
-      
-      if (overPrefix === "dataitem" && activePrefix === "dataitem") {
+    const over = event.over
+    const active = event.active
+
+    if(!over || !active)
+    {
+      setDraggingDataItem(null)
+      setDraggingDataTemplate(null)
+      return;
+    }
+
+    const [overPrefix, section_id] = over.id.toString().split('-');
+    const [activePrefix, active_id] = active.id.toString().split('-');
+    
+    if (overPrefix === "dataitem" && activePrefix === "dataitem") {
+      //check if keys match then show dialog 
+      console.log("DRAG END " + JSON.stringify(active.data) + JSON.stringify(over.data))
+
+      const active_data_item_keys = active.data.current?.data.map((item : string[]) => item[0]).sort();
+
+      const over_data_items_keys_list : [] = over.data.current?.map((item : DataItem) => item.data.map((item : string[]) => item[0]))
+
+      console.log("active_data_item_keys " + JSON.stringify(active_data_item_keys) + " over_data_items_keys_list " + JSON.stringify(over_data_items_keys_list))
+
+
+      const match = over.data.current?.find((item: DataItem) => {
+        const keys = item.data.map((d: string[]) => d[0]).sort();
+        return (
+          keys.length === active_data_item_keys.length &&
+          keys.every((k, i) => k === active_data_item_keys[i])
+        );
+      });
+
+      if(match != undefined){
+        //show modal
+        setReplaceDataItemData({section_id: section_id, active : active.data.current as unknown as DataItem, match : match})
+        setReplaceDataItemOpen(true)
+      }else{
         ResumeSectionDataTable.insert({
           section_id: parseInt(section_id),
           data_item_id: parseInt(active_id)
         })
       }
-      else if (overPrefix === "template" && activePrefix === "template"){
-        ResumeSectionConfigTable.updateTemplate(section_id, active_id)
-      }
-
-      setIsDragging(false);
-      setDraggingDataItem(null)
-      setDraggingDataTemplate(null)
+    }
+    else if (overPrefix === "template" && activePrefix === "template"){
+      ResumeSectionConfigTable.updateTemplate(section_id, active_id)
     }
 
-    function handleDragStart(event : DragStartEvent) {
-      const active = event.active
-      if(!active)
-        return;
+    setIsDragging(false);
+    setDraggingDataItem(null)
+    setDraggingDataTemplate(null)
+  }
 
-      setIsDragging(true);
+  function handleDragStart(event : DragStartEvent) {
+    const active = event.active
+    if(!active)
+      return;
 
-      const [activePrefix, _] = active.id.toString().split('-');
+    setIsDragging(true);
 
-      // console.log("activePrefix " + activePrefix)
+    const [activePrefix, _] = active.id.toString().split('-');
 
-      if(activePrefix === "dataitem")
-      {
-        setDraggingDataItem(active.data.current as unknown as DataItem)
-      }
-      else if(activePrefix === "template"){
-        setDraggingDataTemplate(active.data.current as unknown as Template)
-      }
+    // console.log("activePrefix " + activePrefix)
 
+    if(activePrefix === "dataitem")
+    {
+      setDraggingDataItem(active.data.current as unknown as DataItem)
+    }
+    else if(activePrefix === "template"){
+      setDraggingDataTemplate(active.data.current as unknown as Template)
     }
 
-    const activationConstraint={
-      delay: 250,
-      tolerance: 5,
-    }
+  }
+
+  const ReplaceDataItem = (section_id : string, old_data_item_id : number, new_data_item_id : number) => {
+    // delete match
+    ResumeSectionDataTable.delete({section_id : parseInt(section_id),  data_item_id : old_data_item_id})
+    // add new
+    ResumeSectionDataTable.insert({
+      section_id: parseInt(section_id),
+      data_item_id: new_data_item_id
+    })
+    setReplaceDataItemOpen(false)
+    setReplaceDataItemData(null)
+  }
+
+  const AddDataItem = (section_id : string, active_id : number) => {
+    ResumeSectionDataTable.insert({
+      section_id: parseInt(section_id),
+      data_item_id: active_id
+    })
+    setReplaceDataItemOpen(false)
+    setReplaceDataItemData(null)
+  }
+
+  const activationConstraint={
+    delay: 250,
+    tolerance: 5,
+  }
 
   const mouseSensor = useSensor(MouseSensor, { activationConstraint });
   const sensors = useSensors(mouseSensor);
@@ -135,7 +187,7 @@ export const ResumeView = () => {
                           return <ResumeTemplateDisplay key={section.id} resumeSection={section} /> 
                         })
                       }
-                        <button className='bg-white text-black rounded-lg' onClick={() => setIsOpen(true)}>Add New Component +</button>
+                        <button className='bg-white text-black rounded-lg' onClick={() => setIsNewRsumeOpen(true)}>Add New Component +</button>
                       </div>
                     </Panel>
 
@@ -152,7 +204,7 @@ export const ResumeView = () => {
           </Panel>
         </PanelGroup>
 
-         <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} width='w-100'>
+         <Modal isOpen={isNewResumeOpen} onClose={() => setIsNewRsumeOpen(false)} width='w-100'>
           <h2 className="text-xl font-bold mb-4 text-black">New Resume Block</h2>
           <form>
             <p className="text-black">Title</p>
@@ -169,7 +221,38 @@ export const ResumeView = () => {
             </button>
             <button
               className="mt-4 px-4 py-2 bg-black text-white rounded"
-              onClick={() => setIsOpen(false)}
+              onClick={() => setIsNewRsumeOpen(false)}
+            >
+              Cancel
+            </button>
+          </div>
+        </Modal>
+
+        <Modal isOpen={isReplaceDataItemOpen} onClose={() => setReplaceDataItemOpen(false)} width='w-100'>
+          <h2 className="text-xl font-bold mb-4 text-black">{replaceDataItemData?.active.title} has same keys as {replaceDataItemData?.match.title}</h2>
+          <h2 className="text-xl font-bold mb-4 text-black">Do You Want To Replace?</h2>
+          {/* <form>
+            <p className="text-black">Title</p>
+            <input className='bg-gray-200 w-64' value={title ?? ""} onChange={(e) => setTitle(e.target.value)}  />
+            <p className="text-black">Type</p>
+            <ComboBox selected={selected} onSelectedChange={setSelected} options={["Skills"]} />
+          </form> */}
+          <div className='flex flex-row gap-4'>
+            <button
+              className="mt-4 px-4 py-2 bg-black text-white rounded"
+              onClick={() => ReplaceDataItem(replaceDataItemData?.section_id!, replaceDataItemData?.match.id!, replaceDataItemData?.active.id!)}
+            >
+              Yes
+            </button>
+            <button
+              className="mt-4 px-4 py-2 bg-black text-white rounded"
+              onClick={() => AddDataItem(replaceDataItemData?.section_id!, replaceDataItemData?.active.id!)}
+            >
+              No Add Anyways
+            </button>
+            <button
+              className="mt-4 px-4 py-2 bg-black text-white rounded"
+              onClick={() => setReplaceDataItemOpen(false)}
             >
               Cancel
             </button>

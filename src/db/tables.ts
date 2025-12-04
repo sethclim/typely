@@ -161,6 +161,14 @@ export const ResumeSectionDataTable = {
 
         DB.notifyTable(RESUME_CONFIG_TABLE);
     },
+    delete: ({ section_id, data_item_id }: ResumeSectionDataRow) => {
+        DB.runAndSave(
+            `DELETE FROM ${RESUME_SECTION_DATA_TABLE} WHERE section_id = ? AND data_item_id = ?`,
+            [section_id, data_item_id]
+        );
+
+        DB.notifyTable(RESUME_CONFIG_TABLE);
+    },
 };
 
 export const ResumeDataItemTable = {
