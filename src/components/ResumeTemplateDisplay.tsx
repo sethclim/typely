@@ -82,7 +82,7 @@ type ResumeTemplateDisplayProps = {
 
 export const ResumeTemplateDisplay = (props : ResumeTemplateDisplayProps) => {
     return(
-        <div className="flex flex-col w-full items-start bg-white p-4 rounded-lg">
+        <div className="flex flex-col w-full items-start bg-white p-2 rounded-lg">
             <div className="flex flex-row w-full">
                 <div className="grow w-full flex">
                     <h3 className="text-black text-lg">{props.resumeSection.title}</h3>

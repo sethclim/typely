@@ -43,7 +43,7 @@ export const DataItemComponent = (props : DataItemsProps) => {
         <>
             <Toggle barContents={
                 <div className="flex flex-1 justify-between pr-4">
-                    <h3 className="text-white text-xl text-bold">{props.dataItem.title}</h3>
+                    <h3 className="text-white text-md text-bold">{props.dataItem.title}</h3>
                     <div className="flex flex-row gap-2">
                         <button className="text-white" onClick={(e) => onEdit(e)}>Edit</button>
                         <button className="text-white" onClick={(e) => onDelete(e)}>Delete</button>
@@ -103,9 +103,9 @@ export const TemplateItemComponent = (props : TemplateItemComponentProps) => {
     return (
         <>
             <Toggle barContents={
-                    <div className="flex flex-row justify-between items-center gap-4 p-2 w-full h-full">
-                        <h3 className="text-xl text-bold text-white">{props.template.name}</h3>
-                        <button className="text-white px-2" onClick={(e) => edit(e)}>EDIT</button>
+                    <div className="flex flex-1 justify-between pr-4">
+                        <h3 className="text-md text-bold text-white">{props.template.name}</h3>
+                        <button className="text-white px-2" onClick={(e) => edit(e)}>Edit</button>
                     </div>
                 }
                 postBarContent={
@@ -225,7 +225,7 @@ export const ComponentLibrary = () => {
                             <PlusIcon className="h-5 w-5" />
                         </button>
                     </div>
-                    <div className="flex flex-col gap-2 mt-2">
+                    <div className="flex flex-col gap-1 mt-2">
                     {
                         templates?.map((template) => {
                             return (
