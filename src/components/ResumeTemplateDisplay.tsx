@@ -24,7 +24,7 @@ const DataItemDisplay = (props : DataItemDisplayProps) => {
     const [bgColor, setBGColor] = useState('');
 
     useEffect(()=>{
-        (isOver && active?.id.toString().startsWith("dataitem-"))  ? setBGColor('outline-2 outline-solid outline-green-100') : setBGColor('')
+        (isOver && active?.id.toString().startsWith("dataitem-"))  ? setBGColor('bg-green-900') : setBGColor('')
     },[isOver])
 
     const RemoveDataItemFromResume = (data_item_id : number) =>{
@@ -32,10 +32,13 @@ const DataItemDisplay = (props : DataItemDisplayProps) => {
     }
 
     return(
-        <div ref={setNodeRef} className={clsx(["flex flex-col w-full items-start justify-start  min-h-5 pt-2", bgColor])}>
-            <Toggle barContents={
-                <p className="text-white text-md font-bold">Data Items: ({props.data? props.data.length : 0})</p>
-            }>
+        <div ref={setNodeRef} className="flex flex-col w-full items-start justify-start  min-h-5 pt-2">
+            <Toggle 
+                buttonStyle={clsx(["flex justify-between items-center px-2 py-1 text-sm font-medium text-left text-white bg-black rounded-sm ", bgColor])}
+                panelStyle={clsx(["pt-4 bg-black p-2 ", bgColor])}
+                barContents={
+                    <p className="text-white text-md font-bold">Data Items: ({props.data? props.data.length : 0})</p>
+                }>
                 <GroupedTable dataItems={props.data} onRemove={RemoveDataItemFromResume} />
             </Toggle>
         </div>
@@ -56,17 +59,20 @@ const TemplateItemDisplay = (props : TemplateItemDisplayProps) => {
     const [bgColor, setBGColor] = useState('');
 
     useEffect(()=>{
-        (isOver && active?.id.toString().startsWith("template-"))  ? setBGColor('outline-2 outline-solid outline-green-100 ') : setBGColor('')
+        (isOver && active?.id.toString().startsWith("template-"))  ? setBGColor('bg-green-900 ') : setBGColor('')
     },[isOver])
 
     return (
-        <div ref={setNodeRef} className={clsx(["flex flex-col w-full items-start justify-start min-h-5 pt-2", bgColor])}>
-            <Toggle barContents={
-                <div className="flex flex-row">
-                    <p className="text-white text-md font-bold mr-2">Template:</p>
-                    <p className="text-white text-md">{props.template?.name}</p>
-                </div>
-            }
+        <div ref={setNodeRef} className="flex flex-col w-full items-start justify-start min-h-5 pt-2">
+            <Toggle 
+                buttonStyle={clsx(["flex justify-between items-center px-2 py-1 text-sm font-medium text-left text-white bg-black rounded-sm ", bgColor])}
+                panelStyle={clsx(["pt-4 bg-black p-2 ", bgColor])}
+                barContents={
+                    <div className="flex flex-row">
+                        <p className="text-white text-md font-bold mr-2">Template:</p>
+                        <p className="text-white text-md">{props.template?.name}</p>
+                    </div>
+                }
             >
                 <SyntaxHighlighter className="text-left" language="latex" style={atomOneDark} >
                     {props.template?.content}
