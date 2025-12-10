@@ -49,6 +49,10 @@ export function hydrateResume(raw: any[]): ResumeConfig | null {
     console.error("Failed to parse sections JSON", e);
   }
 
+  // const copy = [...props.resume?.sections]
+  sections.sort((a, b) => a.order - b.order);
+  // console.log(`copy ${sections.length}`)
+
   return {
     id,
     name,

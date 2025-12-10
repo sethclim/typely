@@ -46,12 +46,8 @@ export const CurrentResumeBlockViewer = (props : CurrentResumeBlockViewerProps) 
 
     useEffect(() => {
         if(props.resume?.sections != null) 
-        {
-            const copy = [...props.resume?.sections]
-            copy.sort((a, b) => a.order - b.order);
-            console.log(`copy ${copy.length}`)
-            setSections(copy)
-        }
+            setSections(props.resume!.sections)
+
     },[props.resume?.sections])
 
      useDndMonitor({
