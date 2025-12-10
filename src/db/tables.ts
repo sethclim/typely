@@ -153,6 +153,7 @@ export const ResumeSectionConfigTable = {
             `UPDATE ${RESUME_SECTION_CONFIG_TABLE} SET section_order = ? WHERE id = ?`,
             [newOrder, id]
         );
+        DB.notifyTable(RESUME_CONFIG_TABLE);
     },
 };
 
