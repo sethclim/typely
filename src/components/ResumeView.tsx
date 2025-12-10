@@ -1,6 +1,6 @@
 
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import { useResume } from '../context/resume/ResumeContext'
 import { ResumeSectionConfigTable, ResumeSectionDataTable } from '../db/tables';
