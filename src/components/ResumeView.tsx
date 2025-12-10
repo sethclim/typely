@@ -1,6 +1,6 @@
 
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useResume } from '../context/resume/ResumeContext'
 import { ResumeSectionConfigTable, ResumeSectionDataTable } from '../db/tables';
@@ -45,6 +45,10 @@ export const ResumeView = () => {
   const [draggingDataItem, setDraggingDataItem]= useState<DataItem | null>(null);
   const [draggingDataTemplate, setDraggingDataTemplate]= useState<Template | null>(null);
   const [draggingDataSection, setDraggingDataSection]= useState<ResumeSection | null>(null);
+
+  useEffect(() => {
+    console.log("DRAGING??? " + draggingDataSection)
+  }, [draggingDataSection])
 
   const createResumeComponent = () => {
     if (myResume === null || selected == null || title == undefined)
@@ -260,19 +264,18 @@ export const ResumeView = () => {
           </div>
         </Modal>
       </div>
-
-       <DragOverlay>
-        {(isDragging && draggingDataItem)? (
-          <DataItemComponent dataItem={draggingDataItem} />
-        ): null}
-        {(isDragging && draggingDataTemplate)? (
-          <TemplateItemComponent template={draggingDataTemplate} />
-        ): null}
-{/* 
-        {(isDragging && draggingDataSection)? (
-          <ResumeSectionCard resumeSection={draggingDataSection} />
-        ): null} */}
-      </DragOverlay>
+      {
+        ((draggingDataSection === null)) ? (
+          <DragOverlay>
+            {(isDragging && draggingDataItem)? (
+              <DataItemComponent dataItem={draggingDataItem} />
+            ): null}
+            {(isDragging && draggingDataTemplate)? (
+              <TemplateItemComponent template={draggingDataTemplate} />
+            ): null}
+          </DragOverlay>
+        ) : null
+      }
     </DndContext>
   )
 }

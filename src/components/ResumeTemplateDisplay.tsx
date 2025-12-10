@@ -102,7 +102,7 @@ export const ResumeSectionCard = (props : ResumeTemplateDisplayProps) => {
         setNodeRef,
         transform,
         transition,
-    } = useSortable({id: props.resumeSection.id, data: props.resumeSection});
+    } = useSortable({id: `section-${props.resumeSection.id}`, data: props.resumeSection});
   
     // const style = {
     //     transform: CSS.Transform.toString(transform),

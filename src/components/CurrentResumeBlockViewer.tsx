@@ -65,12 +65,18 @@ export const CurrentResumeBlockViewer = (props : CurrentResumeBlockViewerProps) 
 
         if (sections == null) return;
 
-        if (e.active.id !== e.over.id) {
+        const [overPrefix, over_id] = e.over.id.toString().split('-');
+        const [activePrefix, active_id] = e.active.id.toString().split('-');
+
+        if (overPrefix !== "section" || activePrefix !== "section")
+            return
+
+        if (over_id !== active_id) {
         setSections((sections) => {
             if(!sections || e.over === null) return []
 
-            const oldIdx = sections.findIndex(s => s.id === e.active.id);
-            const newIdx = sections.findIndex(s => s.id === e.over!.id);
+            const oldIdx = sections.findIndex(s => s.id === parseInt(active_id));
+            const newIdx = sections.findIndex(s => s.id === parseInt(over_id));
             return arrayMove(sections, oldIdx, newIdx);
         });
         }
@@ -82,7 +88,7 @@ export const CurrentResumeBlockViewer = (props : CurrentResumeBlockViewerProps) 
             <div className='flex flex-col gap-4'>
             {
                 props.resume && 
-                    <SortableContext items={sections.map((x) => x.id)} >
+                    <SortableContext items={sections.map((x) => `section-${x.id}`)} >
                     {
                         sections.map((section) => {
                             return (
