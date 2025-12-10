@@ -95,13 +95,13 @@ export const ResumeConfigTable = {
     getResumeConfig: (id: number) => {
         const row = DB.exec(getFullResumeQuery(), [id]);
 
-        // console.log("RESUME!! " + JSON.stringify(row));
+        console.log("RESUME!! " + JSON.stringify(row));
 
         return row;
     },
     getAllResumeConfig: () => {
         const res = DB.exec(`SELECT * FROM ${RESUME_CONFIG_TABLE}`);
-        console.log(`[${RESUME_CONFIG_TABLE}] ${JSON.stringify(res)}`);
+        // console.log(`[${RESUME_CONFIG_TABLE}] ${JSON.stringify(res)}`);
         if (res.length === 0) return [];
         const rows = mapRows<ResumeConfigRow>(res[0].columns, res[0].values);
         // console.log("getAllResumeConfig rows!! " + JSON.stringify(rows));
@@ -123,16 +123,24 @@ export const ResumeConfigTable = {
 
 export const ResumeSectionConfigTable = {
     insert: ({
+        id,
         resume_id,
         title,
         section_type,
         template_id,
         section_order,
     }: ResumeSectionConfigRow) => {
-        DB.runAndSave(
-            `INSERT INTO ${RESUME_SECTION_CONFIG_TABLE} (resume_id, title, section_type, template_id, section_order) VALUES (?, ?, ?, ?, ?)`,
-            [resume_id, title, section_type, template_id, section_order]
-        );
+        if (id === undefined) {
+            DB.runAndSave(
+                `INSERT INTO ${RESUME_SECTION_CONFIG_TABLE} (resume_id, title, section_type, template_id, section_order) VALUES (?, ?, ?, ?, ?)`,
+                [resume_id, title, section_type, template_id, section_order]
+            );
+        } else {
+            DB.runAndSave(
+                `INSERT INTO ${RESUME_SECTION_CONFIG_TABLE} (id, resume_id, title, section_type, template_id, section_order) VALUES (?, ?, ?, ?, ?, ?)`,
+                [id, resume_id, title, section_type, template_id, section_order]
+            );
+        }
 
         DB.notifyTable(RESUME_CONFIG_TABLE);
     },
@@ -148,7 +156,7 @@ export const ResumeSectionConfigTable = {
         DB.notifyTable(RESUME_CONFIG_TABLE);
     },
     updateOrder: (id: string, newOrder: number) => {
-        console.log(`id ${id} newOrder ${newOrder}`);
+        // console.log(`id ${id} newOrder ${newOrder}`);
         DB.runAndSave(
             `UPDATE ${RESUME_SECTION_CONFIG_TABLE} SET section_order = ? WHERE id = ?`,
             [newOrder, id]
@@ -187,11 +195,19 @@ export const ResumeSectionDataTable = {
 };
 
 export const ResumeDataItemTable = {
-    insert: ({ title, description, data, type_id }: DataItemRow) => {
-        DB.runAndSave(
-            `INSERT INTO ${RESUME_DATA_ITEM_TABLE} (type_id, title, description, data) VALUES (?, ?, ?, ?)`,
-            [type_id, title, description, data]
-        );
+    insert: ({ id, title, description, data, type_id }: DataItemRow) => {
+        if (id !== undefined) {
+            // console.log(`ResumeDataItemTable insert with id ${id}`);
+            DB.runAndSave(
+                `INSERT INTO ${RESUME_DATA_ITEM_TABLE} (id, type_id, title, description, data) VALUES (?, ?, ?, ?, ?)`,
+                [id, type_id, title, description, data]
+            );
+        } else {
+            DB.runAndSave(
+                `INSERT INTO ${RESUME_DATA_ITEM_TABLE} (type_id, title, description, data) VALUES (?, ?, ?, ?)`,
+                [type_id, title, description, data]
+            );
+        }
         DB.notifyTable(RESUME_DATA_ITEM_TABLE);
         DB.notifyTable(RESUME_CONFIG_TABLE);
     },

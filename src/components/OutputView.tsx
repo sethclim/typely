@@ -76,7 +76,7 @@ export const OutputView = (props : OutputViewProps) => {
     };
 
     const compileLatex = async (latex : string) => {  
-        console.log(`!user ${!user} !props.resume ${!props.resume}`)
+        // console.log(`!user ${!user} !props.resume ${!props.resume}`)
         if (!user || !props.resume)
             return
         const latexData = { latex: latex };

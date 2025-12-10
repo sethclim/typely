@@ -45,10 +45,6 @@ export const ResumeView = () => {
   const [draggingDataTemplate, setDraggingDataTemplate]= useState<Template | null>(null);
   const [draggingDataSection, setDraggingDataSection]= useState<ResumeSection | null>(null);
 
-  useEffect(() => {
-    console.log("DRAGING??? " + draggingDataSection)
-  }, [draggingDataSection])
-
   const createResumeComponent = () => {
     if (myResume === null || selected == null || title == undefined)
       return;
@@ -81,7 +77,7 @@ export const ResumeView = () => {
 
     if (overPrefix === "dataitem" && activePrefix === "dataitem") {
       //check if keys match then show dialog 
-      console.log("DRAG END " + JSON.stringify(active.data) + JSON.stringify(over.data))
+      // console.log("DRAG END " + JSON.stringify(active.data) + JSON.stringify(over.data))
 
       const active_data_item_keys = active.data.current?.data.map((item : string[]) => item[0]).sort();
 
@@ -112,9 +108,9 @@ export const ResumeView = () => {
     else if (overPrefix === "template" && activePrefix === "template"){
       ResumeSectionConfigTable.updateTemplate(section_id, active_id)
     }
-    else if(overPrefix === "section" && activePrefix === "section"){
-      console.log("THIS IS OVER!!!")
-    }
+    // else if(overPrefix === "section" && activePrefix === "section"){
+    //   // console.log("THIS IS OVER!!!")
+    // }
 
     setIsDragging(false);
     setDraggingDataItem(null)
@@ -131,7 +127,7 @@ export const ResumeView = () => {
 
     const [activePrefix, _] = active.id.toString().split('-');
 
-    console.log("activePrefix " + activePrefix)
+    // console.log("activePrefix " + activePrefix)
 
     if(activePrefix === "dataitem")
     {
