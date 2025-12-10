@@ -147,6 +147,13 @@ export const ResumeSectionConfigTable = {
 
         DB.notifyTable(RESUME_CONFIG_TABLE);
     },
+    updateOrder: (id: string, newOrder: number) => {
+        console.log(`id ${id} newOrder ${newOrder}`);
+        DB.runAndSave(
+            `UPDATE ${RESUME_SECTION_CONFIG_TABLE} SET section_order = ? WHERE id = ?`,
+            [newOrder, id]
+        );
+    },
 };
 
 export const ResumeSectionDataTable = {

@@ -8,6 +8,7 @@ import {
     arrayMove,
   SortableContext
 } from '@dnd-kit/sortable';
+import { ResumeSectionConfigTable } from "../db/tables";
 
 export type CurrentResumeBlockViewerProps = {
     resume? : ResumeConfig | null,
@@ -48,16 +49,9 @@ export const CurrentResumeBlockViewer = (props : CurrentResumeBlockViewerProps) 
     },[props.resume?.sections])
 
      useDndMonitor({
-        onDragStart(event) {
-
-        },
-        onDragMove(event) {},
-        onDragOver(event) {},
         onDragEnd(event) {
-            console.log("event " + JSON.stringify(event.active.id))
             reorderGamesList(event)
         },
-        onDragCancel(event) {},
     });
 
     const reorderGamesList = (e: DragEndEvent) => {
@@ -68,18 +62,20 @@ export const CurrentResumeBlockViewer = (props : CurrentResumeBlockViewerProps) 
         const [overPrefix, over_id] = e.over.id.toString().split('-');
         const [activePrefix, active_id] = e.active.id.toString().split('-');
 
-        if (overPrefix !== "section" || activePrefix !== "section")
+        if (overPrefix !== "section" || activePrefix !== "section" || over_id === "" || active_id === "")
             return
 
         if (over_id !== active_id) {
-        setSections((sections) => {
-            if(!sections || e.over === null) return []
+            setSections((sections) => {
+                const oldIdx = sections.findIndex(s => s.id === parseInt(active_id));
+                const newIdx = sections.findIndex(s => s.id === parseInt(over_id));
+                return arrayMove(sections, oldIdx, newIdx);
+            });
 
-            const oldIdx = sections.findIndex(s => s.id === parseInt(active_id));
-            const newIdx = sections.findIndex(s => s.id === parseInt(over_id));
-            return arrayMove(sections, oldIdx, newIdx);
-        });
-        }
+            sections.forEach((section, index) => {
+                ResumeSectionConfigTable.updateOrder(section.id.toString(), index)
+            })
+        }   
     };
 
     return (

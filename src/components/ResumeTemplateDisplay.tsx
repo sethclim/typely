@@ -91,10 +91,6 @@ type ResumeTemplateDisplayProps = {
 }
 
 export const ResumeSectionCard = (props : ResumeTemplateDisplayProps) => {
-    // const {attributes, listeners, setNodeRef, transform} = useDraggable({
-    //     id: `section-${props.resumeSection.id}`,
-    //     data: props.resumeSection
-    // });
 
     const {
         attributes,
@@ -103,11 +99,7 @@ export const ResumeSectionCard = (props : ResumeTemplateDisplayProps) => {
         transform,
         transition,
     } = useSortable({id: `section-${props.resumeSection.id}`, data: props.resumeSection});
-  
-    // const style = {
-    //     transform: CSS.Transform.toString(transform),
-    //     transition,
-    // };
+
 
     return(
         // <Draggable dragId={`section-${props.resumeSection.id}`} data={props.resumeSection}>
