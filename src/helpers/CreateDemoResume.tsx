@@ -373,7 +373,7 @@ export const CreateDemoResume = () =>{
 
 
     const headerLaTeX = `
-    \\newcommand{\\AND}{\\unskip\\cleaders\\copy\\ANDbox\\hskip\\wd\\ANDbox\\ignorespaces}\\newsavebox\\ANDbox\\sbox\\ANDbox{$|$}\n\\begin{header}\n\\fontsize{31 pt}{31 pt}\\selectfont {{NAME}} 
+    \\newcommand{\\AND}{\\unskip\\cleaders\\copy\\ANDbox\\hskip\\wd\\ANDbox\\ignorespaces}\\newsavebox\\ANDbox\\sbox\\ANDbox{$|$}\n\\begin{header}\n\\fontsize{31 pt}{31 pt}\\selectfont [[NAME]] 
     \\\\
     \\vspace{1 pt}
     \\normalsize
@@ -381,26 +381,27 @@ export const CreateDemoResume = () =>{
     \\kern 5.0 pt%
     \\AND%
     \\kern 5.0 pt%
-    \\mbox{\\hrefWithoutArrow{tel:+01-  {{PHONE}} }{+1  {{PHONE}} }}%
+    \\mbox{\\hrefWithoutArrow{tel:+01-[[PHONE]]}{+1 [[PHONE]]}}%
     \\kern 5.0 pt%
     \\AND%
     \\kern 5.0 pt%
-    \\mbox{\\hrefWithoutArrow{mailto: {{EMAIL}} }{ {{EMAIL}}} }%
+    \\mbox{\\hrefWithoutArrow{mailto:[[EMAIL]]}{[[EMAIL]]}}%
     \\kern 5.0 pt%
     \\vspace{-3pt} %
     \\par
     \\kern-6pt %
     \\kern 5.0 pt%
-    \\mbox{\\hrefWithoutArrow{ {{LINKEDIN}} }{\\textcolor[HTML]{0366d6}{ {{LINKEDIN}} }}}%
+    \\mbox{\\hrefWithoutArrow{[[LINKEDIN]]}{\\textcolor[HTML]{0366d6}{[[LINKEDIN]]}}}%
     \\kern 5.0 pt%
     \\AND%
     \\kern 5.0 pt%
-    \\mbox{\\hrefWithoutArrow{ {{WEBSITE}} }{\\textcolor[HTML]{0366d6}{ {{WEBSITE}} }}}%
+    \\mbox{\\hrefWithoutArrow{[[WEBSITE]]}{\\textcolor[HTML]{0366d6}{[[WEBSITE]]}}}%
     \\kern 5.0 pt%
     \\AND%
     \\kern 5.0 pt%
-    \\mbox{\\hrefWithoutArrow{ {{GITHUB}} }{\\textcolor[HTML]{0366d6}{ {{GITHUB}} }}}%
-    \n\\end{header}`;
+    \\mbox{\\hrefWithoutArrow{[[GITHUB]]}{\\textcolor[HTML]{0366d6}{[[GITHUB]]}}}%
+    \n\\end{header} 
+    \n\\vspace{0.2cm}`;
 
     TemplateTable.insert({
         "id": 1,
@@ -411,7 +412,7 @@ export const CreateDemoResume = () =>{
         "content": headerLaTeX
     })
 
-    const skillsLatex = `\\textbf{Languages:} {{LANGUAGES}} \\newline\n\\textbf{AR/VR:} {{VR}} \\newline\n\\textbf{Frameworks:} {{FRAMEWORKS}}  \\newline\n\\textbf{General:} {{GENERAL}} \\newline`
+    const skillsLatex = `\\textbf{Languages:} [[LANGUAGES]] \\newline\n\\textbf{AR/VR:} [[VR]] \\newline\n\\textbf{Frameworks:} [[FRAMEWORKS]]  \\newline\n\\textbf{General:} [[GENERAL]] \\newline`
 
     TemplateTable.insert({
         "id": 2,
@@ -426,15 +427,15 @@ export const CreateDemoResume = () =>{
         \\begin{twocolentry}{
             05/2022 – 04/2023
         }
-        \\fontsize{11 pt}{11 pt}\\textbf{ {{TITLE}} }, {{COMPANY}} - Toronto ON, CA\\end{twocolentry}
+        \\fontsize{11 pt}{11 pt}\\textbf{[[TITLE]]}, [[COMPANY]] - Toronto ON, CA\\end{twocolentry}
 
         \\vspace{0.10 cm}
         \\begin{onecolentry}
             \\begin{highlights}
-                \\item {{POINT1}}
-                \\item {{POINT2}}
-                \\item {{POINT3}}
-                \\item {{POINT4}}
+                \\item [[POINT1]]
+                \\item [[POINT2]]
+                \\item [[POINT3]]
+                \\item [[POINT4]]
             \\end{highlights}
         \\end{onecolentry}
      `
@@ -450,14 +451,14 @@ export const CreateDemoResume = () =>{
 
     const proj_template = `
         \\begin{twocolentry_proj}{
-        \\mbox{\\hrefWithoutArrow{ {{URL}} }{\\textcolor[HTML]{0366d6}{ {{URL}} }}}
+        \\mbox{\\hrefWithoutArrow{[[URL]]}{\\textcolor[HTML]{0366d6}{[[URL]]}}}
         }{5.6cm}
-        \\fontsize{11 pt}{11 pt}\\textbf{ {{TITLE}} } - {{HIGHLIGHTS}}
+        \\fontsize{11 pt}{11 pt}\\textbf{[[TITLE]]} - [[HIGHLIGHTS]]
         \\end{twocolentry_proj}
         \\begin{onecolentry}
             \\begin{highlights}
-                \\item {{POINT1}}
-                \\item {{POINT2}}
+                \\item [[POINT1]]
+                \\item [[POINT2]]
             \\end{highlights}
         \\end{onecolentry}
     `
@@ -473,10 +474,10 @@ export const CreateDemoResume = () =>{
 
     const edu_template = `
         \\begin{twocolentry}{
-            {{START_DATE}} – {{END_DATE}}
+            [[START_DATE]] – [[END_DATE]]
         }
         \\vspace{0.10 cm}
-        \\textbf{ {{UNI}} }, {{PROGRAM}}  {{GPA}} 
+        \\textbf{[[UNI]]}, [[PROGRAM]] [[GPA]] 
         \\end{twocolentry}
     `
     TemplateTable.insert({
@@ -489,8 +490,8 @@ export const CreateDemoResume = () =>{
     })
 
     const section_template = `
-        \\section{ {{TITLE}} }
-        \\vspace{ {{SPACE}} }
+        \\section{[[TITLE]]}
+        \\vspace{[[SPACE]]}
     `
     TemplateTable.insert({
         "id": 6,
