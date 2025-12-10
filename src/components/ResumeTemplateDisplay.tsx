@@ -4,12 +4,15 @@ import { DataItem, ResumeSection, Template } from "../types"
 import SyntaxHighlighter from 'react-syntax-highlighter';
 // @ts-ignore
 import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
-import { useDroppable } from "@dnd-kit/core";
+import { useDraggable, useDroppable } from "@dnd-kit/core";
 import clsx from "clsx";
 import { Toggle } from "./Toggle";
 import GroupedTable from "./GroupedDataTable";
 import { ResumeSectionDataTable } from "../db/tables";
 import { GrabHandle } from "./GrabHandle";
+// import { Draggable } from "./Draggable";
+import { useSortable } from "@dnd-kit/sortable";
+import {CSS} from '@dnd-kit/utilities';
 
 type DataItemDisplayProps = {
     data : DataItem[]
@@ -87,9 +90,31 @@ type ResumeTemplateDisplayProps = {
     resumeSection : ResumeSection
 }
 
-export const ResumeTemplateDisplay = (props : ResumeTemplateDisplayProps) => {
+export const ResumeSectionCard = (props : ResumeTemplateDisplayProps) => {
+    // const {attributes, listeners, setNodeRef, transform} = useDraggable({
+    //     id: `section-${props.resumeSection.id}`,
+    //     data: props.resumeSection
+    // });
+
+    const {
+        attributes,
+        listeners,
+        setNodeRef,
+        transform,
+        transition,
+    } = useSortable({id: props.resumeSection.id, data: props.resumeSection});
+  
+    // const style = {
+    //     transform: CSS.Transform.toString(transform),
+    //     transition,
+    // };
+
     return(
-        <div className="flex flex-row w-full items-center bg-white p-2 rounded-lg">
+        // <Draggable dragId={`section-${props.resumeSection.id}`} data={props.resumeSection}>
+        <div className="flex flex-row min-w-80 w-full items-center bg-white p-2 rounded-lg" ref={setNodeRef} {...listeners} {...attributes}  style={{
+            transform: CSS.Transform.toString(transform),
+            transition: transition
+        }}>
             <div className="flex flex-col grow">
                 <div className="flex flex-row w-full">
                     <div className="grow w-full flex">
@@ -106,5 +131,6 @@ export const ResumeTemplateDisplay = (props : ResumeTemplateDisplayProps) => {
                 <GrabHandle dotColor="bg-gray-500" />
             </div>
         </div>
+        // </Draggable>
     )
 }

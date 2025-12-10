@@ -8,12 +8,12 @@ import { ResumeSectionConfigTable, ResumeSectionDataTable } from '../db/tables';
 import Modal from "./Modal";
 import ComboBox from './ComboBox';
 
-import { ResumeTemplateDisplay } from './ResumeTemplateDisplay'
+import { ResumeSectionCard } from './ResumeTemplateDisplay'
 import { ComponentLibrary, DataItemComponent, TemplateItemComponent } from './ComponentLibrary';
 
 import 'react-pdf/dist/Page/TextLayer.css';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
-import { DataItem, Template } from '../types';
+import { DataItem, ResumeSection, Template } from '../types';
 import { DndContext, DragEndEvent, DragOverlay, DragStartEvent, MouseSensor, useSensor, useSensors } from '@dnd-kit/core';
 
 // @ts-ignore
@@ -24,6 +24,7 @@ import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 
 import { ArrowsRightLeftIcon } from "@heroicons/react/24/solid";
 import { OutputView } from './OutputView';
+import { CurrentResumeBlockViewer } from './CurrentResumeBlockViewer';
 
 type ReplaceDataItemInfo = {
   section_id : string
@@ -43,6 +44,7 @@ export const ResumeView = () => {
 
   const [draggingDataItem, setDraggingDataItem]= useState<DataItem | null>(null);
   const [draggingDataTemplate, setDraggingDataTemplate]= useState<Template | null>(null);
+  const [draggingDataSection, setDraggingDataSection]= useState<ResumeSection | null>(null);
 
   const createResumeComponent = () => {
     if (myResume === null || selected == null || title == undefined)
@@ -73,7 +75,7 @@ export const ResumeView = () => {
 
     const [overPrefix, section_id] = over.id.toString().split('-');
     const [activePrefix, active_id] = active.id.toString().split('-');
-    
+
     if (overPrefix === "dataitem" && activePrefix === "dataitem") {
       //check if keys match then show dialog 
       console.log("DRAG END " + JSON.stringify(active.data) + JSON.stringify(over.data))
@@ -107,10 +109,14 @@ export const ResumeView = () => {
     else if (overPrefix === "template" && activePrefix === "template"){
       ResumeSectionConfigTable.updateTemplate(section_id, active_id)
     }
+    else if(overPrefix === "section" && activePrefix === "section"){
+      console.log("THIS IS OVER!!!")
+    }
 
     setIsDragging(false);
     setDraggingDataItem(null)
     setDraggingDataTemplate(null)
+    setDraggingDataSection(null)
   }
 
   function handleDragStart(event : DragStartEvent) {
@@ -122,7 +128,7 @@ export const ResumeView = () => {
 
     const [activePrefix, _] = active.id.toString().split('-');
 
-    // console.log("activePrefix " + activePrefix)
+    console.log("activePrefix " + activePrefix)
 
     if(activePrefix === "dataitem")
     {
@@ -130,6 +136,9 @@ export const ResumeView = () => {
     }
     else if(activePrefix === "template"){
       setDraggingDataTemplate(active.data.current as unknown as Template)
+    }
+    else if(activePrefix === "section"){
+      setDraggingDataSection(active.data.current as unknown as ResumeSection)
     }
 
   }
@@ -180,15 +189,7 @@ export const ResumeView = () => {
               <h3 className='text-3xl font-bold text-white p-4'>{myResume?.name}</h3>
                 <PanelGroup direction="horizontal" className="flex-1 h-full">
                     <Panel defaultSize={35} minSize={30}>
-                      <div className='flex flex-col gap-4 p-4'>
-                        <h4 className='text-white text-lg font-bold'>Resume Components</h4>
-                      {
-                        myResume?.sections.map((section) => {
-                          return <ResumeTemplateDisplay key={section.id} resumeSection={section} /> 
-                        })
-                      }
-                        <button className='bg-white text-black rounded-lg' onClick={() => setIsNewRsumeOpen(true)}>Add New Component +</button>
-                      </div>
+                      <CurrentResumeBlockViewer resume={myResume} setIsNewRsumeOpen={setIsNewRsumeOpen}  />
                     </Panel>
 
                     <PanelResizeHandle className="w-2 mx-2 bg-white flex flex-col justify-center items-center data-[resize-handle-active]:bg-gray-200">
@@ -267,6 +268,10 @@ export const ResumeView = () => {
         {(isDragging && draggingDataTemplate)? (
           <TemplateItemComponent template={draggingDataTemplate} />
         ): null}
+{/* 
+        {(isDragging && draggingDataSection)? (
+          <ResumeSectionCard resumeSection={draggingDataSection} />
+        ): null} */}
       </DragOverlay>
     </DndContext>
   )
