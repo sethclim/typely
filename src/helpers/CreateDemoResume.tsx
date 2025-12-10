@@ -27,11 +27,20 @@ export const CreateDemoResume = () =>{
     })
 
     ResumeSectionConfigTable.insert({
+        "id": 8,
+        "title": "Work Title Section",
+        "resume_id": 1,
+        "template_id": 6,
+        "section_order": 2,
+        "section_type": "section"
+    })
+
+    ResumeSectionConfigTable.insert({
         "id": 3,
         "title": "Current Job",
         "resume_id": 1,
         "template_id": 3,
-        "section_order": 2,
+        "section_order": 3,
         "section_type": "experience"
     })
 
@@ -40,24 +49,39 @@ export const CreateDemoResume = () =>{
         "title": "Previous Game Job",
         "resume_id": 1,
         "template_id": 3,
-        "section_order": 3,
+        "section_order": 4,
         "section_type": "experience"
     })
-
-
 
     ResumeSectionConfigTable.insert({
         "id": 5,
         "title": "Old Job",
         "resume_id": 1,
         "template_id": 3,
-        "section_order": 4,
+        "section_order": 5,
         "section_type": "experience"
     })
 
+    ResumeSectionConfigTable.insert({
+        "id": 6,
+        "title": "C++ Project",
+        "resume_id": 1,
+        "template_id": 4,
+        "section_order": 6,
+        "section_type": "project"
+    })
+
+    ResumeSectionConfigTable.insert({
+        "id": 7,
+        "title": "Education",
+        "resume_id": 1,
+        "template_id": 5,
+        "section_order": 7,
+        "section_type": "education"
+    })
 
     ResumeSectionDataTable.insert({
-        section_id: 1,
+        section_id: 1,  
         data_item_id: 1
     })
 
@@ -86,6 +110,20 @@ export const CreateDemoResume = () =>{
         data_item_id: 4
     })
 
+    ResumeSectionDataTable.insert({
+        section_id: 6,
+        data_item_id: 6
+    })
+
+    ResumeSectionDataTable.insert({
+        section_id: 7,
+        data_item_id: 6
+    })
+
+    ResumeSectionDataTable.insert({
+        section_id: 8,
+        data_item_id: 7
+    })
 
     const me = [
         ["EMAIL", "somebody@gmail.com"],
@@ -170,6 +208,57 @@ export const CreateDemoResume = () =>{
         "updated_at" : Date.now().toString(),
     })
 
+    const raytracer = [
+        ["TITLE", "Vulkan RayTracer"],
+        ["HIGHLIGHTS", "C++, Vulkan"],
+        ["URL", "https://github/my-raytracer"],
+        ["POINT1", "Created custom vulkan raytracer"],
+        ["POINT2", "implemented dialetric material"],
+    ]
+
+    ResumeDataItemTable.insert({
+        "id": 5,
+        title: "Project",
+        description: "raytracer",
+        data: JSON.stringify(raytracer),
+        type_id: 3,
+        "created_at" : Date.now().toString(),
+        "updated_at" : Date.now().toString(),
+    })
+
+    const uni = [
+        ["UNI", "University of Waterloo"],
+        ["PROGRAM", "Honours Bachelor Computer Science"],
+        ["START_DATE", "SEPT 2024"],
+        ["END_DATE", "MAY 2028"],
+        ["GPA", "4.0"]
+    ]
+
+    ResumeDataItemTable.insert({
+        "id": 6,
+        title: "Uni",
+        description: "undergrad",
+        data: JSON.stringify(uni),
+        type_id: 3,
+        "created_at" : Date.now().toString(),
+        "updated_at" : Date.now().toString(),
+    })
+
+    const work_title = [
+        ["TITLE", "Experience"],
+        ["SPACE", "0.2cm"],
+    ]
+
+    ResumeDataItemTable.insert({
+        title: "Work Experience Title",
+        description: "undergrad",
+        data: JSON.stringify(work_title),
+        type_id: 3,
+        "created_at" : Date.now().toString(),
+        "updated_at" : Date.now().toString(),
+    })
+
+
     ResumeDataItemTypeTable.insert({
         "id": 1,
         name : "email"
@@ -183,6 +272,16 @@ export const CreateDemoResume = () =>{
     ResumeDataItemTypeTable.insert({
         "id": 3,
         name : "experience"
+    })
+
+    ResumeDataItemTypeTable.insert({
+        "id": 4,
+        name : "project"
+    })
+
+    ResumeDataItemTypeTable.insert({
+        "id": 5,
+        name : "education"
     })
 
 
@@ -260,5 +359,58 @@ export const CreateDemoResume = () =>{
         "section_type": "experience",
         "created_at" : Date.now().toString(),
         "content": expLatex
+    })
+
+    const proj_template = `
+        \\begin{twocolentry_proj}{
+        \\mbox{\\hrefWithoutArrow{ {{URL}} }{\\textcolor[HTML]{0366d6}{ {{URL}} }}}
+        }{5.6cm}
+        \\fontsize{11 pt}{11 pt}\\textbf{ {{TITLE}} } - {{HIGHLIGHTS}}
+        \\end{twocolentry_proj}
+        \\begin{onecolentry}
+            \\begin{highlights}
+                \\item {{POINT1}}
+                \\item {{POINT2}}
+            \\end{highlights}
+        \\end{onecolentry}
+    `
+
+    TemplateTable.insert({
+        "id": 4,
+        "name": "Project template",
+        "description": "this show's my project",
+        "section_type": "project",
+        "created_at" : Date.now().toString(),
+        "content": proj_template
+    })
+
+    const edu_template = `
+        \\begin{twocolentry}{
+            {{START_DATE}} – {{END_DATE}}
+        }
+        \\vspace{0.10 cm}
+        \\textbf{ {{UNI}} }, {{PROGRAM}}  {{GPA}} 
+        \\end{twocolentry}
+    `
+    TemplateTable.insert({
+        "id": 5,
+        "name": "Education Template",
+        "description": "this show's my education",
+        "section_type": "education",
+        "created_at" : Date.now().toString(),
+        "content": edu_template
+    })
+
+    const section_template = `
+        \\section{ {{TITLE}} }
+        \\vspace{ {{SPACE}} }
+    `
+    TemplateTable.insert({
+        "id": 6,
+        "name": "section title",
+        "description": "header section",
+        "section_type": "section",
+        "created_at" : Date.now().toString(),
+        "content": section_template
     })
 }
