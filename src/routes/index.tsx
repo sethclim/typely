@@ -47,7 +47,7 @@ function HomeComponent() {
 
     const fetchResumes = () => {
         const rows = ResumeConfigTable.getAllResumeConfig();
-        console.log("fetchResumes " + rows.length)
+        // console.log("fetchResumes " + rows.length)
         setResumes(rows)
     }
 

@@ -15,13 +15,14 @@ type PDFViewProps = {
   pdfUrl? : string | null
 }
 
+
 export const ReplaceVariables = (section: ResumeSection) => {
   let str = section.template?.content || "";
   const dict = Object.fromEntries(section.items.flatMap(item => item.data));
   // console.log("dict", dict);
 
-  // Replace all {{KEY}} in one pass
-  str = str.replace(/\{\{(.*?)\}\}/g, (_, key) => {
+  // Replace all [[KEY]] in one pass
+  str = str.replace(/\[\[(.*?)\]\]/g, (_, key) => {
     key = key.trim();
     const data = dict[key];
     // console.log("Replacing", key, "with", data);
