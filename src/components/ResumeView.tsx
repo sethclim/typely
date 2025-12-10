@@ -8,7 +8,6 @@ import { ResumeSectionConfigTable, ResumeSectionDataTable } from '../db/tables';
 import Modal from "./Modal";
 import ComboBox from './ComboBox';
 
-import { ResumeSectionCard } from './ResumeTemplateDisplay'
 import { ComponentLibrary, DataItemComponent, TemplateItemComponent } from './ComponentLibrary';
 
 import 'react-pdf/dist/Page/TextLayer.css';

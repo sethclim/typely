@@ -4,13 +4,13 @@ import { DataItem, ResumeSection, Template } from "../types"
 import SyntaxHighlighter from 'react-syntax-highlighter';
 // @ts-ignore
 import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
-import { useDraggable, useDroppable } from "@dnd-kit/core";
+import { useDroppable } from "@dnd-kit/core";
 import clsx from "clsx";
 import { Toggle } from "./Toggle";
 import GroupedTable from "./GroupedDataTable";
 import { ResumeSectionDataTable } from "../db/tables";
 import { GrabHandle } from "./GrabHandle";
-// import { Draggable } from "./Draggable";
+
 import { useSortable } from "@dnd-kit/sortable";
 import {CSS} from '@dnd-kit/utilities';
 import { SectionContextMenu } from "./SectionContextMenu";
@@ -103,7 +103,6 @@ export const ResumeSectionCard = (props : ResumeTemplateDisplayProps) => {
 
 
     return(
-        // <Draggable dragId={`section-${props.resumeSection.id}`} data={props.resumeSection}>
         <div className="flex flex-row min-w-80 w-full items-center bg-white p-2 rounded-lg" ref={setNodeRef} {...listeners} {...attributes}  style={{
             transform: CSS.Transform.toString(transform),
             transition: transition
@@ -127,6 +126,5 @@ export const ResumeSectionCard = (props : ResumeTemplateDisplayProps) => {
                 <GrabHandle dotColor="bg-gray-500" />
             </div>
         </div>
-        // </Draggable>
     )
 }

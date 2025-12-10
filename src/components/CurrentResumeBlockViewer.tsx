@@ -1,7 +1,6 @@
-import { DragEndEvent, useDndMonitor, useDroppable } from "@dnd-kit/core";
+import { DragEndEvent, useDndMonitor } from "@dnd-kit/core";
 import { ResumeConfig, ResumeSection } from "../types"
 import { ResumeSectionCard } from "./ResumeTemplateDisplay";
-import clsx from "clsx";
 import { useEffect, useState } from "react";
 
 import {
@@ -13,30 +12,6 @@ import { ResumeSectionConfigTable } from "../db/tables";
 export type CurrentResumeBlockViewerProps = {
     resume? : ResumeConfig | null,
     setIsNewRsumeOpen: (state : true) => void;
-}
-
-type ListDroppableProps = {
-    id : number
-}
-
-const ListDroppable = ({id} : ListDroppableProps) => {
-
-    const {isOver, setNodeRef, active} = useDroppable({
-        id: `section-${id}`,
-    });
-
-    const [bgColor, setBGColor] = useState('');
-
-    useEffect(()=>{
-        console.log("active?.id " + active?.id);
-        (isOver && active?.id.toString().startsWith("section-"))  ? setBGColor('bg-green-900') : setBGColor('bg-gray-200')
-    },[isOver])
-
-    return(
-        <div ref={setNodeRef} className="flex justify-center items-center my-2 h-6">
-            <div className={clsx(["w-full h-1", bgColor])}></div>
-        </div>
-    )
 }
 
 export const CurrentResumeBlockViewer = (props : CurrentResumeBlockViewerProps) => {
