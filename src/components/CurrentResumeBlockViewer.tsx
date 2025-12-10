@@ -42,10 +42,16 @@ const ListDroppable = ({id} : ListDroppableProps) => {
 export const CurrentResumeBlockViewer = (props : CurrentResumeBlockViewerProps) => {
 
     const [sections, setSections] =  useState<ResumeSection[]>([])
+    const [reordered, setReordered] = useState(false);
 
     useEffect(() => {
         if(props.resume?.sections != null) 
-            setSections(props.resume!.sections)
+        {
+            const copy = [...props.resume?.sections]
+            copy.sort((a, b) => a.order - b.order);
+            console.log(`copy ${copy.length}`)
+            setSections(copy)
+        }
     },[props.resume?.sections])
 
      useDndMonitor({
@@ -72,11 +78,21 @@ export const CurrentResumeBlockViewer = (props : CurrentResumeBlockViewerProps) 
                 return arrayMove(sections, oldIdx, newIdx);
             });
 
-            sections.forEach((section, index) => {
-                ResumeSectionConfigTable.updateOrder(section.id.toString(), index)
-            })
+            setReordered(true);
         }   
     };
+
+
+    useEffect(() => {
+        if (reordered) {
+            sections.forEach((section, index) => {
+                ResumeSectionConfigTable.updateOrder(section.id.toString(), index);
+            });
+
+            // Reset the flag
+            setReordered(false);
+        }
+    }, [sections, reordered]);
 
     return (
         <div className='flex flex-col gap-4 p-4'>
@@ -89,7 +105,7 @@ export const CurrentResumeBlockViewer = (props : CurrentResumeBlockViewerProps) 
                         sections.map((section) => {
                             return (
                                 <>
-                                    <ResumeSectionCard key={section.id} resumeSection={section} /> 
+                                    <ResumeSectionCard key={section.id} resumeSection={section}  /> 
                                 </>
                             )
                         })
