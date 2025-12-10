@@ -155,6 +155,13 @@ export const ResumeSectionConfigTable = {
         );
         DB.notifyTable(RESUME_CONFIG_TABLE);
     },
+    delete: (id: number) => {
+        DB.runAndSave(
+            `DELETE FROM ${RESUME_SECTION_CONFIG_TABLE}  WHERE id = ?`,
+            [id]
+        );
+        DB.notifyTable(RESUME_CONFIG_TABLE);
+    },
 };
 
 export const ResumeSectionDataTable = {

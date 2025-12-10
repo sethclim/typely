@@ -13,6 +13,7 @@ import { GrabHandle } from "./GrabHandle";
 // import { Draggable } from "./Draggable";
 import { useSortable } from "@dnd-kit/sortable";
 import {CSS} from '@dnd-kit/utilities';
+import { SectionContextMenu } from "./SectionContextMenu";
 
 type DataItemDisplayProps = {
     data : DataItem[]
@@ -110,7 +111,10 @@ export const ResumeSectionCard = (props : ResumeTemplateDisplayProps) => {
             <div className="flex flex-col grow">
                 <div className="flex flex-row w-full">
                     <div className="grow w-full flex">
-                        <h3 className="text-black text-lg">{props.resumeSection.title}</h3>
+                        <div className="flex flex-row relative">
+                            <h3 className="text-black text-lg">{props.resumeSection.title}</h3>
+                            <SectionContextMenu section_id={props.resumeSection.id} />
+                        </div>
                     </div>
                     <div className="inline-flex items-center px-1 rounded-sm bg-blue-900/80 text-neutral-200 text-xs">
                         {props.resumeSection.sectionType}
