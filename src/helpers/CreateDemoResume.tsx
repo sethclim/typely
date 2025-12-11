@@ -14,6 +14,7 @@ export const CreateDemoResume = () =>{
     const WorkTitleSectionId = 8
     const ProjectTitleSectionId = 9
     const EducationTitleSectionId = 10
+    const FirstJobSectionId = 11
 
     const InfoDataItemId = 1
     const SkillDataItemId = 2
@@ -25,6 +26,7 @@ export const CreateDemoResume = () =>{
     const WorkSectionDataItemId = 8
     const ProjectSectionDataItemId = 9
     const EducationSectionDataItemId = 10
+    const Job3DataItemId = 11
 
     ResumeConfigTable.insert({
         "id": ResumeId,
@@ -84,7 +86,7 @@ export const CreateDemoResume = () =>{
         "title": "C++ Project",
         "resume_id": ResumeId,
         "template_id": 4,
-        "section_order": 7, 
+        "section_order": 8, 
         "section_type": "project"
     })
     
@@ -93,7 +95,7 @@ export const CreateDemoResume = () =>{
         "title": "Education",
         "resume_id": ResumeId,
         "template_id": 5,
-        "section_order": 9,
+        "section_order": 11,
         "section_type": "education"
     })
 
@@ -111,7 +113,7 @@ export const CreateDemoResume = () =>{
         "title": "Project Title Section",
         "resume_id": ResumeId,
         "template_id": 6,
-        "section_order": 6,
+        "section_order": 7,
         "section_type": "section"
     })
 
@@ -120,8 +122,17 @@ export const CreateDemoResume = () =>{
         "title": "Education Title Section",
         "resume_id": ResumeId,
         "template_id": 6,
-        "section_order": 8,
+        "section_order": 9,
         "section_type": "section"
+    })
+
+    ResumeSectionConfigTable.insert({
+        "id": FirstJobSectionId,
+        "title": "First Job",
+        "resume_id": ResumeId,
+        "template_id": 3,
+        "section_order": 6,
+        "section_type": "experience"
     })
     
     ResumeSectionDataTable.insert({
@@ -174,12 +185,15 @@ export const CreateDemoResume = () =>{
         data_item_id: ProjectSectionDataItemId
     })
 
-
     ResumeSectionDataTable.insert({
         section_id: EducationTitleSectionId,
         data_item_id: EducationSectionDataItemId
     })
 
+    ResumeSectionDataTable.insert({
+        section_id: FirstJobSectionId,
+        data_item_id: Job3DataItemId
+    })
 
     const me = [
         ["EMAIL", "somebody@gmail.com"],
@@ -227,13 +241,13 @@ export const CreateDemoResume = () =>{
     })
 
     const job1 = [
-        ["TITLE", "Software Developer"], 
-        ["COMPANY", "Acme Corp"], 
-        ["POINT1", "Developed new APIs and wrote MySQL"],
-        ["POINT2", "Improved key KPIs by 130%."],
-        ["POINT3", "Regularly attended standups"],
-        ["POINT4", "Saved corp \\$300,000 a year"]
-    ]
+        ["TITLE", "Software Developer"],
+        ["COMPANY", "Acme Corp"],
+        ["POINT1", "Developed scalable REST APIs and optimized MySQL queries to improve application performance and reliability."],
+        ["POINT2", "Improved key KPIs by 130\\% through targeted backend optimizations and data-driven performance tuning."],
+        ["POINT3", "Participated in daily standups and cross-team planning to keep development aligned and unblock dependencies."],
+        ["POINT4", "Implemented system efficiencies that reduced operational overhead, saving the company over \\$300,000 annually."]
+    ];
 
     ResumeDataItemTable.insert({
         id: Job1DataItemId,
@@ -245,14 +259,14 @@ export const CreateDemoResume = () =>{
         "updated_at" : Date.now().toString(),
     })
 
-     const job2 = [
-        ["TITLE", "Game Developer"], 
-        ["COMPANY", "Game Company"], 
-        ["POINT1", "Created multiplayer game with Unity Engine"],
-        ["POINT2", "Developed character movement system."],
-        ["POINT3", "Created an abstract networking layer"],
-        ["POINT4", "Regularly collaborated with other team members"]
-    ]
+    const job2 = [
+        ["TITLE", "Game Developer"],
+        ["COMPANY", "Game Company"],
+        ["POINT1", "Designed and implemented a complete multiplayer gameplay loop in Unity, handling networking, synchronization, and game-state management."],
+        ["POINT2", "Built a responsive and scalable character movement system using physics, animation blending, and custom input handling."],
+        ["POINT3", "Developed an abstracted networking layer that decoupled gameplay logic from the underlying network implementation for easier iteration."],
+        ["POINT4", "Collaborated with designers, artists, and engineers to deliver polished features and resolve cross-disciplinary issues during rapid development cycles."]
+    ];
 
     ResumeDataItemTable.insert({
         id: Job2DataItemId,
@@ -264,13 +278,35 @@ export const CreateDemoResume = () =>{
         "updated_at" : Date.now().toString(),
     })
 
+    const job3 = [
+        ["TITLE", "Full-Stack Developer"],
+        ["COMPANY", "Brightwave Solutions"],
+        ["POINT1", "Built and maintained full-stack features using React, Node.js, and PostgreSQL for a high-traffic SaaS platform."],
+        ["POINT2", "Implemented CI/CD pipelines that reduced deployment times and improved release reliability across environments."],
+        ["POINT3", "Optimized frontend performance, cutting load times by over 40\\% through code splitting and bundle analysis."],
+        ["POINT4", "Worked closely with product and UX teams to deliver user-focused features on rapid iteration cycles."]
+    ];
+
+    
+    ResumeDataItemTable.insert({
+        id: Job3DataItemId,
+        title: "Brightwave Solutions",
+        description: "First Job",
+        data: JSON.stringify(job3),
+        type_id: 3,
+        "created_at" : Date.now().toString(),
+        "updated_at" : Date.now().toString(),
+    })
+
     const raytracer = [
         ["TITLE", "Vulkan RayTracer"],
         ["HIGHLIGHTS", "C++, Vulkan"],
         ["URL", "https://github/my-raytracer"],
-        ["POINT1", "Created custom vulkan raytracer"],
-        ["POINT2", "implemented dialetric material"],
-    ]
+        ["POINT1", "Built a custom Vulkan-based ray tracer from scratch, including acceleration structures and GPU-driven rendering pipelines."],
+        ["POINT2", "Implemented dielectric materials with physically-based light behavior, including refraction, Fresnel effects, and total internal reflection."],
+        ["POINT3", "Added support for multiple BRDF shading models to enable realistic metal, diffuse, and glass surface interactions."],
+        ["POINT4", "Optimized GPU workloads using descriptor sets, memory barriers, and command buffer batching for high-performance rendering."]
+    ];
 
     ResumeDataItemTable.insert({
         id: ProjectDataItemId,
@@ -412,7 +448,7 @@ export const CreateDemoResume = () =>{
         "content": headerLaTeX
     })
 
-    const skillsLatex = `\\textbf{Languages:} [[LANGUAGES]] \\newline\n\\textbf{AR/VR:} [[VR]] \\newline\n\\textbf{Frameworks:} [[FRAMEWORKS]]  \\newline\n\\textbf{General:} [[GENERAL]] \\newline`
+    const skillsLatex = `\\textbf{Languages:} [[LANGUAGES]] \\newline\n\\textbf{AR/VR:} [[VR]] \\newline\n\\textbf{Frameworks:} [[FRAMEWORKS]]  \\newline\n\\textbf{General:} [[GENERAL]]`
 
     TemplateTable.insert({
         "id": 2,
@@ -438,6 +474,7 @@ export const CreateDemoResume = () =>{
                 \\item [[POINT4]]
             \\end{highlights}
         \\end{onecolentry}
+        \n\\vspace{0.20 cm}
      `
 
     TemplateTable.insert({
@@ -459,6 +496,8 @@ export const CreateDemoResume = () =>{
             \\begin{highlights}
                 \\item [[POINT1]]
                 \\item [[POINT2]]
+                \\item [[POINT3]]
+                \\item [[POINT4]]
             \\end{highlights}
         \\end{onecolentry}
     `
