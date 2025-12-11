@@ -1,5 +1,5 @@
 {
-    "name": "worker-name",
+    "name": "typely",
     "compatibility_date": "2025-12-11",
     "assets": {
         "directory": "./dist"
