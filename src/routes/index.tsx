@@ -1,5 +1,4 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { Footer } from '../components/Footer'
 
 export const Route = createFileRoute('/')({
   component: RouteComponent,
@@ -46,7 +45,6 @@ export const Hero = () => {
 type Feature = {
   title: string;
   description: string;
-  icon?: Element; // optional icon component
 };
 
 const features: Feature[] = [
@@ -76,7 +74,6 @@ export const Features = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {features.map((feature) => (
             <div key={feature.title} className="p-6 bg-white rounded-2xl shadow hover:shadow-lg transition">
-              {feature.icon && <div className="mb-4">{feature.icon}</div>}
               <h3 className="text-xl font-semibold mb-2 text-black">{feature.title}</h3>
               <p className="text-gray-600">{feature.description}</p>
             </div>
@@ -90,13 +87,13 @@ export const Features = () => {
 function RouteComponent() {
   return (
     <>
-            <div className='grow flex flex-col bg-slate-900'>
-               <Hero  />
-               <Features />
-                 <div className="flex w-full justify-center items-center  bg-black/20 min-h-10">
-                    <p className="text-white">@sethclim 2025</p>
-                </div>
-            </div>
+      <div className='grow flex flex-col bg-slate-900'>
+          <Hero  />
+          <Features />
+            <div className="flex w-full justify-center items-center  bg-black/20 min-h-10">
+              <p className="text-white">@sethclim 2025</p>
+          </div>
+      </div>
     </>
   )
 }
