@@ -1,78 +1,102 @@
-// import { User } from '@supabase/supabase-js';
-import { createFileRoute } from '@tanstack/react-router'
-import { useState, useEffect } from 'react';
-import { Footer } from '../components/Footer';
-import { Header } from '../components/Header';
-import { ResumeView } from '../components/ResumeView';
-import { Sidebar } from '../components/Sidebar';
-import { ResumeProvider } from '../context/resume/ResumeProvider';
-import { DB } from '../db';
-import { ResumeConfigTable } from '../db/tables';
-import { ResumeConfigRow } from '../db/types';
-import { CreateDemoResume } from '../helpers/CreateDemoResume';
-
-// import { supabase } from '../helpers/SupabaseClient';
-
+import { createFileRoute, Link } from '@tanstack/react-router'
+import { Footer } from '../components/Footer'
 
 export const Route = createFileRoute('/')({
-  component: HomeComponent,
+  component: RouteComponent,
 })
 
-function HomeComponent() {
 
-    
-    // const [user, setUser] = useState<User>();
-    const [activeId, setActiveId] = useState(1);
-    const [resumes, setResumes] = useState<ResumeConfigRow[]>([]);
-
-    useEffect(() => {
-        const init = async () => {
-        await DB.ready;
-        const rows = ResumeConfigTable.getResumeConfig(1);
-        if(rows.length == 0)
-            CreateDemoResume();
-
-
-        // // Whenever the auth state changes, we receive an event and a session object.
-        // // Save the user from the session object to the state.
-        // supabase.auth.onAuthStateChange((event, session) => {
-        //     if (event === "SIGNED_IN") {
-        //     setUser(session?.user);
-        //     }
-        // });
-        }
-        init();
-    }, []
-    )
-
-    const fetchResumes = () => {
-        const rows = ResumeConfigTable.getAllResumeConfig();
-        // console.log("fetchResumes " + rows.length)
-        setResumes(rows)
-    }
-
-    useEffect(() => {
-        const init = async () => {
-            await DB.ready;
-            fetchResumes();
-        }
-        const unsubscribe = ResumeConfigTable.subscribe(fetchResumes);
-        init();
-        return () => unsubscribe();
-    }, []);
-
+export const Hero = () => {
   return (
-    <ResumeProvider resumeId={activeId}>
-        <Header />
-        <div className='grow flex flex-row'>
-            <Sidebar
-                resumes={resumes}
-                activeId={activeId}
-                onSelect={setActiveId}
-            />
-            <ResumeView />
+    <div className="relative w-full h-[70vh] flex flex-col items-center justify-start overflow-hidden bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#0f172a]">
+     
+        <div className="flex w-full justify-start bg-black/20 backdrop-blur-md min-h-15 items-center p-4">
+            <h3 className="text-white text-3xl font-bold">TYPELY</h3>
         </div>
-        <Footer />
-    </ResumeProvider>
+     
+      {/* Gradient mesh blobs */}
+      <div className="absolute w-[600px] h-[600px] bg-purple-500/30 rounded-full blur-[150px] -top-40 -left-20" />
+      <div className="absolute w-[500px] h-[500px] bg-blue-500/20 rounded-full blur-[150px] bottom-0 -right-20" />
+
+      <div className='h-full w-full flex items-center justify-center'>
+
+        <div className="relative z-10 text-center px-6 max-w-2xl">
+            <h1 className="text-white text-4xl font-bold mb-4">
+            Build Beautiful Resumes, Fast
+            </h1>
+
+            <p className="text-white/80 text-lg mb-6">
+            Create tailored versions for every job without rewriting anything.
+            </p>
+
+            <Link
+                to="/app"
+                className="px-6 py-3 bg-white text-black font-semibold rounded-xl shadow-md hover:bg-white/90 transition inline-block"
+                >
+                Start Building
+            </Link>
+        </div>
+
+      </div>
+
+    </div>
+  );
+};
+
+type Feature = {
+  title: string;
+  description: string;
+  icon?: Element; // optional icon component
+};
+
+const features: Feature[] = [
+  {
+    title: "Multiple Versions",
+    description: "Tailor your resume for every role — update once, sync everywhere.",
+  },
+  {
+    title: "Drag-and-Drop Sections",
+    description: "Reorder and organize your resume visually.",
+  },
+  {
+    title: "Clean PDF Export",
+    description: "Pixel-perfect export for applications or email.",
+  },
+  {
+    title: "Reusable Sections",
+    description: "Keep work experience, projects, and skills modular and reusable.",
+  },
+];
+
+export const Features = () => {
+  return (
+    <section className="py-20 bg-slate-900 text-white">
+      <div className="max-w-6xl mx-auto px-6">
+        <h2 className="text-3xl font-bold text-center mb-12">Features</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {features.map((feature) => (
+            <div key={feature.title} className="p-6 bg-white rounded-2xl shadow hover:shadow-lg transition">
+              {feature.icon && <div className="mb-4">{feature.icon}</div>}
+              <h3 className="text-xl font-semibold mb-2 text-black">{feature.title}</h3>
+              <p className="text-gray-600">{feature.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+function RouteComponent() {
+  return (
+    <>
+            <div className='grow flex flex-col bg-slate-900'>
+               <Hero  />
+               <Features />
+                 <div className="flex w-full justify-center items-center  bg-black/20 min-h-10">
+                    <p className="text-white">@sethclim 2025</p>
+                </div>
+            </div>
+    </>
   )
 }
