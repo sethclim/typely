@@ -21,7 +21,6 @@ import SyntaxHighlighter from 'react-syntax-highlighter';
 import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 
-import { ArrowsRightLeftIcon } from "@heroicons/react/24/solid";
 import { OutputView } from './OutputView';
 import { CurrentResumeBlockViewer } from './CurrentResumeBlockViewer';
 
