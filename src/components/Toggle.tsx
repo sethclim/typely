@@ -14,8 +14,8 @@ export const Toggle = ({
   children, 
   barContents, 
   postBarContent, 
-  buttonStyle = "flex justify-between items-center px-2 py-1 text-sm font-medium text-left text-white bg-black rounded-sm",
-  panelStyle = "pt-4 bg-black p-2"
+  buttonStyle = "flex justify-between items-center px-2 py-1 text-sm font-medium text-left text-white bg-darkest rounded-sm",
+  panelStyle = "pt-4 bg-darkest p-2"
 } : ToggleProps) => {
   return (
     <div className="flex flex-col flex-1 w-full">

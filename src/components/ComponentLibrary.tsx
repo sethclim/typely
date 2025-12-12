@@ -43,10 +43,10 @@ export const DataItemComponent = (props : DataItemsProps) => {
         <>
             <Toggle barContents={
                 <div className="flex flex-1 justify-between pr-4">
-                    <h3 className="text-white text-md text-bold">{props.dataItem.title}</h3>
+                    <h3 className="text-grey text-md text-bold">{props.dataItem.title}</h3>
                     <div className="flex flex-row gap-2">
-                        <button className="text-white" onClick={(e) => onEdit(e)}>Edit</button>
-                        <button className="text-white" onClick={(e) => onDelete(e)}>Delete</button>
+                        <button className="text-grey" onClick={(e) => onEdit(e)}>Edit</button>
+                        <button className="text-grey" onClick={(e) => onDelete(e)}>Delete</button>
                     </div>
                 </div>
                 }
@@ -65,11 +65,11 @@ export const DataItemComponent = (props : DataItemsProps) => {
                             <th className="px-2 py-2 text-left font-medium text-white">Value</th>
                             </tr>
                         </thead>
-                        <tbody className="bg-white divide-y divide-white border border-white">
+                        <tbody className="bg-darker divide-y divide-white border border-white">
                           {props.dataItem.data.map(([key, value]) => (
-                            <tr key={key} className="hover:bg-gray-50">
-                                <th className="px-2 py-2 text-left font-medium text-gray-700">{key}</th>
-                                <td className="px-2 py-2 text-left text-gray-900">{value}</td>
+                            <tr key={key} className="hover:bg-dark">
+                                <th className="px-2 py-2 text-left font-medium text-grey">{key}</th>
+                                <td className="px-2 py-2 text-left text-grey">{value}</td>
                             </tr>
                             ))}
                         </tbody>
@@ -104,8 +104,8 @@ export const TemplateItemComponent = (props : TemplateItemComponentProps) => {
         <>
             <Toggle barContents={
                     <div className="flex flex-1 justify-between pr-4">
-                        <h3 className="text-md text-bold text-white">{props.template.name}</h3>
-                        <button className="text-white px-2" onClick={(e) => edit(e)}>Edit</button>
+                        <h3 className="text-md text-bold text-grey">{props.template.name}</h3>
+                        <button className="text-grey px-2" onClick={(e) => edit(e)}>Edit</button>
                     </div>
                 }
                 postBarContent={
@@ -181,8 +181,8 @@ export const ComponentLibrary = () => {
     )
 
     return (
-        <div className="flex flex-col">
-            <h3 className="text-xl text-bold text-black">Component Library</h3>
+        <div className="flex flex-col p-2">
+            <h3 className="text-xl text-bold text-grey">Component Library</h3>
 
             <ThreeWaySlider
                 options={["DataItems", "Templates", "Instances"]}
@@ -190,55 +190,59 @@ export const ComponentLibrary = () => {
                 onChange={setLevel}
                 className="w-full"
             />
+   
 
-            {
-                (level == "DataItems") ?  
-                    (
-                        <>
-                            <div className="bg-black flex flex-row justify-between items-center p-2 h-8">
-                                <p className="text-white">Add Item</p>
-                                <button className="bg-white my-8 rounded-sm font-bold text-lg " onClick={() => setIsOpenDataItemModal(true)}>
-                                    <PlusIcon className="h-5 w-5" />
-                                </button>
-                            </div>
-                            <div className="flex flex-col gap-1 mt-2">
-                            {
-                                dataItems?.map((data_item) => {
-                                    return (
-                                        <Draggable key={data_item.id} dragId={`dataitem-${data_item.id}`} data={data_item}  >
-                                            <DataItemComponent dataItem={data_item} />
-                                        </Draggable>
-                                    )
-                                })
-                            }
-                            </div> 
-                        </>
-                    )
-                : null
-            }
-            {
-                 (level == "Templates") ?  
-                 <>
-                    <div className="bg-black flex flex-row justify-between items-center p-2 h-8">
-                        <p className="text-white">Add Template</p>
-                        <button className="bg-white my-8 rounded-sm font-bold text-lg" onClick={() => setIsOpenTemplateModal(true)}>
-                            <PlusIcon className="h-5 w-5" />
-                        </button>
-                    </div>
-                    <div className="flex flex-col gap-1 mt-2">
-                    {
-                        templates?.map((template) => {
-                            return (
-                                <Draggable<Template> key={template.id} dragId={`template-${template.id}`} data={template} >
-                                    <TemplateItemComponent template={template} />
-                                </Draggable>
-                            )
-                        })
-                    }
-                    </div> 
-                 </>
-                : null
-            }
+                {
+                    (level == "DataItems") ?  
+                        (
+                            <>
+                                <div className="bg-darkest flex flex-row justify-between items-center p-2 h-8">
+                                    <p className="text-grey">Add Item</p>
+                                    <button className="bg-gradient-to-tr from-dark to-primary/50 my-8 rounded-sm font-bold text-lg " onClick={() => setIsOpenDataItemModal(true)}>
+                                        <PlusIcon className="text-mywhite h-5 w-5" />
+                                    </button>
+                                </div>
+                                <div className="flex flex-col gap-1 mt-2 bg-dark p-2">
+                                {
+                                    dataItems?.map((data_item) => {
+                                        return (
+                                            <Draggable key={data_item.id} dragId={`dataitem-${data_item.id}`} data={data_item}  >
+                                                <DataItemComponent dataItem={data_item} />
+                                            </Draggable>
+                                        )
+                                    })
+                                }
+                                </div> 
+                            </>
+                        )
+                    : null
+                }
+                {
+                    (level == "Templates") ?  
+                    <>
+                        <div className="bg-darkest flex flex-row justify-between items-center p-2 h-8">
+                            <p className="text-white">Add Template</p>
+                            <button className="bg-gradient-to-tr from-dark to-primary/50 my-8 rounded-sm font-bold text-lg" onClick={() => setIsOpenTemplateModal(true)}>
+                                <PlusIcon className="text-mywhite h-5 w-5" />
+                            </button>
+                        </div>
+                        <div className="flex flex-col gap-1 mt-2 bg-dark p-2">
+                        {
+                            templates?.map((template) => {
+                                return (
+                                    <Draggable<Template> key={template.id} dragId={`template-${template.id}`} data={template} >
+                                        <TemplateItemComponent template={template} />
+                                    </Draggable>
+                                )
+                            })
+                        }
+                        </div> 
+                    </>
+                    : null
+                }
+
+
+
 
             <AddDetailsModal isOpen={isDataItemModalOpen} setIsOpen={setIsOpenDataItemModal}  />
             <AddTemplateModal isOpen={isTemplateModalOpen} setIsOpen={setIsOpenTemplateModal}  />

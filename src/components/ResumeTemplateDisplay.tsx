@@ -39,10 +39,10 @@ const DataItemDisplay = (props : DataItemDisplayProps) => {
     return(
         <div ref={setNodeRef} className="flex flex-col w-full items-start justify-start  min-h-5 pt-2">
             <Toggle 
-                buttonStyle={clsx(["flex justify-between items-center px-2 py-1 text-sm font-medium text-left text-white bg-black rounded-sm ", bgColor])}
-                panelStyle={clsx(["pt-4 bg-black p-2 ", bgColor])}
+                buttonStyle={clsx(["flex justify-between items-center px-2 py-1 text-sm font-medium text-left text-mywhite bg-darkest rounded-sm ", bgColor])}
+                panelStyle={clsx(["pt-4 bg-darkest p-2 ", bgColor])}
                 barContents={
-                    <p className="text-white text-md font-bold">Data Items: ({props.data? props.data.length : 0})</p>
+                    <p className="text-grey text-md font-bold">Data Items: ({props.data? props.data.length : 0})</p>
                 }>
                 <GroupedTable dataItems={props.data} onRemove={RemoveDataItemFromResume} />
             </Toggle>
@@ -70,12 +70,12 @@ const TemplateItemDisplay = (props : TemplateItemDisplayProps) => {
     return (
         <div ref={setNodeRef} className="flex flex-col w-full items-start justify-start min-h-5 pt-2">
             <Toggle 
-                buttonStyle={clsx(["flex justify-between items-center px-2 py-1 text-sm font-medium text-left text-white bg-black rounded-sm ", bgColor])}
-                panelStyle={clsx(["pt-4 bg-black p-2 ", bgColor])}
+                buttonStyle={clsx(["flex justify-between items-center px-2 py-1 text-sm font-medium text-left text-grey bg-darkest rounded-sm ", bgColor])}
+                panelStyle={clsx(["pt-4 bg-darkest p-2 ", bgColor])}
                 barContents={
                     <div className="flex flex-row">
-                        <p className="text-white text-md font-bold mr-2">Template:</p>
-                        <p className="text-white text-md">{props.template?.name}</p>
+                        <p className="text-grey text-md font-bold mr-2">Template:</p>
+                        <p className="text-grey text-md">{props.template?.name}</p>
                     </div>
                 }
             >
@@ -103,7 +103,7 @@ export const ResumeSectionCard = (props : ResumeTemplateDisplayProps) => {
 
 
     return(
-        <div className="flex flex-row min-w-80 w-full items-center bg-white p-2 rounded-lg" ref={setNodeRef} {...listeners} {...attributes}  style={{
+        <div className="flex flex-row min-w-80 w-full items-center   bg-gradient-to-tr from-darker via-dark/70 to-primary/50 p-2 rounded-lg" ref={setNodeRef} {...listeners} {...attributes}  style={{
             transform: CSS.Transform.toString(transform),
             transition: transition
         }}>
@@ -111,11 +111,11 @@ export const ResumeSectionCard = (props : ResumeTemplateDisplayProps) => {
                 <div className="flex flex-row w-full">
                     <div className="grow w-full flex">
                         <div className="flex flex-row relative">
-                            <h3 className="text-black text-lg">{props.resumeSection.title}</h3>
+                            <h3 className="text-mywhite text-lg">{props.resumeSection.title}</h3>
                             <SectionContextMenu section_id={props.resumeSection.id} />
                         </div>
                     </div>
-                    <div className="inline-flex items-center px-1 rounded-sm bg-blue-900/80 text-neutral-200 text-xs">
+                    <div className="inline-flex items-center px-2 rounded-sm bg-black/30 text-other/80 text-xs">
                         {props.resumeSection.sectionType}
                     </div>
                 </div>
@@ -123,7 +123,7 @@ export const ResumeSectionCard = (props : ResumeTemplateDisplayProps) => {
                 <DataItemDisplay data={props.resumeSection.items} section_id={props.resumeSection.id} />
             </div>
             <div className="pl-2">
-                <GrabHandle dotColor="bg-gray-500" />
+                <GrabHandle dotColor="bg-darkest" />
             </div>
         </div>
     )

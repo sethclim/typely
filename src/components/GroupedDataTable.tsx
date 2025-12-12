@@ -11,22 +11,22 @@ export default function GroupedTable({ dataItems, onRemove } : Props) {
 
     return (
         <table className="w-full border-collapse border border-gray-200">
-            <thead className="bg-gray-50">
+            <thead className="bg-darkest">
             <tr>
-                <th className="px-2 py-2 text-left font-medium text-gray-700 border-r border-gray-200"></th>
-                <th className="px-2 py-2 text-left font-medium text-gray-700 border-r border-gray-200">Title</th>
-                <th className="px-2 py-2 text-left font-medium text-gray-700 border-r border-gray-200">Key</th>
-                <th className="px-2 py-2 text-left font-medium text-gray-700">Value</th>
+                <th className="px-2 py-2 text-left font-medium text-grey border-r border-grey"></th>
+                <th className="px-2 py-2 text-left font-medium text-grey border-r border-grey">Title</th>
+                <th className="px-2 py-2 text-left font-medium text-grey border-r border-grey">Key</th>
+                <th className="px-2 py-2 text-left font-medium text-grey">Value</th>
             </tr>
             </thead>
-            <tbody className="bg-white">
+            <tbody className="bg-darker">
             {dataItems.map((item, i) => {
                 // const entries = Object.entries(item.data);
                 if (item.data.length === 0) {
                 return (
                     <tr key={i}>
-                        <td className="px-2 py-2 text-left border-r border-gray-200">{item.title}</td>
-                        <td className="px-2 py-2 text-left border-r border-gray-200" colSpan={2}></td>
+                        <td className="px-2 py-2 text-left border-r border-grey">{item.title}</td>
+                        <td className="px-2 py-2 text-left border-r border-grey" colSpan={2}></td>
                     </tr>
                 );
                 }
@@ -41,15 +41,15 @@ export default function GroupedTable({ dataItems, onRemove } : Props) {
                             </button>
                         </td>
                         <td
-                            className="px-2 py-2 font-medium text-gray-700 text-left border-r border-gray-200"
+                            className="px-2 py-2 font-medium text-mywhite text-left border-r border-gray-200"
                             rowSpan={item.data.length}
                         >
                             {item.title}
                         </td>
                     </>
                     )}
-                    <td className="px-2 py-2 text-gray-700 text-left border-r border-gray-200">{key}</td>
-                    <td className="px-2 py-2 text-gray-900 text-left">{value}</td>
+                    <td className="px-2 py-2 text-grey text-left border-r border-gray-200">{key}</td>
+                    <td className="px-2 py-2 text-grey text-left">{value}</td>
                 </tr>
                 ));
             })}
