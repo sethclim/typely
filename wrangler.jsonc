@@ -2,6 +2,7 @@
     "name": "typely",
     "compatibility_date": "2025-12-11",
     "assets": {
-        "directory": "./dist"
+        "directory": "./dist",
+        "not_found_handling": "single-page-application"
     }
 }
