@@ -68,7 +68,7 @@ export const CurrentResumeBlockViewer = (props : CurrentResumeBlockViewerProps) 
     return (
         <div className='flex flex-col gap-4 p-4'>
             <h4 className='text-white text-lg font-bold'>Resume Components</h4>
-            <div className='flex flex-col gap-4'>
+            <div className='flex flex-col gap-4 bg-darkest p-2'>
             {
                 props.resume && 
                     <SortableContext items={sections.map((x) => `section-${x.id}`)} >
@@ -84,7 +84,7 @@ export const CurrentResumeBlockViewer = (props : CurrentResumeBlockViewerProps) 
                     </SortableContext>
             }
             </div>
-            <button className='bg-white text-black rounded-lg' onClick={() => props.setIsNewRsumeOpen(true)}>Add New Component +</button>
+            <button className='bg-dark text-grey rounded-lg' onClick={() => props.setIsNewRsumeOpen(true)}>Add New Component +</button>
         </div>
     )
 }

@@ -173,28 +173,24 @@ export const ResumeView = () => {
 
   return (
     <DndContext onDragStart={handleDragStart}  onDragEnd={handleDragEnd} sensors={sensors} >
-      <div className='flex flex-1 flex-row w-lvw justify-start bg-white p-4 gap-2'>
+      <div className='flex flex-1 flex-row w-lvw justify-start bg-darkest p-4 gap-2'>
         <PanelGroup direction="horizontal">
           <Panel defaultSize={30} minSize={20}>
               <ComponentLibrary />
           </Panel>
-          <PanelResizeHandle className="w-3 bg-white flex flex-col justify-center items-center data-[resize-handle-active]:bg-gray-200">
-            <ArrowsRightLeftIcon
-              className="h-3 w-3 text-black"
-            />
+          <PanelResizeHandle className="w-px relative flex flex-col justify-center items-center data-[resize-handle-active]:bg-grey">
+            <div className="absolute top-0 bottom-0 left-1/2 w-px bg-grey -translate-x-1/2 "></div>
           </PanelResizeHandle>
           <Panel minSize={45}>
-            <div className='bg-black w-full flex flex-col  min-h-full'>
+            <div className='w-full flex flex-col  min-h-full'>
               <h3 className='text-3xl font-bold text-white p-4'>{myResume?.name}</h3>
                 <PanelGroup direction="horizontal" className="flex-1 h-full">
                     <Panel defaultSize={35} minSize={30}>
                       <CurrentResumeBlockViewer resume={myResume} setIsNewRsumeOpen={setIsNewRsumeOpen}  />
                     </Panel>
 
-                    <PanelResizeHandle className="w-2 mx-2 bg-white flex flex-col justify-center items-center data-[resize-handle-active]:bg-gray-200">
-                      <ArrowsRightLeftIcon
-                        className="h-2 w-2 text-black"
-                      />
+                    <PanelResizeHandle className="w-px mx-2 relative flex flex-col justify-center items-center data-[resize-handle-active]:bg-gray-200">
+                      <div className="absolute top-0 bottom-0 left-1/2 w-px bg-grey -translate-x-1/2 "></div>
                     </PanelResizeHandle>
                     <Panel minSize={45}>
                       <OutputView resume={myResume} />

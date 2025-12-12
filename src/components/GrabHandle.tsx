@@ -4,7 +4,7 @@ export type GrabHandleProps = {
     dotColor? : string
 }
 
-export const GrabHandle = ({dotColor = "bg-gray-200"}:GrabHandleProps) => {
+export const GrabHandle = ({dotColor = "bg-grey"}:GrabHandleProps) => {
     return(
         <div className="flex flex-col gap-0.5 cursor-grab">
             <div className="flex gap-0.5">

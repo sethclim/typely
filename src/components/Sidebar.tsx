@@ -61,13 +61,13 @@ export function Sidebar({ resumes, activeId, onSelect } : SidebarProps) {
   return (
     <aside
       className={`
-        min-h-full border-r bg-gray-50 flex flex-col transition-all duration-200
+        min-h-full border-r bg-dark flex flex-col transition-all duration-200
         ${expanded ? "w-64" : "w-16"}
       `}
     >
       <div className="flex items-center justify-between px-3 py-3">
         {expanded && (
-            <span className="font-semibold text-gray-700">
+            <span className="font-semibold text-grey">
               Typely
             </span>
           )}
@@ -76,9 +76,9 @@ export function Sidebar({ resumes, activeId, onSelect } : SidebarProps) {
             className="p-1 rounded hover:bg-gray-200"
           >
             {expanded ? (
-              <ChevronDoubleLeftIcon className="h-5 w-5 text-gray-600" />
+              <ChevronDoubleLeftIcon className="h-5 w-5 text-grey" />
             ) : (
-              <ChevronDoubleRightIcon className="h-5 w-5 text-gray-600" />
+              <ChevronDoubleRightIcon className="h-5 w-5 text-grey" />
             )}
         </button>
 
@@ -90,7 +90,7 @@ export function Sidebar({ resumes, activeId, onSelect } : SidebarProps) {
           onClick={createResume}
           className={`
             flex items-center gap-2 w-full py-2 rounded-md
-            bg-purple-800 text-white hover:bg-blue-500 justify-center
+            bg-primary/80 text-white hover:bg-primary justify-center
           `}
         >
           <PlusIcon className="h-5 w-5" />
@@ -101,7 +101,7 @@ export function Sidebar({ resumes, activeId, onSelect } : SidebarProps) {
       {/* Header + toggle */}
       <div className="flex items-center justify-between px-3 py-3">
         {expanded && (
-          <span className="font-semibold text-gray-700">
+          <span className="font-semibold text-grey">
             Resumes
           </span>
         )}
@@ -115,16 +115,16 @@ export function Sidebar({ resumes, activeId, onSelect } : SidebarProps) {
             key={r.id}
             onClick={() => onSelect(r.id!)}
             className={` group 
-              flex justify-between items-center gap-2 w-full px-2 py-2 rounded-md text-left
+              flex justify-between items-center gap-2 w-full px-2 rounded-md text-left
               ${activeId === r.id
-                ? "bg-white font-medium border-l-2 border-blue-500 hover:bg-gray-300" 
+                ? "font-medium border-l-2 hover:bg-darkest" 
                 : "hover:bg-gray-300"
               }
             `}
           >
-            <DocumentIcon className="h-5 w-5 text-gray-600 flex-shrink-0" />
+            {/* <DocumentIcon className="h-5 w-5 text-gray-600 flex-shrink-0" /> */}
             { expanded ? (
-              (rename !== r.id)  ? <span className="truncate text-black">{r.name}</span> : (
+              (rename !== r.id)  ? <span className="truncate text-grey">{r.name}</span> : (
                 <input value={newName!} className="text-black bg-gray-200" onChange={(e) => setNewName(e.target.value)}  onKeyDown={(e) => {
                   if (e.key === "Enter") {
                     onSubmit();
@@ -142,8 +142,8 @@ export function Sidebar({ resumes, activeId, onSelect } : SidebarProps) {
                 transition-opacity
               ">
                 <Menu as="div" className="relative">
-                  <MenuButton className="p-1 rounded hover:bg-gray-200 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <EllipsisVerticalIcon className="h-5 w-5 text-gray-600" />
+                  <MenuButton className="p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                    <EllipsisVerticalIcon className="h-5 w-5 text-grey" />
                   </MenuButton>
 
                   <MenuItems

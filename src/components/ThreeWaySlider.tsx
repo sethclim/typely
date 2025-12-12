@@ -18,11 +18,11 @@ export default function ThreeWaySlider({
 
   return (
     <RadioGroup value={value} onChange={onChange} className={className}>
-      <div className="relative h-10 bg-gray-200 flex items-center px-2">
+      <div className="relative h-10 bg-dark flex items-center px-2">
         {/* Slider indicator */}
         <div
           className={clsx(
-            "absolute top-1 bottom-1 w-1/3 rounded-50 bg-black transition-all duration-200",
+            "absolute top-1 bottom-1 w-1/3 rounded-50 bg-darkest transition-all duration-200",
             {
               "left-1": index === 0,
               "left-1/3": index === 1,
@@ -41,12 +41,12 @@ export default function ThreeWaySlider({
             <Radio
               key={opt}
               value={opt}
-              className="flex-1 flex items-center justify-center z-10 cursor-pointer select-none text-sm"
+              className="flex-1 flex items-center justify-center z-10 cursor-pointer select-none text-sm "
             >
               {({ checked }) => (
                 <span
                   className={
-                    checked ? "text-white font-semibold" : "text-gray-700"
+                    checked ? "text-mywhite font-semibold" : "text-grey"
                   }
                 >
                   {opt}

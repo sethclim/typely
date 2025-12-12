@@ -7,15 +7,15 @@ export const Route = createFileRoute('/')({
 
 export const Hero = () => {
   return (
-    <div className="relative w-full h-[70vh] flex flex-col items-center justify-start overflow-hidden bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#0f172a]">
+    <div className="relative w-full h-[70vh] flex flex-col items-center justify-start overflow-hidden bg-gradient-to-br from-darkest via-darker to-darkest">
      
         <div className="flex w-full justify-start bg-black/20 backdrop-blur-md min-h-15 items-center p-4">
             <h3 className="text-white text-3xl font-bold">TYPELY</h3>
         </div>
      
       {/* Gradient mesh blobs */}
-      <div className="absolute w-[600px] h-[600px] bg-purple-500/30 rounded-full blur-[150px] -top-40 -left-20" />
-      <div className="absolute w-[500px] h-[500px] bg-blue-500/20 rounded-full blur-[150px] bottom-0 -right-20" />
+      <div className="absolute w-[600px] h-[600px] bg-primary/30 rounded-full blur-[150px] -top-40 -left-20" />
+      <div className="absolute w-[500px] h-[500px] bg-primary/20 rounded-full blur-[150px] bottom-0 -right-20" />
 
       <div className='h-full w-full flex items-center justify-center'>
 
@@ -68,14 +68,14 @@ const features: Feature[] = [
 
 export const Features = () => {
   return (
-    <section className="py-20 bg-slate-900 text-white">
+    <section className="py-20 bg-darker text-white">
       <div className="max-w-6xl mx-auto px-6">
         <h2 className="text-3xl font-bold text-center mb-12">Features</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {features.map((feature) => (
-            <div key={feature.title} className="p-6 bg-white rounded-2xl shadow hover:shadow-lg transition">
-              <h3 className="text-xl font-semibold mb-2 text-black">{feature.title}</h3>
-              <p className="text-gray-600">{feature.description}</p>
+            <div key={feature.title} className="p-6 bg-gradient-to-tr from-dark/20 via-dark/70 to-primary/50 rounded-2xl shadow hover:shadow-lg transition">
+              <h3 className="text-xl font-semibold mb-2 text-mywhite">{feature.title}</h3>
+              <p className="text-grey">{feature.description}</p>
             </div>
           ))}
         </div>
@@ -90,7 +90,7 @@ function RouteComponent() {
       <div className='grow flex flex-col bg-slate-900'>
           <Hero  />
           <Features />
-            <div className="flex w-full justify-center items-center  bg-black/20 min-h-10">
+            <div className="flex w-full justify-center items-center  bg-darkest min-h-10">
               <p className="text-white">@sethclim 2025</p>
           </div>
       </div>
