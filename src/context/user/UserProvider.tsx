@@ -25,9 +25,9 @@ export const UserProvider: React.FC<ResumeProviderProps> = ({ children }) => {
         supabase.auth.onAuthStateChange((event, session) => {
             if (event === "SIGNED_IN") {
                 setUser(session?.user ?? null);
-                navigate({
-                    to: '/',
-                })
+                if (window.location.pathname === '/login') {
+                  navigate({ to: '/app' });
+                }
             }
         });
     }, []
