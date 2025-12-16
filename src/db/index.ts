@@ -18,7 +18,9 @@ export const DuplicateResume = (id: number) => {
     console.log("resume " + JSON.stringify(resume));
 
     try {
+        const uuid = crypto.randomUUID();
         ResumeConfigTable.insert({
+            uuid: uuid,
             name: resume.name + " - Copy",
             created_at: Date.now().toString(),
             updated_at: Date.now().toString(),

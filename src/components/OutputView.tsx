@@ -75,11 +75,14 @@ export const OutputView = (props : OutputViewProps) => {
     
     };
 
-    const compileLatex = async (latex : string) => {  
+    const compileLatex = async (uuid: string, latex : string) => {  
         // console.log(`!user ${!user} !props.resume ${!props.resume}`)
         if (!user || !props.resume)
             return
-        const latexData = { latex: latex };
+        const compileData = { 
+            uuid: uuid,
+            latex: latex 
+        };
         const api_url = `${import.meta.env.VITE_BE_URL}/${import.meta.env.VITE_COMPILE_ENDPOINT}`
         console.log("api_url " + api_url)
         const response = await fetch(api_url, {
@@ -88,7 +91,7 @@ export const OutputView = (props : OutputViewProps) => {
                 "Content-Type": "application/json",
                 Authorization: getToken(),
             },
-            body: JSON.stringify(latexData),
+            body: JSON.stringify(compileData),
         });
 
         if (!response.ok) {
@@ -123,7 +126,7 @@ export const OutputView = (props : OutputViewProps) => {
                 }
                 else{
                     console.log("calling compile")
-                    compileLatex(latex);
+                    compileLatex(props.resume.uuid, latex);
                 }
             }
         }
