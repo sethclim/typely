@@ -6,7 +6,7 @@ export function hydrateResume(raw: any[]): ResumeConfig | null {
   const row = raw[0];
   const values = row.values[0];
 
-  const [id, name, sectionsJson] = values;
+  const [id, uuid, name, sectionsJson] = values;
 
   let sections: ResumeSection[] = [];
   try {
@@ -55,6 +55,7 @@ export function hydrateResume(raw: any[]): ResumeConfig | null {
 
   return {
     id,
+    uuid,
     name,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),

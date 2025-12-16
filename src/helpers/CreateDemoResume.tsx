@@ -28,7 +28,9 @@ export const CreateDemoResume = () =>{
     const EducationSectionDataItemId = 10
     const Job3DataItemId = 11
 
+    const uuid = crypto.randomUUID();
     ResumeConfigTable.insert({
+        uuid: uuid,
         "id": ResumeId,
         "name" : "Demo Resume",
         "created_at" : Date.now().toString(),

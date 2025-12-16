@@ -28,6 +28,7 @@ function mapRows<T = any>(columns: string[], values: any[][]): T[] {
 export function getFullResumeQuery(resumeIdParam = "?"): string {
     return `
     SELECT rc.id,
+           rc.uuid,
            rc.name,
            COALESCE(
              json_group_array(
@@ -84,10 +85,10 @@ export function getFullResumeQuery(resumeIdParam = "?"): string {
 //LEFT JOIN ${TEMPLATE_TABLE} t ON t.id = rs.template_id
 
 export const ResumeConfigTable = {
-    insert: ({ name, created_at, updated_at }: ResumeConfigRow) => {
+    insert: ({ uuid, name, created_at, updated_at }: ResumeConfigRow) => {
         DB.runAndSave(
-            `INSERT INTO ${RESUME_CONFIG_TABLE} (name, created_at, updated_at) VALUES (?, ?, ?)`,
-            [name, created_at, updated_at]
+            `INSERT INTO ${RESUME_CONFIG_TABLE} (uuid, name, created_at, updated_at) VALUES (?, ?, ?, ?)`,
+            [uuid, name, created_at, updated_at]
         );
 
         DB.notifyTable(RESUME_CONFIG_TABLE);

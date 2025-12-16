@@ -40,6 +40,7 @@ export class DBService {
         this.runAndSave(`
             CREATE TABLE IF NOT EXISTS resume_config (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
+                uuid  TEXT UNIQUE NOT NULL,
                 name TEXT NOT NULL,
                 created_at TEXT DEFAULT (datetime('now')),
                 updated_at TEXT DEFAULT (datetime('now'))

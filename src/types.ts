@@ -32,6 +32,7 @@ export interface ResumeSection {
 
 export interface ResumeConfig {
     id: number;
+    uuid: string;
     name: string;
     createdAt: string;
     updatedAt: string;

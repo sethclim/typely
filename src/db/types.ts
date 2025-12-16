@@ -24,6 +24,7 @@ export interface TemplateRow {
 
 export interface ResumeConfigRow {
     id?: number;
+    uuid?: string;
     name: string;
     created_at?: string;
     updated_at: string;

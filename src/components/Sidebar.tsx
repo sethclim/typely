@@ -19,7 +19,9 @@ export function Sidebar({ resumes, activeId, onSelect } : SidebarProps) {
   const [newName, setNewName] = useState<string | null>(null)
 
   const createResume = () => {
+    const uuid = crypto.randomUUID();
     ResumeConfigTable.insert({
+        uuid: uuid,
         "name" : "New Resume",
         "created_at" : Date.now().toString(),
         "updated_at" : Date.now().toString(),
