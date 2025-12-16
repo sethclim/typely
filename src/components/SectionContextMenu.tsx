@@ -20,9 +20,9 @@ export const SectionContextMenu = (props: SectionContextMenuProps) => {
             {/* Context button */}
             <button
                 onClick={() => setOpen(!open)}
-                className="p-1 rounded hover:bg-gray-200 focus:outline-none"
+                className="p-1 rounded focus:outline-none"
             >
-                <EllipsisVerticalIcon className="w-5 h-5 text-gray-600" />
+                <EllipsisVerticalIcon className="w-5 h-5 text-grey/80 hover:text-mywhite" />
             </button>
 
             {/* Dropdown menu */}

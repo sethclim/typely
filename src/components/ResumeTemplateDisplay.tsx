@@ -103,16 +103,18 @@ export const ResumeSectionCard = (props : ResumeTemplateDisplayProps) => {
 
 
     return(
-        <div className="flex flex-row min-w-80 w-full items-center   bg-gradient-to-tr from-darker via-dark/70 to-primary/50 p-2 rounded-lg" ref={setNodeRef} {...listeners} {...attributes}  style={{
+        <div className="flex flex-row min-w-80 w-full items-center bg-gradient-to-tr from-darker via-dark/70 to-primary/50 p-2 rounded-lg" ref={setNodeRef} {...listeners} {...attributes}  style={{
             transform: CSS.Transform.toString(transform),
             transition: transition
         }}>
             <div className="flex flex-col grow">
-                <div className="flex flex-row w-full">
+                <div className="flex flex-row w-full group">
                     <div className="grow w-full flex">
                         <div className="flex flex-row relative">
                             <h3 className="text-mywhite text-lg">{props.resumeSection.title}</h3>
-                            <SectionContextMenu section_id={props.resumeSection.id} />
+                            <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-150">
+                                <SectionContextMenu section_id={props.resumeSection.id} />
+                            </div>
                         </div>
                     </div>
                     <div className="inline-flex items-center px-2 rounded-sm bg-black/30 text-other/80 text-xs">
