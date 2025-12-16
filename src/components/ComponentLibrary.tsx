@@ -41,12 +41,14 @@ export const DataItemComponent = (props : DataItemsProps) => {
 
     return(
         <>
-            <Toggle barContents={
+            <Toggle
+            buttonStyle = "flex justify-between items-center px-2 py-1 text-sm font-medium text-left text-white bg-darkest rounded-sm group" 
+            barContents={
                 <div className="flex flex-1 justify-between pr-4">
                     <h3 className="text-grey text-md text-bold">{props.dataItem.title}</h3>
-                    <div className="flex flex-row gap-2">
-                        <button className="text-grey" onClick={(e) => onEdit(e)}>Edit</button>
-                        <button className="text-grey" onClick={(e) => onDelete(e)}>Delete</button>
+                    <div className="flex flex-row gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-100">
+                        <button className="text-grey hover:text-mywhite" onClick={(e) => onEdit(e)}>Edit</button>
+                        <button className="text-grey hover:text-mywhite" onClick={(e) => onDelete(e)}>Delete</button>
                     </div>
                 </div>
                 }
@@ -102,10 +104,14 @@ export const TemplateItemComponent = (props : TemplateItemComponentProps) => {
 
     return (
         <>
-            <Toggle barContents={
+            <Toggle 
+                buttonStyle = "flex justify-between items-center px-2 py-1 text-sm font-medium text-left text-white bg-darkest rounded-sm group" 
+                barContents={
                     <div className="flex flex-1 justify-between pr-4">
                         <h3 className="text-md text-bold text-grey">{props.template.name}</h3>
-                        <button className="text-grey px-2" onClick={(e) => edit(e)}>Edit</button>
+                        <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-100">
+                            <button className="text-grey hover:text-mywhite px-2" onClick={(e) => edit(e)}>Edit</button>
+                        </div>
                     </div>
                 }
                 postBarContent={
