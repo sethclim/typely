@@ -200,22 +200,22 @@ export const ResumeView = () => {
         </PanelGroup>
 
          <Modal isOpen={isNewResumeOpen} onClose={() => setIsNewRsumeOpen(false)} width='w-100'>
-          <h2 className="text-xl font-bold mb-4 text-black">New Resume Block</h2>
+          <h2 className="text-xl font-bold mb-4 text-mywhite">New Resume Block</h2>
           <form>
-            <p className="text-black">Title</p>
-            <input className='bg-gray-200 w-64' value={title ?? ""} onChange={(e) => setTitle(e.target.value)}  />
-            <p className="text-black">Type</p>
+            <p className="text-grey">Title</p>
+            <input className='bg-gray-200 w-64 p-1 my-2' value={title ?? ""} onChange={(e) => setTitle(e.target.value)}  />
+            <p className="text-grey">Type</p>
             <ComboBox selected={selected} onSelectedChange={setSelected} options={["Skills"]} />
           </form>
           <div className='flex flex-row gap-4'>
             <button
-              className="mt-4 px-4 py-2 bg-black text-white rounded"
+              className="mt-4 px-4 py-2  bg-grey hover:bg-mywhite text-darkest  rounded"
               onClick={() => createResumeComponent()}
             >
               Create
             </button>
             <button
-              className="mt-4 px-4 py-2 bg-black text-white rounded"
+              className="mt-4 px-4 py-2  bg-grey hover:bg-mywhite text-darkest  rounded"
               onClick={() => setIsNewRsumeOpen(false)}
             >
               Cancel
@@ -224,29 +224,29 @@ export const ResumeView = () => {
         </Modal>
 
         <Modal isOpen={isReplaceDataItemOpen} onClose={() => setReplaceDataItemOpen(false)} width='w-100'>
-          <h2 className="text-xl font-bold mb-4 text-black">{replaceDataItemData?.active.title} has same keys as {replaceDataItemData?.match.title}</h2>
-          <h2 className="text-xl font-bold mb-4 text-black">Do You Want To Replace?</h2>
+          <h2 className="text-xl text-center font-bold mb-4 text-mywhite">{replaceDataItemData?.active.title} has same keys as {replaceDataItemData?.match.title}</h2>
+          <h2 className="text-xl text-center font-bold mb-4 text-red-400">Do You Want To Replace?</h2>
           {/* <form>
             <p className="text-black">Title</p>
             <input className='bg-gray-200 w-64' value={title ?? ""} onChange={(e) => setTitle(e.target.value)}  />
             <p className="text-black">Type</p>
             <ComboBox selected={selected} onSelectedChange={setSelected} options={["Skills"]} />
           </form> */}
-          <div className='flex flex-row gap-4'>
+          <div className='flex justify-center flex-row gap-4'>
             <button
-              className="mt-4 px-4 py-2 bg-black text-white rounded"
+              className="mt-4 px-4 py-2 bg-dark text-white hover:bg-grey hover:text-darkest rounded"
               onClick={() => ReplaceDataItem(replaceDataItemData?.section_id!, replaceDataItemData?.match.id!, replaceDataItemData?.active.id!)}
             >
               Yes
             </button>
             <button
-              className="mt-4 px-4 py-2 bg-black text-white rounded"
+              className="mt-4 px-4 py-2 bg-dark text-white hover:bg-grey hover:text-darkest rounded"
               onClick={() => AddDataItem(replaceDataItemData?.section_id!, replaceDataItemData?.active.id!)}
             >
               No Add Anyways
             </button>
             <button
-              className="mt-4 px-4 py-2 bg-black text-white rounded"
+              className="mt-4 px-4 py-2 bg-dark text-white hover:bg-grey hover:text-darkest rounded"
               onClick={() => setReplaceDataItemOpen(false)}
             >
               Cancel
