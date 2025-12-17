@@ -11,10 +11,11 @@ type SidebarProps = {
     resumes : Array<ResumeConfigRow>
     activeId : number,
     onSelect : (id : number) => void;
+    expanded : boolean
 }
 
-export function Sidebar({ resumes, activeId, onSelect } : SidebarProps) {
-  const [expanded, setExpanded] = useState(true);
+export function Sidebar({ resumes, activeId, onSelect, expanded } : SidebarProps) {
+
   const [rename, setRename] = useState(-1)
   const [newName, setNewName] = useState<string | null>(null)
 
@@ -64,7 +65,7 @@ export function Sidebar({ resumes, activeId, onSelect } : SidebarProps) {
     <aside
       className={`
         min-h-full border-r bg-dark flex flex-col transition-all duration-200
-        ${expanded ? "w-64" : "w-16"}
+        ${expanded ? "w-64" : "w-0"}
       `}
     >
       <div className="flex items-center justify-between px-3 py-3">
@@ -73,16 +74,7 @@ export function Sidebar({ resumes, activeId, onSelect } : SidebarProps) {
               Typely
             </span>
           )}
-        <button
-            onClick={() => setExpanded(!expanded)}
-            className="p-1 rounded hover:bg-gray-200"
-          >
-            {expanded ? (
-              <ChevronDoubleLeftIcon className="h-5 w-5 text-grey" />
-            ) : (
-              <ChevronDoubleRightIcon className="h-5 w-5 text-grey" />
-            )}
-        </button>
+
 
       </div>
 
