@@ -19,7 +19,7 @@ import { DndContext, DragEndEvent, DragOverlay, DragStartEvent, MouseSensor, use
 import SyntaxHighlighter from 'react-syntax-highlighter';
 // @ts-ignore
 import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
-import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
+import { Panel, PanelResizeHandle, PanelGroup } from 'react-resizable-panels';
 
 import { OutputView } from './OutputView';
 import { CurrentResumeBlockViewer } from './CurrentResumeBlockViewer';
@@ -174,7 +174,7 @@ export const ResumeView = () => {
     <DndContext onDragStart={handleDragStart}  onDragEnd={handleDragEnd} sensors={sensors} >
       <div className='flex flex-1 flex-row w-lvw justify-start bg-darkest p-4 gap-2'>
         <PanelGroup direction="horizontal">
-          <Panel defaultSize={30} minSize={20}>
+          <Panel defaultSize={30} minSize={20} className='min-w-0 w-full [contain:inline-size]'>
               <ComponentLibrary />
           </Panel>
           <PanelResizeHandle className="w-px relative flex flex-col justify-center items-center data-[resize-handle-active]:bg-grey">
@@ -183,9 +183,14 @@ export const ResumeView = () => {
           <Panel minSize={45}>
             <div className='w-full flex flex-col  min-h-full'>
               <h3 className='text-3xl font-bold text-white p-4'>{myResume?.name}</h3>
-                <PanelGroup direction="horizontal" className="flex-1 h-full">
-                    <Panel defaultSize={35} minSize={30}>
-                      <CurrentResumeBlockViewer resume={myResume} setIsNewRsumeOpen={setIsNewRsumeOpen}  />
+                <PanelGroup direction="horizontal" className="h-full">
+                    <Panel defaultSize={35} minSize={30} className='min-w-0 w-full [contain:inline-size]'>
+                      <div className='min-w-0  max-w-full'>
+                        <CurrentResumeBlockViewer resume={myResume} setIsNewRsumeOpen={setIsNewRsumeOpen}  />
+                        {/* <div className='bg-blue-500 max-w-full text-white break-all'>
+                          hahaha
+                        </div> */}
+                      </div>
                     </Panel>
 
                     <PanelResizeHandle className="w-px mx-2 relative flex flex-col justify-center items-center data-[resize-handle-active]:bg-gray-200">
