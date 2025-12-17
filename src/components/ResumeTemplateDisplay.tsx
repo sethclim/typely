@@ -106,9 +106,8 @@ export const ResumeSectionCard = (props : ResumeTemplateDisplayProps) => {
         transition,
     } = useSortable({id: `section-${props.resumeSection.id}`, data: props.resumeSection});
 
-
     return(
-        <div className="min-w-0 flex flex-row w-full items-center bg-gradient-to-tr from-darker via-dark/70 to-primary/50 p-2 rounded-lg " ref={setNodeRef} {...listeners} {...attributes}  style={{
+        <div className="min-w-0 flex flex-row w-full items-center bg-gradient-to-tr from-darker via-dark/70 to-primary/50 p-2 rounded-lg" ref={setNodeRef} {...listeners} {...attributes}  style={{
             transform: CSS.Transform.toString(transform),
             transition: transition
         }}>

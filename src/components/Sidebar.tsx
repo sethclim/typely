@@ -119,8 +119,8 @@ export function Sidebar({ resumes, activeId, onSelect } : SidebarProps) {
             className={` group 
               flex justify-between items-center gap-2 w-full px-2 rounded-md text-left
               ${activeId === r.id
-                ? "font-medium border-l-2 hover:bg-darkest" 
-                : "hover:bg-gray-300"
+                ? "font-medium border-l-4 border-t-1 border-b-1  border-grey/20 hover:bg-darkest" 
+                : "hover:bg-darkest"
               }
             `}
           >
@@ -150,7 +150,7 @@ export function Sidebar({ resumes, activeId, onSelect } : SidebarProps) {
 
                   <MenuItems
                     className="
-                      absolute right-0 mt-1 w-36 rounded-md bg-white shadow-lg border
+                      absolute right-0 mt-1 w-36 rounded-md bg-darker shadow-lg border
                       focus:outline-none z-20
                     "
                   >
@@ -158,8 +158,8 @@ export function Sidebar({ resumes, activeId, onSelect } : SidebarProps) {
                       {({ active }) => (
                         <button
                           className={`${
-                            active ? "bg-gray-100" : ""
-                          } flex w-full items-center gap-2 px-3 py-2 text-left text-black`}
+                            active ? "bg-dark" : ""
+                          } flex w-full items-center gap-2 px-3 py-2 text-left text-grey`}
                           onClick={() => onRename(r.name, r.id)}
                         >
                           <PencilIcon className="h-4 w-4" />
@@ -172,8 +172,8 @@ export function Sidebar({ resumes, activeId, onSelect } : SidebarProps) {
                       {({ active }) => (
                         <button
                           className={`${
-                            active ? "bg-gray-100" : ""
-                          } flex w-full items-center gap-2 px-3 py-2 text-left text-black`}
+                            active ? "bg-dark" : ""
+                          } flex w-full items-center gap-2 px-3 py-2 text-left text-grey`}
                           onClick={() => duplicateResume(r.id)}
                         >
                           <DocumentDuplicateIcon className="h-4 w-4" />
@@ -186,8 +186,8 @@ export function Sidebar({ resumes, activeId, onSelect } : SidebarProps) {
                       {({ active }) => (
                         <button
                           className={`${
-                            active ? "bg-gray-100" : ""
-                          } flex w-full items-center gap-2 px-3 py-2 text-red-600 text-lef text-blackt`}
+                            active ? "bg-dark" : ""
+                          } flex w-full items-center gap-2 px-3 py-2 text-red-600 text-left text-grey`}
                           onClick={() => onDelete(r.id)}
                         >
                           <TrashIcon className="h-4 w-4" />

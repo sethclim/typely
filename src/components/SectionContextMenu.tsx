@@ -29,11 +29,11 @@ export const SectionContextMenu = (props: SectionContextMenuProps) => {
             {open && (
                 <div
                     ref={menuRef}
-                    className="absolute top-full left-0 mt-1 w-40 bg-white border rounded shadow-md z-10"
+                    className="absolute top-full left-0 mt-1 w-40 bg-white rounded shadow-md z-10"
                     onMouseLeave={() => setOpen(false)} // only triggers when mouse leaves menu itself
                 >
                     <button
-                        className="w-full text-left px-4 py-2 hover:bg-red-100 text-red-600"
+                        className="w-full text-left px-4 py-2 bg-darker text-red-600 hover:bg-dark"
                         onClick={() => deleteSectionFromResume(props.section_id)}
                     >
                         Delete
