@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { PlusIcon, ChevronDoubleLeftIcon, ChevronDoubleRightIcon } from "@heroicons/react/24/outline";
+import { PlusIcon } from "@heroicons/react/24/outline";
 import { ResumeConfigRow } from "../db/types";
 import { ResumeConfigTable } from "../db/tables";
 import { DocumentDuplicateIcon, EllipsisVerticalIcon, TrashIcon } from "@heroicons/react/20/solid";

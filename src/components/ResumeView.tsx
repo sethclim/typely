@@ -187,9 +187,6 @@ export const ResumeView = () => {
                     <Panel defaultSize={35} minSize={30} className='min-w-0 w-full [contain:inline-size]'>
                       <div className='min-w-0  max-w-full'>
                         <CurrentResumeBlockViewer resume={myResume} setIsNewRsumeOpen={setIsNewRsumeOpen}  />
-                        {/* <div className='bg-blue-500 max-w-full text-white break-all'>
-                          hahaha
-                        </div> */}
                       </div>
                     </Panel>
 

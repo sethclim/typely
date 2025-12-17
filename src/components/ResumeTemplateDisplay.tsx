@@ -127,7 +127,6 @@ export const ResumeSectionCard = (props : ResumeTemplateDisplayProps) => {
                 </div>
                 <TemplateItemDisplay template={props.resumeSection.template}  section_id={props.resumeSection.id} />
                 <DataItemDisplay data={props.resumeSection.items} section_id={props.resumeSection.id} />
-
             </div>
             <div className="pl-2">
                 <GrabHandle dotColor="bg-darkest" />
