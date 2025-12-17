@@ -183,17 +183,15 @@ export const ResumeView = () => {
           <Panel minSize={45}>
             <div className='w-full flex flex-col  min-h-full'>
               <h3 className='text-3xl font-bold text-white p-4'>{myResume?.name}</h3>
-                <PanelGroup direction="horizontal" className="h-full">
+                <PanelGroup direction="horizontal" className="h-full grow">
                     <Panel defaultSize={35} minSize={30} className='min-w-0 w-full [contain:inline-size]'>
-                      <div className='min-w-0  max-w-full'>
                         <CurrentResumeBlockViewer resume={myResume} setIsNewRsumeOpen={setIsNewRsumeOpen}  />
-                      </div>
                     </Panel>
 
                     <PanelResizeHandle className="w-px mx-2 relative flex flex-col justify-center items-center data-[resize-handle-active]:bg-gray-200">
                       <div className="absolute top-0 bottom-0 left-1/2 w-px bg-grey -translate-x-1/2 "></div>
                     </PanelResizeHandle>
-                    <Panel minSize={45}>
+                    <Panel minSize={45} className=' grow'>
                       <OutputView resume={myResume} />
                     </Panel>
                 </PanelGroup>
