@@ -29,7 +29,7 @@ export default function ComboBox(props : ComboBoxProps) {
   }
 
   return (
-    <div className="w-64 text-black">
+    <div className="w-64 text-mywhite my-2">
       <Combobox value={props.selected} onChange={props.onSelectedChange}>
         <div className="relative">
           <ComboboxInput

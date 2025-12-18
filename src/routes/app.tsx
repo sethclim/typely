@@ -22,6 +22,8 @@ function HomeComponent() {
     const [activeId, setActiveId] = useState(1);
     const [resumes, setResumes] = useState<ResumeConfigRow[]>([]);
 
+    const [expanded, setExpanded] = useState(true);
+
     useEffect(() => {
         const init = async () => {
         await DB.ready;
@@ -60,12 +62,13 @@ function HomeComponent() {
 
   return (
     <ResumeProvider resumeId={activeId}>
-        <Header />
+        <Header expanded={expanded} setExpanded={setExpanded} />
         <div className='grow flex flex-row'>
             <Sidebar
                 resumes={resumes}
                 activeId={activeId}
                 onSelect={setActiveId}
+                expanded={expanded}
             />
             <ResumeView />
         </div>

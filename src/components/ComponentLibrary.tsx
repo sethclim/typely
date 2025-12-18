@@ -41,12 +41,14 @@ export const DataItemComponent = (props : DataItemsProps) => {
 
     return(
         <>
-            <Toggle barContents={
+            <Toggle
+            buttonStyle = "flex justify-between items-center px-2 py-1 text-sm font-medium text-left text-white bg-darkest rounded-sm group" 
+            barContents={
                 <div className="flex flex-1 justify-between pr-4">
                     <h3 className="text-grey text-md text-bold">{props.dataItem.title}</h3>
-                    <div className="flex flex-row gap-2">
-                        <button className="text-grey" onClick={(e) => onEdit(e)}>Edit</button>
-                        <button className="text-grey" onClick={(e) => onDelete(e)}>Delete</button>
+                    <div className="flex flex-row gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-100">
+                        <button className="text-grey hover:text-mywhite" onClick={(e) => onEdit(e)}>Edit</button>
+                        <button className="text-grey hover:text-mywhite" onClick={(e) => onDelete(e)}>Delete</button>
                     </div>
                 </div>
                 }
@@ -102,10 +104,14 @@ export const TemplateItemComponent = (props : TemplateItemComponentProps) => {
 
     return (
         <>
-            <Toggle barContents={
+            <Toggle 
+                buttonStyle = "flex justify-between items-center px-2 py-1 text-sm font-medium text-left text-white bg-darkest rounded-sm group" 
+                barContents={
                     <div className="flex flex-1 justify-between pr-4">
                         <h3 className="text-md text-bold text-grey">{props.template.name}</h3>
-                        <button className="text-grey px-2" onClick={(e) => edit(e)}>Edit</button>
+                        <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-100">
+                            <button className="text-grey hover:text-mywhite px-2" onClick={(e) => edit(e)}>Edit</button>
+                        </div>
                     </div>
                 }
                 postBarContent={
@@ -152,6 +158,21 @@ export function mapRowToTemplate(
     };
 }
 
+type AddBarProps = {
+    title : string
+    action : (state : boolean) => void
+}
+// bg-gradient-to-tr from-dark to-primary/50 my-8 rounded-sm
+const AddBar = (props: AddBarProps) => {
+    return(
+        <div className="bg-darkest flex flex-row justify-between items-center p-2 h-10">
+            <p className="text-grey">{props.title}</p>
+            <button className="bg-grey/20 opacity-100 hover:bg-primary/80 my-8 p-1 rounded-sm font-bold text-lg transition-bg duration-150" onClick={() => props.action(true)}>
+                <PlusIcon className="text-mywhite h-5 w-5" />
+            </button>
+        </div>
+    )
+}
 
 export const ComponentLibrary = () => {
 
@@ -190,19 +211,13 @@ export const ComponentLibrary = () => {
                 onChange={setLevel}
                 className="w-full"
             />
-   
 
                 {
                     (level == "DataItems") ?  
                         (
                             <>
-                                <div className="bg-darkest flex flex-row justify-between items-center p-2 h-8">
-                                    <p className="text-grey">Add Item</p>
-                                    <button className="bg-gradient-to-tr from-dark to-primary/50 my-8 rounded-sm font-bold text-lg " onClick={() => setIsOpenDataItemModal(true)}>
-                                        <PlusIcon className="text-mywhite h-5 w-5" />
-                                    </button>
-                                </div>
-                                <div className="flex flex-col gap-1 mt-2 bg-dark p-2">
+                                <AddBar title="Add Item" action={setIsOpenDataItemModal} />
+                                <div className="flex flex-col gap-1 bg-dark p-2">
                                 {
                                     dataItems?.map((data_item) => {
                                         return (
@@ -220,13 +235,8 @@ export const ComponentLibrary = () => {
                 {
                     (level == "Templates") ?  
                     <>
-                        <div className="bg-darkest flex flex-row justify-between items-center p-2 h-8">
-                            <p className="text-white">Add Template</p>
-                            <button className="bg-gradient-to-tr from-dark to-primary/50 my-8 rounded-sm font-bold text-lg" onClick={() => setIsOpenTemplateModal(true)}>
-                                <PlusIcon className="text-mywhite h-5 w-5" />
-                            </button>
-                        </div>
-                        <div className="flex flex-col gap-1 mt-2 bg-dark p-2">
+                        <AddBar title="Add Template" action={setIsOpenTemplateModal} />
+                        <div className="flex flex-col gap-1 bg-dark p-2">
                         {
                             templates?.map((template) => {
                                 return (

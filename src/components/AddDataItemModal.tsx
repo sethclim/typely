@@ -58,30 +58,30 @@ export const AddDetailsModal = (props : AddDetailsModalProps) => {
 
     return (
         <Modal isOpen={props.isOpen} onClose={() => props.setIsOpen(false)} width="w-300">
-            <h2 className="text-xl font-bold mb-4 text-black">Add DataItem</h2>
+            <h2 className="text-xl font-bold mb-4 text-mywhite">Add DataItem</h2>
             <form>
-                <p className="text-black">Title</p>
+                <p className="text-mywhite">Title</p>
                 <input className="text-black bg-gray-200 p-1" value={title} onChange={(e) => setTitle(e.target.value)} />
                 <p className="text-black">Items</p>
                 <div className="flex flex-col border-solid border-black">
-                    <table className="min-w-full divide-y divide-white border border-white bg-black">
+                    <table className="min-w-full divide-y divide-white border border-grey bg-black">
                         <thead className="">
                             <tr>
                                 <th className="px-2 py-2 text-left font-medium text-white w-50">Key</th>
                                 <th className="px-2 py-2 text-left font-medium text-white">Value</th>
                             </tr>
                         </thead>
-                        <tbody className="bg-white divide-y divide-white border border-white">
+                        <tbody className="bg-white divide-y divide-white border border-grey">
                         {
                             items.map(([key, value], index) => (
                                      <tr key={index}>
                                         {/* <p className="text-black pr-2">Key</p> */}
                                         <td>
-                                            <input className="text-black bg-gray-200 p-1 w-full" value={key} onChange={(e) => updateItem(index, e.target.value, 0)} />
+                                            <input className="text-mywhite bg-dark p-1 w-full" value={key} onChange={(e) => updateItem(index, e.target.value, 0)} />
                                         </td>
                                         {/* <p className="text-black px-2">Value</p> */}
                                         <td>
-                                            <input className="text-black bg-gray-200 p-1 mr-2 w-full" value={value} onChange={(e) => updateItem(index, e.target.value, 1)} />
+                                            <input className="text-mywhite bg-dark p-1 mr-2 w-full" value={value} onChange={(e) => updateItem(index, e.target.value, 1)} />
                                         </td>
                                     </tr>
                                 )
@@ -90,20 +90,20 @@ export const AddDetailsModal = (props : AddDetailsModalProps) => {
                         </tbody>
                     </table>
                     <div className="flex justify-end p-2 pt-4">
-                        <button className="bg-black px-4 text-white" onClick={(e) => addItem(e)}>Add</button>
+                        <button className="bg-primary px-4 text-white rounded-sm" onClick={(e) => addItem(e)}>Add</button>
                     </div>
                 </div>
     
             </form>
             <div className='flex flex-row gap-4'>
             <button
-                className="mt-4 px-4 py-2 bg-black text-white rounded"
+                className="mt-4 px-4 py-2 bg-grey hover:bg-mywhite text-darkest rounded"
                 onClick={() => AddDataItem()}
             >
                 {props.dataItem ? "Update" : "Add"}
             </button>
             <button
-                className="mt-4 px-4 py-2 bg-black text-white rounded"
+                className="mt-4 px-4 py-2 bg-grey hover:bg-mywhite text-darkest rounded"
                 onClick={() => props.setIsOpen(false)}
             >
                 Cancel

@@ -18,7 +18,7 @@ export const Toggle = ({
   panelStyle = "pt-4 bg-darkest p-2"
 } : ToggleProps) => {
   return (
-    <div className="flex flex-col flex-1 w-full">
+    <div className="flex flex-col w-full min-w-0 max-w-full overflow-hidden">
       <Disclosure>
         {({ open }) => (
           <>

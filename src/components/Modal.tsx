@@ -30,7 +30,7 @@ export default function Modal({ isOpen, onClose, children, width }: ModalProps) 
       onClick={onClose} // click on overlay closes modal
     >
       <div
-        className={clsx(["bg-white p-6 rounded shadow-lg ", width])}
+        className={clsx(["bg-darkest p-6 rounded shadow-lg ", width])}
         onClick={(e) => e.stopPropagation()} // prevent closing when clicking inside modal
       >
         {children}

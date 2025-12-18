@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { PlusIcon, ChevronDoubleLeftIcon, ChevronDoubleRightIcon } from "@heroicons/react/24/outline";
+import { PlusIcon } from "@heroicons/react/24/outline";
 import { ResumeConfigRow } from "../db/types";
 import { ResumeConfigTable } from "../db/tables";
 import { DocumentDuplicateIcon, EllipsisVerticalIcon, TrashIcon } from "@heroicons/react/20/solid";
@@ -11,10 +11,11 @@ type SidebarProps = {
     resumes : Array<ResumeConfigRow>
     activeId : number,
     onSelect : (id : number) => void;
+    expanded : boolean
 }
 
-export function Sidebar({ resumes, activeId, onSelect } : SidebarProps) {
-  const [expanded, setExpanded] = useState(true);
+export function Sidebar({ resumes, activeId, onSelect, expanded } : SidebarProps) {
+
   const [rename, setRename] = useState(-1)
   const [newName, setNewName] = useState<string | null>(null)
 
@@ -64,7 +65,7 @@ export function Sidebar({ resumes, activeId, onSelect } : SidebarProps) {
     <aside
       className={`
         min-h-full border-r bg-dark flex flex-col transition-all duration-200
-        ${expanded ? "w-64" : "w-16"}
+        ${expanded ? "w-64" : "w-0"}
       `}
     >
       <div className="flex items-center justify-between px-3 py-3">
@@ -73,16 +74,7 @@ export function Sidebar({ resumes, activeId, onSelect } : SidebarProps) {
               Typely
             </span>
           )}
-        <button
-            onClick={() => setExpanded(!expanded)}
-            className="p-1 rounded hover:bg-gray-200"
-          >
-            {expanded ? (
-              <ChevronDoubleLeftIcon className="h-5 w-5 text-grey" />
-            ) : (
-              <ChevronDoubleRightIcon className="h-5 w-5 text-grey" />
-            )}
-        </button>
+
 
       </div>
 
@@ -119,8 +111,8 @@ export function Sidebar({ resumes, activeId, onSelect } : SidebarProps) {
             className={` group 
               flex justify-between items-center gap-2 w-full px-2 rounded-md text-left
               ${activeId === r.id
-                ? "font-medium border-l-2 hover:bg-darkest" 
-                : "hover:bg-gray-300"
+                ? "font-medium border-l-4 border-t-1 border-b-1  border-grey/20 hover:bg-darkest" 
+                : "hover:bg-darkest"
               }
             `}
           >
@@ -150,7 +142,7 @@ export function Sidebar({ resumes, activeId, onSelect } : SidebarProps) {
 
                   <MenuItems
                     className="
-                      absolute right-0 mt-1 w-36 rounded-md bg-white shadow-lg border
+                      absolute right-0 mt-1 w-36 rounded-md bg-darker shadow-lg border
                       focus:outline-none z-20
                     "
                   >
@@ -158,8 +150,8 @@ export function Sidebar({ resumes, activeId, onSelect } : SidebarProps) {
                       {({ active }) => (
                         <button
                           className={`${
-                            active ? "bg-gray-100" : ""
-                          } flex w-full items-center gap-2 px-3 py-2 text-left text-black`}
+                            active ? "bg-dark" : ""
+                          } flex w-full items-center gap-2 px-3 py-2 text-left text-grey`}
                           onClick={() => onRename(r.name, r.id)}
                         >
                           <PencilIcon className="h-4 w-4" />
@@ -172,8 +164,8 @@ export function Sidebar({ resumes, activeId, onSelect } : SidebarProps) {
                       {({ active }) => (
                         <button
                           className={`${
-                            active ? "bg-gray-100" : ""
-                          } flex w-full items-center gap-2 px-3 py-2 text-left text-black`}
+                            active ? "bg-dark" : ""
+                          } flex w-full items-center gap-2 px-3 py-2 text-left text-grey`}
                           onClick={() => duplicateResume(r.id)}
                         >
                           <DocumentDuplicateIcon className="h-4 w-4" />
@@ -186,8 +178,8 @@ export function Sidebar({ resumes, activeId, onSelect } : SidebarProps) {
                       {({ active }) => (
                         <button
                           className={`${
-                            active ? "bg-gray-100" : ""
-                          } flex w-full items-center gap-2 px-3 py-2 text-red-600 text-lef text-blackt`}
+                            active ? "bg-dark" : ""
+                          } flex w-full items-center gap-2 px-3 py-2 text-red-600 text-left text-grey`}
                           onClick={() => onDelete(r.id)}
                         >
                           <TrashIcon className="h-4 w-4" />

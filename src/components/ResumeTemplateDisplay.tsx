@@ -68,20 +68,25 @@ const TemplateItemDisplay = (props : TemplateItemDisplayProps) => {
     },[isOver])
 
     return (
-        <div ref={setNodeRef} className="flex flex-col w-full items-start justify-start min-h-5 pt-2">
+        <div ref={setNodeRef} className="min-w-0 flex flex-col w-full items-start justify-start min-h-5 pt-2">
             <Toggle 
-                buttonStyle={clsx(["flex justify-between items-center px-2 py-1 text-sm font-medium text-left text-grey bg-darkest rounded-sm ", bgColor])}
-                panelStyle={clsx(["pt-4 bg-darkest p-2 ", bgColor])}
+                buttonStyle={clsx(["min-w-0 flex justify-between items-center px-2  py-1 text-sm font-medium text-left text-grey bg-darkest rounded-sm", bgColor])}
+                panelStyle={clsx(["min-w-0 pt-4 bg-darkest  w-full overflow-hidden", bgColor])}
                 barContents={
-                    <div className="flex flex-row">
+                    <div className="min-w-0 flex flex-row">
                         <p className="text-grey text-md font-bold mr-2">Template:</p>
                         <p className="text-grey text-md">{props.template?.name}</p>
                     </div>
                 }
             >
-                <SyntaxHighlighter className="text-left" language="latex" style={atomOneDark} >
+                {/* <SyntaxHighlighter className="text-left" language="latex" style={atomOneDark} wrapLongLines={true}  >
                     {props.template?.content}
-                </SyntaxHighlighter>
+                </SyntaxHighlighter> */}
+                <div className="min-w-0">
+                    <SyntaxHighlighter className="flex-1 w-full min-w-0 overflow-x-auto text-left" language="latex" style={atomOneDark} wrapLongLines={true}  >
+                        {props.template?.content}
+                    </SyntaxHighlighter>
+                </div>
             </Toggle>
         </div>
     )
@@ -101,18 +106,19 @@ export const ResumeSectionCard = (props : ResumeTemplateDisplayProps) => {
         transition,
     } = useSortable({id: `section-${props.resumeSection.id}`, data: props.resumeSection});
 
-
     return(
-        <div className="flex flex-row min-w-80 w-full items-center   bg-gradient-to-tr from-darker via-dark/70 to-primary/50 p-2 rounded-lg" ref={setNodeRef} {...listeners} {...attributes}  style={{
+        <div className="min-w-0 flex flex-row w-full items-center bg-gradient-to-tr from-darker via-dark/70 to-primary/50 p-2 rounded-lg" ref={setNodeRef} {...listeners} {...attributes}  style={{
             transform: CSS.Transform.toString(transform),
             transition: transition
         }}>
-            <div className="flex flex-col grow">
-                <div className="flex flex-row w-full">
+            <div className="w-full min-w-0">
+                <div className="flex flex-row w-full group">
                     <div className="grow w-full flex">
                         <div className="flex flex-row relative">
                             <h3 className="text-mywhite text-lg">{props.resumeSection.title}</h3>
-                            <SectionContextMenu section_id={props.resumeSection.id} />
+                            <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-150">
+                                <SectionContextMenu section_id={props.resumeSection.id} />
+                            </div>
                         </div>
                     </div>
                     <div className="inline-flex items-center px-2 rounded-sm bg-black/30 text-other/80 text-xs">

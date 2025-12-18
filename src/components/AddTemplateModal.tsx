@@ -29,20 +29,20 @@ export const AddTemplateModal = (props : AddTemplateModalProps) => {
 
     return (
         <Modal isOpen={props.isOpen} onClose={() => props.setIsOpen(false)} width="w-100">
-            <h2 className="text-xl font-bold mb-4 text-black">Add Template</h2>
+            <h2 className="text-xl font-bold mb-4 text-mywhite">Add Template</h2>
             <form>
-                <p className="text-black">Title</p>
-                <input className="text-black" value={title} onChange={(e) => setTitle(e.target.value)} />
+                <p className="text-grey">Title</p>
+                <input className="bg-grey text-black p-1 my-2" value={title} onChange={(e) => setTitle(e.target.value)} />
             </form>
             <div className='flex flex-row gap-4'>
             <button
-                className="mt-4 px-4 py-2 bg-black text-white rounded"
+                className="mt-4 px-4 py-2 bg-grey hover:bg-mywhite text-darkest rounded"
                 onClick={() => AddTemplate()}
             >
                 Add
             </button>
             <button
-                className="mt-4 px-4 py-2 bg-black text-white rounded"
+                className="mt-4 px-4 py-2 bg-grey hover:bg-mywhite text-darkest rounded"
                 onClick={() => props.setIsOpen(false)}
             >
                 Cancel
