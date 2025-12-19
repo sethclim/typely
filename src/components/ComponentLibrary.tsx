@@ -17,6 +17,7 @@ import { Draggable } from "./Draggable";
 import { Toggle } from "./Toggle";
 import { GrabHandle } from "./GrabHandle";
 import { PlusIcon } from "@heroicons/react/20/solid";
+import { DeleteModal } from "./DeleteModal";
 
 // type componentLibraryProps = {
 //     // latex_comps : Array<Block>
@@ -28,6 +29,7 @@ export type DataItemsProps = {
 
 export const DataItemComponent = (props : DataItemsProps) => {
     const [isEditDataItemModalOpen, setIsOpenEditDataItemModal] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false)
     
     const onEdit = (e : React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.stopPropagation()
@@ -36,21 +38,26 @@ export const DataItemComponent = (props : DataItemsProps) => {
 
     const onDelete = (e : React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.stopPropagation()
-        setIsOpenEditDataItemModal(true)
+        setShowDeleteModal(true)
+    }
+
+    const performDeleteAction = () => {
+        ResumeDataItemTable.delete(props.dataItem.id)
+        setShowDeleteModal(false)
     }
 
     return(
         <>
             <Toggle
-            buttonStyle = "flex justify-between items-center px-2 py-1 text-sm font-medium text-left text-white bg-darkest rounded-sm group" 
-            barContents={
-                <div className="flex flex-1 justify-between pr-4">
-                    <h3 className="text-grey text-md text-bold">{props.dataItem.title}</h3>
-                    <div className="flex flex-row gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-100">
-                        <button className="text-grey hover:text-mywhite" onClick={(e) => onEdit(e)}>Edit</button>
-                        <button className="text-grey hover:text-mywhite" onClick={(e) => onDelete(e)}>Delete</button>
+                buttonStyle = "flex justify-between items-center px-2 py-1 text-sm font-medium text-left text-white bg-darkest rounded-sm group" 
+                barContents={
+                    <div className="flex flex-1 justify-between pr-4">
+                        <h3 className="text-grey text-md text-bold">{props.dataItem.title}</h3>
+                        <div className="flex flex-row gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-100">
+                            <button className="text-grey hover:text-mywhite" onClick={(e) => onEdit(e)}>Edit</button>
+                            <button className="text-grey hover:text-mywhite" onClick={(e) => onDelete(e)}>Delete</button>
+                        </div>
                     </div>
-                </div>
                 }
                 postBarContent={
                     <div className="pl-2">
@@ -81,6 +88,11 @@ export const DataItemComponent = (props : DataItemsProps) => {
             }
             </Toggle>
             <AddDetailsModal isOpen={isEditDataItemModalOpen} setIsOpen={setIsOpenEditDataItemModal} dataItem={props.dataItem} />
+            <DeleteModal 
+                msg={`Are you sure you want to delete ${props?.dataItem.title}?`} 
+                setIsOpen={setShowDeleteModal} 
+                isOpen={showDeleteModal}   
+                dangerAction={performDeleteAction}/>
         </>
     )
 }
@@ -92,10 +104,22 @@ export type TemplateItemComponentProps = {
 
 export const TemplateItemComponent = (props : TemplateItemComponentProps) => {
     const [isOpen, setIsOpen] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false)
 
     const edit = (e : React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.stopPropagation();
         setIsOpen(true)
+    }
+
+    
+    const onDelete = (e : React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        e.stopPropagation()
+        setShowDeleteModal(true)
+    }
+
+    const performDeleteAction = () => {
+        TemplateTable.delete(props.template.id)
+        setShowDeleteModal(false)
     }
 
     const saveChange = (text : string) => {
@@ -111,6 +135,7 @@ export const TemplateItemComponent = (props : TemplateItemComponentProps) => {
                         <h3 className="text-md text-bold text-grey">{props.template.name}</h3>
                         <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-100">
                             <button className="text-grey hover:text-mywhite px-2" onClick={(e) => edit(e)}>Edit</button>
+                            <button className="text-grey hover:text-mywhite" onClick={(e) => onDelete(e)}>Delete</button>
                         </div>
                     </div>
                 }
@@ -125,6 +150,11 @@ export const TemplateItemComponent = (props : TemplateItemComponentProps) => {
                 </SyntaxHighlighter>
             </Toggle>
             <LatexEditor isOpen={isOpen} setIsOpen={setIsOpen} latex={props.template.content} saveChange={saveChange} />
+            <DeleteModal 
+            msg={`Are you sure you want to delete ${props?.template.name}?`} 
+            setIsOpen={setShowDeleteModal} 
+            isOpen={showDeleteModal}   
+            dangerAction={performDeleteAction}/>
         </>
     )
 }
@@ -196,8 +226,12 @@ export const ComponentLibrary = () => {
 
     useEffect(() => {
             fetchDataForLib();
-            const unsubscribe = ResumeDataItemTable.subscribe(fetchDataForLib);
-            return () => unsubscribe();
+            const unsubscribeResumeDataItemTable = ResumeDataItemTable.subscribe(fetchDataForLib);
+            const unsubscribeTemplateTable = TemplateTable.subscribe(fetchDataForLib);
+            return () => {
+                unsubscribeResumeDataItemTable();
+                unsubscribeTemplateTable();
+            };
         }, []
     )
 
@@ -250,9 +284,6 @@ export const ComponentLibrary = () => {
                     </>
                     : null
                 }
-
-
-
 
             <AddDetailsModal isOpen={isDataItemModalOpen} setIsOpen={setIsOpenDataItemModal}  />
             <AddTemplateModal isOpen={isTemplateModalOpen} setIsOpen={setIsOpenTemplateModal}  />

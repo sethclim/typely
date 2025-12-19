@@ -235,6 +235,13 @@ export const ResumeDataItemTable = {
         DB.notifyTable(RESUME_DATA_ITEM_TABLE);
         DB.notifyTable(RESUME_CONFIG_TABLE);
     },
+    delete: (id: number) => {
+        DB.runAndSave(`DELETE FROM ${RESUME_DATA_ITEM_TABLE}  WHERE id = ?`, [
+            id,
+        ]);
+        DB.notifyTable(RESUME_DATA_ITEM_TABLE);
+        DB.notifyTable(RESUME_CONFIG_TABLE);
+    },
     subscribe: (cb: () => void) => DB.subscribe(RESUME_DATA_ITEM_TABLE, cb),
 };
 
@@ -273,4 +280,13 @@ export const TemplateTable = {
 
         DB.notifyTable(RESUME_TEMPLATE_TABLE);
     },
+    delete: (id: number) => {
+        DB.runAndSave(`DELETE FROM ${RESUME_TEMPLATE_TABLE}  WHERE id = ?`, [
+            id,
+        ]);
+
+        DB.notifyTable(RESUME_TEMPLATE_TABLE);
+        DB.notifyTable(RESUME_CONFIG_TABLE);
+    },
+    subscribe: (cb: () => void) => DB.subscribe(RESUME_TEMPLATE_TABLE, cb),
 };
