@@ -29,6 +29,8 @@ export const OutputView = (props : OutputViewProps) => {
     const { user } = useUser();
 
     const [compile_count, setCompileCount] = useState(-1)
+    const [compilesExceeded, setCompilesExceeded] = useState<boolean>(false);
+    const [showLastCompiled, setShowLastCompiled] = useState<boolean>(false);
 
     useEffect(() => {
         const init = async() => {
@@ -110,7 +112,13 @@ export const OutputView = (props : OutputViewProps) => {
         });
 
         if (!response.ok) {
-            console.error("Failed to compile LaTeX", await response.text());
+            const msg = (await response.text()).trim();
+            console.error("Failed to compile LaTeX: ", msg);
+
+            if(msg === "Max Free Compiles Exceeded"){
+                setShowLastCompiled(false)
+                setCompilesExceeded(true)
+            }
             return;
         }
 
@@ -192,7 +200,28 @@ export const OutputView = (props : OutputViewProps) => {
                                             </div>
                                     </Link>
                                 </div>
-                            ) :  <PDFView pdfUrl={pdfUrl} />
+                            ) : (
+                                    (compilesExceeded && !showLastCompiled) ? (
+                                        <div className="flex flex-col gap-2 p-4  justify-center items-center bg-dark mt-8">
+                                            <h3 className="text-xl font-bold text-white">Free Compiles Exceeded</h3>
+                                            <p className="text-white">Upgrade now for unlimited compiles!</p>
+                                            <a className="bg-primary p-2 text-mywhite w-50 rounded-sm">Signup Now</a>
+                                            <span className="flex flex-row">
+                                                <p className="text-white mr-2">See last compiled version:</p>
+                                                <button className="text-blue-500" onClick={() => setShowLastCompiled(true)}>HERE</button>
+                                            </span>
+                                            <div className="w-full h-[1px] bg-grey/20 my-1" />
+                                            <div className="flex flex-col items-center">
+                                                <p className="text-white">You can always download the latex and compile locally, or on overleaf etc.</p>
+                                                <span className="flex flex-row">
+                                                    <p className="text-white mr-2">Please see our</p>                      
+                                                    <a className="text-blue-500  mr-2">FAQ</a>
+                                                    <p className="text-white">for more info</p>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    ): <PDFView pdfUrl={pdfUrl} />
+                            ) 
                         }
                         </>
                     )   : null
