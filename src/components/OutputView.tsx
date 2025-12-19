@@ -34,7 +34,7 @@ export const OutputView = (props : OutputViewProps) => {
 
     useEffect(() => {
         const init = async() => {
-            let { data: users, error } = await supabase
+            let { data: users } = await supabase
               .from('users')
               .select('compile_count')
 
