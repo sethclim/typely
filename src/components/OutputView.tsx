@@ -119,7 +119,7 @@ export const OutputView = (props : OutputViewProps) => {
                 setShowLastCompiled(false)
                 setCompilesExceeded(true)
             }
-            return;
+            throw new Error("Max Free Compiles Exceeded")
         }
 
         // Get PDF as Blob
@@ -149,7 +149,15 @@ export const OutputView = (props : OutputViewProps) => {
                 }
                 else{
                     console.log("calling compile")
-                    compileLatex(props.resume.uuid, latex);
+                    try{
+                        await compileLatex(props.resume.uuid, latex);
+                    }
+                    catch(ex){
+                        if(pdfData !== null)
+                        {
+                            setPdfUrl(pdfData.url);
+                        }
+                    }
                 }
             }
         }
