@@ -104,10 +104,22 @@ export type TemplateItemComponentProps = {
 
 export const TemplateItemComponent = (props : TemplateItemComponentProps) => {
     const [isOpen, setIsOpen] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false)
 
     const edit = (e : React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.stopPropagation();
         setIsOpen(true)
+    }
+
+    
+    const onDelete = (e : React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        e.stopPropagation()
+        setShowDeleteModal(true)
+    }
+
+    const performDeleteAction = () => {
+        TemplateTable.delete(props.template.id)
+        setShowDeleteModal(false)
     }
 
     const saveChange = (text : string) => {
@@ -123,6 +135,7 @@ export const TemplateItemComponent = (props : TemplateItemComponentProps) => {
                         <h3 className="text-md text-bold text-grey">{props.template.name}</h3>
                         <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-100">
                             <button className="text-grey hover:text-mywhite px-2" onClick={(e) => edit(e)}>Edit</button>
+                            <button className="text-grey hover:text-mywhite" onClick={(e) => onDelete(e)}>Delete</button>
                         </div>
                     </div>
                 }
@@ -137,6 +150,11 @@ export const TemplateItemComponent = (props : TemplateItemComponentProps) => {
                 </SyntaxHighlighter>
             </Toggle>
             <LatexEditor isOpen={isOpen} setIsOpen={setIsOpen} latex={props.template.content} saveChange={saveChange} />
+            <DeleteModal 
+            msg={`Are you sure you want to delete ${props?.template.name}?`} 
+            setIsOpen={setShowDeleteModal} 
+            isOpen={showDeleteModal}   
+            dangerAction={performDeleteAction}/>
         </>
     )
 }
@@ -208,8 +226,12 @@ export const ComponentLibrary = () => {
 
     useEffect(() => {
             fetchDataForLib();
-            const unsubscribe = ResumeDataItemTable.subscribe(fetchDataForLib);
-            return () => unsubscribe();
+            const unsubscribeResumeDataItemTable = ResumeDataItemTable.subscribe(fetchDataForLib);
+            const unsubscribeTemplateTable = TemplateTable.subscribe(fetchDataForLib);
+            return () => {
+                unsubscribeResumeDataItemTable();
+                unsubscribeTemplateTable();
+            };
         }, []
     )
 
@@ -262,9 +284,6 @@ export const ComponentLibrary = () => {
                     </>
                     : null
                 }
-
-
-
 
             <AddDetailsModal isOpen={isDataItemModalOpen} setIsOpen={setIsOpenDataItemModal}  />
             <AddTemplateModal isOpen={isTemplateModalOpen} setIsOpen={setIsOpenTemplateModal}  />
