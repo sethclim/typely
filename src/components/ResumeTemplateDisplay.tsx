@@ -117,7 +117,7 @@ export const ResumeSectionCard = (props : ResumeTemplateDisplayProps) => {
                         <div className="flex flex-row relative">
                             <h3 className="text-mywhite text-lg">{props.resumeSection.title}</h3>
                             <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-150">
-                                <SectionContextMenu section_id={props.resumeSection.id} />
+                                <SectionContextMenu section={props.resumeSection} />
                             </div>
                         </div>
                     </div>
