@@ -14,6 +14,7 @@ import { getPDF, savePDF } from "../services/PDFStorageManager";
 import { hashString } from "../helpers/HashString";
 
 import { ArrowDownTrayIcon } from "@heroicons/react/24/solid";
+import { supabase } from "../helpers/SupabaseClient";
 
 export type OutputViewProps = {
     resume? : ResumeConfig | null
@@ -26,6 +27,20 @@ export const OutputView = (props : OutputViewProps) => {
     const [pdfUrl, setPdfUrl] = useState<string | null>(null);
 
     const { user } = useUser();
+
+    const [compile_count, setCompileCount] = useState(-1)
+
+    useEffect(() => {
+        const init = async() => {
+            let { data: users, error } = await supabase
+              .from('users')
+              .select('compile_count')
+
+            if(users)
+                setCompileCount(users[0].compile_count)
+        }
+        init()
+    }, [pdfUrl])
 
     const downloadPDF = () => {
         if(pdfUrl === null || props.resume === undefined || props.resume === null)
@@ -135,7 +150,10 @@ export const OutputView = (props : OutputViewProps) => {
 
     return (
         <div className='p-4 h-full bg-black flex flex-col justify-start'>
-            <div className="flex justify-end">
+            <div className="flex justify-start">
+                <div className="flex items-end grow">
+                    <h3 className="text-mg text-mywhite p-2">{compile_count}/100</h3>
+                </div>
                 <button className="bg-white m-2 p-1 px-2 font-bold rounded-sm" onClick={downloadPDF}>
                     <div className="flex flex-row justify-between items-center">
                         PDF
