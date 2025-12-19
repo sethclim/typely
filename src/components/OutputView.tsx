@@ -14,6 +14,7 @@ import { getPDF, savePDF } from "../services/PDFStorageManager";
 import { hashString } from "../helpers/HashString";
 
 import { ArrowDownTrayIcon } from "@heroicons/react/24/solid";
+import { supabase } from "../helpers/SupabaseClient";
 
 export type OutputViewProps = {
     resume? : ResumeConfig | null
@@ -26,6 +27,22 @@ export const OutputView = (props : OutputViewProps) => {
     const [pdfUrl, setPdfUrl] = useState<string | null>(null);
 
     const { user } = useUser();
+
+    const [compile_count, setCompileCount] = useState(-1)
+    const [compilesExceeded, setCompilesExceeded] = useState<boolean>(false);
+    const [showLastCompiled, setShowLastCompiled] = useState<boolean>(false);
+
+    useEffect(() => {
+        const init = async() => {
+            let { data: users } = await supabase
+              .from('users')
+              .select('compile_count')
+
+            if(users)
+                setCompileCount(users[0].compile_count)
+        }
+        init()
+    }, [pdfUrl])
 
     const downloadPDF = () => {
         if(pdfUrl === null || props.resume === undefined || props.resume === null)
@@ -95,8 +112,14 @@ export const OutputView = (props : OutputViewProps) => {
         });
 
         if (!response.ok) {
-            console.error("Failed to compile LaTeX", await response.text());
-            return;
+            const msg = (await response.text()).trim();
+            console.error("Failed to compile LaTeX: ", msg);
+
+            if(msg === "Max Free Compiles Exceeded"){
+                setShowLastCompiled(false)
+                setCompilesExceeded(true)
+            }
+            throw new Error("Max Free Compiles Exceeded")
         }
 
         // Get PDF as Blob
@@ -126,7 +149,15 @@ export const OutputView = (props : OutputViewProps) => {
                 }
                 else{
                     console.log("calling compile")
-                    compileLatex(props.resume.uuid, latex);
+                    try{
+                        await compileLatex(props.resume.uuid, latex);
+                    }
+                    catch(ex){
+                        if(pdfData !== null)
+                        {
+                            setPdfUrl(pdfData.url);
+                        }
+                    }
                 }
             }
         }
@@ -135,7 +166,10 @@ export const OutputView = (props : OutputViewProps) => {
 
     return (
         <div className='p-4 h-full bg-black flex flex-col justify-start'>
-            <div className="flex justify-end">
+            <div className="flex justify-start">
+                <div className="flex items-end grow">
+                    <h3 className="text-mg text-mywhite p-2">{compile_count}/100</h3>
+                </div>
                 <button className="bg-white m-2 p-1 px-2 font-bold rounded-sm" onClick={downloadPDF}>
                     <div className="flex flex-row justify-between items-center">
                         PDF
@@ -174,7 +208,39 @@ export const OutputView = (props : OutputViewProps) => {
                                             </div>
                                     </Link>
                                 </div>
-                            ) :  <PDFView pdfUrl={pdfUrl} />
+                            ) : (
+                                    (compilesExceeded && !showLastCompiled) ? (
+                                        <div className="flex flex-col gap-2 p-4  justify-center items-center bg-dark mt-8">
+                                            <h3 className="text-xl font-bold text-white">Free Compiles Exceeded</h3>
+                                            <p className="text-white">Upgrade now for unlimited compiles!</p>
+                                            <Link
+                                                to="/pricing"
+                                                className="bg-primary p-2 text-mywhite w-50 rounded-sm"
+                                                >
+                                                Buy Now
+                                            </Link>
+                                            <h3 className="text-grey"  >--------- OR ---------</h3>
+                                            <span className="flex flex-row">
+                                                <p className="text-white mr-2">See last compiled version:</p>
+                                                <button className="text-blue-500" onClick={() => setShowLastCompiled(true)}>HERE</button>
+                                            </span>
+                                            <div className="w-full h-[1px] bg-grey/20 my-1" />
+                                            <div className="flex flex-col items-center">
+                                                <p className="text-white">You can always download the latex and compile locally, or on overleaf etc.</p>
+                                                <span className="flex flex-row">
+                                                    <p className="text-white mr-2">Please see our</p>                      
+                                                    <Link
+                                                        to="/faq"
+                                                        className="text-blue-500  mr-2"
+                                                        >
+                                                        FAQ
+                                                    </Link>
+                                                    <p className="text-white">for more info</p>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    ): <PDFView pdfUrl={pdfUrl} />
+                            ) 
                         }
                         </>
                     )   : null
