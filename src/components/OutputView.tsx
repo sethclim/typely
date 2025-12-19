@@ -213,7 +213,13 @@ export const OutputView = (props : OutputViewProps) => {
                                         <div className="flex flex-col gap-2 p-4  justify-center items-center bg-dark mt-8">
                                             <h3 className="text-xl font-bold text-white">Free Compiles Exceeded</h3>
                                             <p className="text-white">Upgrade now for unlimited compiles!</p>
-                                            <a className="bg-primary p-2 text-mywhite w-50 rounded-sm">Signup Now</a>
+                                            <Link
+                                                to="/pricing"
+                                                className="bg-primary p-2 text-mywhite w-50 rounded-sm"
+                                                >
+                                                Buy Now
+                                            </Link>
+                                            <h3 className="text-grey"  >--------- OR ---------</h3>
                                             <span className="flex flex-row">
                                                 <p className="text-white mr-2">See last compiled version:</p>
                                                 <button className="text-blue-500" onClick={() => setShowLastCompiled(true)}>HERE</button>
@@ -223,7 +229,12 @@ export const OutputView = (props : OutputViewProps) => {
                                                 <p className="text-white">You can always download the latex and compile locally, or on overleaf etc.</p>
                                                 <span className="flex flex-row">
                                                     <p className="text-white mr-2">Please see our</p>                      
-                                                    <a className="text-blue-500  mr-2">FAQ</a>
+                                                    <Link
+                                                        to="/faq"
+                                                        className="text-blue-500  mr-2"
+                                                        >
+                                                        FAQ
+                                                    </Link>
                                                     <p className="text-white">for more info</p>
                                                 </span>
                                             </div>
