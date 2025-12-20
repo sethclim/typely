@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import { Header } from '../components/Header'
 import { Footer } from '../components/Footer'
 
@@ -11,6 +11,7 @@ const plans = [
     name: "Free",
     price: "$0",
     features: ["100 Free Compiles", "Local First Data"],
+    to: "/app"
   },
   {
     name: "Tokens",
@@ -42,9 +43,9 @@ const PricingCard = ({ plan } : any) => (
         <li key={i}>✔ {f}</li>
       ))}
     </ul>
-    <button className={`bg-dark hover:brightness-130 ${plan.popular ? "bg-primary brightness-80 " : ""} text-white py-2 rounded transition`}>
+    <Link to={plan.to} className={`bg-dark hover:brightness-130 ${plan.popular ? "bg-primary brightness-80 " : ""} text-white py-2 rounded transition`}>
       Get Started
-    </button>
+    </Link>
   </div>
 );
   
