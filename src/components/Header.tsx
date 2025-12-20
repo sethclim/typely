@@ -1,5 +1,6 @@
 import { ChevronDoubleRightIcon } from "@heroicons/react/20/solid"
 import { ChevronDoubleLeftIcon } from "@heroicons/react/20/solid"
+import { Link } from "@tanstack/react-router"
 import clsx from "clsx"
 
 export type HeaderProps = {
@@ -27,7 +28,9 @@ export const Header = ({expanded, setExpanded, bg="bg-darker"} : HeaderProps) =>
                 }
             </div>
             <div className="flex flex-col justify-center">
-                <h3 className="text-white text-3xl font-bold">TYPELY</h3>
+                <Link to="/app" >
+                    <h3 className="text-white text-3xl font-bold">TYPELY</h3>
+                </Link>
             </div>
         </div>
     )
