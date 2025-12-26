@@ -21,7 +21,7 @@ export function ResumeIntakeForm() {
     const [projects, setProjects] = useState<Project[]>([]);
     const [education, setEducation] = useState<Education[]>([]);
 
-    const addJob = () => setJobs([...jobs, { company: "", title: "", startDate: "", endDate: "", description: "" }]);
+    const addJob = () => setJobs([...jobs, { company: "", title: "", startDate: "", endDate: "", pointOne: "", pointTwo : "", pointThree: "", pointFour: "" }]);
 
     const addSkill = () => setSkillPoints([...skillPoints, { title: "", skills: ""}]);
 
@@ -43,7 +43,7 @@ export function ResumeIntakeForm() {
             website,
             github
         }
-        
+
         const info : IntakeInfo = {
             personal : p,
             skills : skillPoints,

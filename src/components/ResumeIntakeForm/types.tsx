@@ -3,7 +3,10 @@ export type Job = {
   title: string;
   startDate: string;
   endDate: string;
-  description: string;
+  pointOne: string;
+  pointTwo: string;
+  pointThree: string;
+  pointFour: string;
 };
 
 export type SkillPoint = {

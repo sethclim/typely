@@ -127,8 +127,14 @@ export const ExperienceSection = (props : ExperienceProps) => {
                         <Input label="End Date" value={job.endDate}
                         onChange={(v : string) => props.setJobs(j => j.map((x, idx) => idx === i ? { ...x, endDate: v } : x))} />
                     </div>
-                    <Textarea label="Description" value={job.description}
-                        onChange={(v : string) => props.setJobs(j => j.map((x, idx) => idx === i ? { ...x, description: v } : x))} />
+                  <Input label="Point One" value={job.pointOne}
+                        onChange={(v : string) => props.setJobs(j => j.map((x, idx) => idx === i ? { ...x, pointOne: v } : x))} />
+                  <Input label="Point Two" value={job.pointTwo}
+                        onChange={(v : string) => props.setJobs(j => j.map((x, idx) => idx === i ? { ...x, pointTwo: v } : x))} />
+                  <Input label="Point Three" value={job.pointThree}
+                        onChange={(v : string) => props.setJobs(j => j.map((x, idx) => idx === i ? { ...x, pointThree: v } : x))} />
+                  <Input label="Point Four" value={job.pointFour}
+                        onChange={(v : string) => props.setJobs(j => j.map((x, idx) => idx === i ? { ...x, pointFour: v } : x))} />
                 </Card>
             ))}
 

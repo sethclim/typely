@@ -1,4 +1,4 @@
-import { IntakeInfo } from "../components/ResumeIntakeForm"
+import { IntakeInfo } from "../components/ResumeIntakeForm/types"
 import { 
     ResumeConfigTable, 
     ResumeSectionConfigTable, 
@@ -355,15 +355,15 @@ export const CreateDemoResume = (info : IntakeInfo) =>{
         const jobData = [
             ["TITLE", inJob.title],
             ["COMPANY", inJob.company],
-            ["POINT1", "Developed scalable REST APIs and optimized MySQL queries to improve application performance and reliability."],
-            ["POINT2", "Improved key KPIs by 130\\% through targeted backend optimizations and data-driven performance tuning."],
-            ["POINT3", "Participated in daily standups and cross-team planning to keep development aligned and unblock dependencies."],
-            ["POINT4", "Implemented system efficiencies that reduced operational overhead, saving the company over \\$300,000 annually."]
+            ["POINT1", inJob.pointOne],
+            ["POINT2", inJob.pointTwo],
+            ["POINT3", inJob.pointThree],
+            ["POINT4", inJob.pointFour]
         ];
 
         ResumeDataItemTable.insert({
             id: dataItemId,
-            title: "Acme Corp",
+            title: `${inJob.title}@${inJob.company}`,
             description: "current job",
             data: JSON.stringify(jobData),
             type_id: 3,
