@@ -2,7 +2,7 @@ import { useState } from "react";
 import { CreateDemoResume } from "../../helpers/CreateDemoResume";
 import { useRouter } from "@tanstack/react-router";
 
-import {Education, IntakeInfo, Job, Personal, Project, SkillPoint } from "./types"
+import { Education, IntakeInfo, Job, Personal, Project, SkillPoint } from "./types"
 import { EducationSection, ExperienceSection, PersonalSection, ProjectsSection, SkillsSection } from "./sections";
 
 export function ResumeIntakeForm() {
@@ -15,7 +15,6 @@ export function ResumeIntakeForm() {
     const [summary, setSummary] = useState<string>();
     const [website, setWebsite] = useState<string>();
     const [github, setGithub] = useState<string>();
-    
 
     const [jobs, setJobs] = useState<Job[]>([]);
     const [skillPoints, setSkillPoints] = useState<SkillPoint[]>([]);
@@ -44,6 +43,7 @@ export function ResumeIntakeForm() {
             website,
             github
         }
+        
         const info : IntakeInfo = {
             personal : p,
             skills : skillPoints,
@@ -57,6 +57,18 @@ export function ResumeIntakeForm() {
         router.navigate({
             to: '/app',
         })
+    }
+
+    const removeExperience = (index : number) => {
+       setJobs(p => p.filter((_, idx) => idx !== index))
+    }
+
+    const removeProject = (index : number) => {
+       setProjects(p => p.filter((_, idx) => idx !== index))
+    }
+
+    const removeEducation = (index : number) => {
+       setEducation(p => p.filter((_, idx) => idx !== index))
     }
 
     return (
@@ -80,11 +92,11 @@ export function ResumeIntakeForm() {
 
                 <SkillsSection skillPoints={skillPoints} setSkillPoints={setSkillPoints} addSkill={addSkill} />
 
-                <ExperienceSection jobs={jobs} setJobs={setJobs} addJob={addJob} />
+                <ExperienceSection jobs={jobs} setJobs={setJobs} addJob={addJob} close={removeExperience} />
 
-                <ProjectsSection projects={projects} setProjects={setProjects} addProject={addProject} />
+                <ProjectsSection projects={projects} setProjects={setProjects} addProject={addProject} close={removeProject} />
 
-                <EducationSection education={education} setEducation={setEducation} addEducation={addEducation} />
+                <EducationSection education={education} setEducation={setEducation} addEducation={addEducation} close={removeEducation} />
 
                 <button onClick={() => Create()}>CREATE</button>
             </div>

@@ -1,8 +1,7 @@
 
 import { Dispatch, SetStateAction } from "react"
 import { Education, Job, Project, SkillPoint } from "./types"
-import { AddButton, Card, Section } from "./ui"
-import { Input, Textarea } from "./ui"
+import { AddButton, Card, Section, Input, Textarea } from "./ui"
 
 export type PersonalSectionProps = {
   name?: string
@@ -110,13 +109,14 @@ export type ExperienceProps = {
     jobs:  Job[] 
     setJobs: (value: SetStateAction<Job[]>) => void
     addJob: () => void
+    close: (index: number) => void
 }
 
 export const ExperienceSection = (props : ExperienceProps) => {
     return(
         <Section title="Experience">
             {props.jobs.map((job, i) => (
-                <Card key={i}>
+                <Card key={i} onClose={() => props.close(i)}>
                     <Input label="Company" value={job.company}
                         onChange={(v : string) => props.setJobs(j => j.map((x, idx) => idx === i ? { ...x, company: v } : x))} />
                     <Input label="Title" value={job.title}
@@ -137,18 +137,19 @@ export const ExperienceSection = (props : ExperienceProps) => {
     )
 }
 
-
 export type ProjectsProps = {
   projects: Project[]
   setProjects: (value: SetStateAction<Project[]>) => void
   addProject: () => void
+  close: (index: number) => void
 }
 
 export const ProjectsSection = (props: ProjectsProps) => {
+
   return (
     <Section title="Projects">
       {props.projects.map((project, i) => (
-        <Card key={i}>
+        <Card key={i} onClose={() => props.close(i)}>
           <Input
             label="Title"
             value={project.title}
@@ -211,13 +212,14 @@ export type EducationProps = {
   education: Education[]
   setEducation: (value: SetStateAction<Education[]>) => void
   addEducation: () => void
+  close: (index: number) => void
 }
 
 export const EducationSection = (props: EducationProps) => {
   return (
     <Section title="Education">
       {props.education.map((ed, i) => (
-        <Card key={i}>
+        <Card key={i} onClose={() => props.close(i)}>
           <Input
             label="School"
             value={ed.school}

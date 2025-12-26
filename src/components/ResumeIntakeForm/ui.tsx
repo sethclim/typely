@@ -11,11 +11,26 @@ export const Section = ({ title, children }: SectionProps) => (
   </div>
 );
 
+import { XMarkIcon } from "@heroicons/react/24/solid"
+
 export type CardProps = {
     children : ReactNode
+    onClose?: () => void
 }
-export const Card = ({ children }: CardProps) => (
+export const Card = ({ children, onClose }: CardProps) => (
   <div className="bg-white/5 border border-white/10 rounded-xl p-4 space-y-4">
+    {
+      onClose ? (
+        <div className="w-full h-full relative flex justify-end">
+          <button
+            onClick={onClose}
+            className="p-1 rounded group"
+          >
+            <XMarkIcon className="h-5 w-5 hover:text-black" />
+          </button>
+        </div>
+      ):  null
+    }
     {children}
   </div>
 );
