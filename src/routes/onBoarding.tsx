@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import ResumeStylePicker from '../components/ResumeStylePicker'
 import { useState } from 'react'
-import ResumeIntakeForm from '../components/ResumeIntakeForm'
+import { ResumeIntakeForm } from '../components/ResumeIntakeForm'
 
 export const Route = createFileRoute('/onBoarding')({
   component: RouteComponent,
