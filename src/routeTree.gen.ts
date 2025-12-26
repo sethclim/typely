@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as PricingRouteImport } from './routes/pricing'
+import { Route as OnBoardingRouteImport } from './routes/onBoarding'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as AppRouteImport } from './routes/app'
@@ -18,6 +19,11 @@ import { Route as IndexRouteImport } from './routes/index'
 const PricingRoute = PricingRouteImport.update({
   id: '/pricing',
   path: '/pricing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnBoardingRoute = OnBoardingRouteImport.update({
+  id: '/onBoarding',
+  path: '/onBoarding',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -46,6 +52,7 @@ export interface FileRoutesByFullPath {
   '/app': typeof AppRoute
   '/faq': typeof FaqRoute
   '/login': typeof LoginRoute
+  '/onBoarding': typeof OnBoardingRoute
   '/pricing': typeof PricingRoute
 }
 export interface FileRoutesByTo {
@@ -53,6 +60,7 @@ export interface FileRoutesByTo {
   '/app': typeof AppRoute
   '/faq': typeof FaqRoute
   '/login': typeof LoginRoute
+  '/onBoarding': typeof OnBoardingRoute
   '/pricing': typeof PricingRoute
 }
 export interface FileRoutesById {
@@ -61,14 +69,15 @@ export interface FileRoutesById {
   '/app': typeof AppRoute
   '/faq': typeof FaqRoute
   '/login': typeof LoginRoute
+  '/onBoarding': typeof OnBoardingRoute
   '/pricing': typeof PricingRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/app' | '/faq' | '/login' | '/pricing'
+  fullPaths: '/' | '/app' | '/faq' | '/login' | '/onBoarding' | '/pricing'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/app' | '/faq' | '/login' | '/pricing'
-  id: '__root__' | '/' | '/app' | '/faq' | '/login' | '/pricing'
+  to: '/' | '/app' | '/faq' | '/login' | '/onBoarding' | '/pricing'
+  id: '__root__' | '/' | '/app' | '/faq' | '/login' | '/onBoarding' | '/pricing'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -76,6 +85,7 @@ export interface RootRouteChildren {
   AppRoute: typeof AppRoute
   FaqRoute: typeof FaqRoute
   LoginRoute: typeof LoginRoute
+  OnBoardingRoute: typeof OnBoardingRoute
   PricingRoute: typeof PricingRoute
 }
 
@@ -86,6 +96,13 @@ declare module '@tanstack/react-router' {
       path: '/pricing'
       fullPath: '/pricing'
       preLoaderRoute: typeof PricingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/onBoarding': {
+      id: '/onBoarding'
+      path: '/onBoarding'
+      fullPath: '/onBoarding'
+      preLoaderRoute: typeof OnBoardingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -124,6 +141,7 @@ const rootRouteChildren: RootRouteChildren = {
   AppRoute: AppRoute,
   FaqRoute: FaqRoute,
   LoginRoute: LoginRoute,
+  OnBoardingRoute: OnBoardingRoute,
   PricingRoute: PricingRoute,
 }
 export const routeTree = rootRouteImport

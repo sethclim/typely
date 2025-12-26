@@ -8,7 +8,7 @@ import { ResumeProvider } from '../context/resume/ResumeProvider';
 import { DB } from '../db';
 import { ResumeConfigTable } from '../db/tables';
 import { ResumeConfigRow } from '../db/types';
-import { CreateDemoResume } from '../helpers/CreateDemoResume';
+// import { CreateDemoResume } from '../helpers/CreateDemoResume';
 
 
 export const Route = createFileRoute('/app')({
@@ -24,25 +24,25 @@ function HomeComponent() {
 
     const [expanded, setExpanded] = useState(true);
 
-    useEffect(() => {
-        const init = async () => {
-        await DB.ready;
-        const rows = ResumeConfigTable.getResumeConfig(1);
-        if(rows.length == 0)
-            CreateDemoResume();
+    // useEffect(() => {
+    //     const init = async () => {
+    //     await DB.ready;
+    //     const rows = ResumeConfigTable.getResumeConfig(1);
+    //     if(rows.length == 0)
+    //         CreateDemoResume();
 
 
-        // // Whenever the auth state changes, we receive an event and a session object.
-        // // Save the user from the session object to the state.
-        // supabase.auth.onAuthStateChange((event, session) => {
-        //     if (event === "SIGNED_IN") {
-        //     setUser(session?.user);
-        //     }
-        // });
-        }
-        init();
-    }, []
-    )
+    //     // // Whenever the auth state changes, we receive an event and a session object.
+    //     // // Save the user from the session object to the state.
+    //     // supabase.auth.onAuthStateChange((event, session) => {
+    //     //     if (event === "SIGNED_IN") {
+    //     //     setUser(session?.user);
+    //     //     }
+    //     // });
+    //     }
+    //     init();
+    // }, []
+    // )
 
     const fetchResumes = () => {
         const rows = ResumeConfigTable.getAllResumeConfig();
