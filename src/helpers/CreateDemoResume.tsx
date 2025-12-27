@@ -15,6 +15,8 @@ export const CreateDemoResume = (info : IntakeInfo) =>{
     let sectionId = 1
     let dataItemId = 1
 
+    console.log("Creating Resume")
+
     ////////////////////////////////////////////////
     // RESUME CONFIG
     ///////////////////////////////////////////////
@@ -27,6 +29,7 @@ export const CreateDemoResume = (info : IntakeInfo) =>{
         "updated_at" : Date.now().toString(),
     })
     
+    console.log("    sectionId " + sectionId)
     ////////////////////////////////////////////////
     // Header
     ///////////////////////////////////////////////
@@ -98,6 +101,7 @@ export const CreateDemoResume = (info : IntakeInfo) =>{
     ////////////////////////////////////////////////
     // SKILLS
     ///////////////////////////////////////////////
+    console.log("    sectionId " + sectionId)
     ResumeSectionConfigTable.insert({
         "id": sectionId,
         "title": "C++ Skills",
@@ -154,16 +158,17 @@ export const CreateDemoResume = (info : IntakeInfo) =>{
     ////////////////////////////////////////////////
     // Project
     ///////////////////////////////////////////////
-    ResumeSectionConfigTable.insert({
-        "id": sectionId,
-        "title": "C++ Project",
-        "resume_id": ResumeId,
-        "template_id": 4,
-        "section_order": 8, 
-        "section_type": "project"
-    })
-
+    
     info.projects.forEach(proj =>{
+        console.log("    sectionId " + sectionId)
+        ResumeSectionConfigTable.insert({
+            "id": sectionId,
+            "title": "C++ Project",
+            "resume_id": ResumeId,
+            "template_id": 4,
+            "section_order": 8, 
+            "section_type": "project"
+        })
         const project = [
             ["TITLE", proj.title],
             ["HIGHLIGHTS", "C++, Vulkan"],
@@ -197,6 +202,7 @@ export const CreateDemoResume = (info : IntakeInfo) =>{
     // Education
     ///////////////////////////////////////////////
     info.education.forEach(edu =>{
+        console.log("    sectionId " + sectionId)
         ResumeSectionConfigTable.insert({
             "id": sectionId,
             "title": "Education",
@@ -236,6 +242,7 @@ export const CreateDemoResume = (info : IntakeInfo) =>{
     ////////////////////////////////////////////////
     // Work section header
     ///////////////////////////////////////////////
+    console.log("    sectionId " + sectionId)
     ResumeSectionConfigTable.insert({
         "id": sectionId,
         "title": "Work Title Section",
@@ -271,6 +278,7 @@ export const CreateDemoResume = (info : IntakeInfo) =>{
     ////////////////////////////////////////////////
     // Project section header
     ///////////////////////////////////////////////
+    console.log("    sectionId " + sectionId)
     ResumeSectionConfigTable.insert({
         "id": sectionId,
         "title": "Project Title Section",
@@ -307,6 +315,7 @@ export const CreateDemoResume = (info : IntakeInfo) =>{
     ////////////////////////////////////////////////
     // Education Section Header
     ///////////////////////////////////////////////
+    console.log("    sectionId " + sectionId)
     ResumeSectionConfigTable.insert({
         "id": sectionId,
         "title": "Education Title Section",
@@ -343,6 +352,7 @@ export const CreateDemoResume = (info : IntakeInfo) =>{
     // Jobs
     ///////////////////////////////////////////////
     info.jobs.forEach(inJob => {
+        console.log("    sectionId " + sectionId)
         ResumeSectionConfigTable.insert({
             "id": sectionId,
             "title": "Current Job",

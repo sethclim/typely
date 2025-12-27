@@ -188,9 +188,11 @@ export const ResumeView = () => {
 
     if(filtered)
       setSelectedTemplate(filtered.name)
-    
+    else{
+       setSelectedTemplate("")
+    }
   }
-
+  
   return (
     <DndContext onDragStart={handleDragStart}  onDragEnd={handleDragEnd} sensors={sensors} >
       <div className='flex flex-1 flex-row w-lvw justify-start bg-darkest p-4 gap-2'>
