@@ -23,6 +23,7 @@ import { Panel, PanelResizeHandle, PanelGroup } from 'react-resizable-panels';
 
 import { OutputView } from './OutputView';
 import { CurrentResumeBlockViewer } from './CurrentResumeBlockViewer';
+import { DB } from '../db';
 
 type ReplaceDataItemInfo = {
   section_id : string
@@ -48,10 +49,14 @@ export const ResumeView = () => {
   const [draggingDataSection, setDraggingDataSection]= useState<ResumeSection | null>(null);
 
   useEffect(()=>{
-    const templateData = TemplateTable.getAll();
-    const hydratedTemplate = templateData.map((item) => mapRowToTemplate(item))
-    hydratedTemplate.forEach(t => console.log(t.sectionType))
-    setTemplates(hydratedTemplate)
+    const init = async() =>{
+      await DB.ready
+      const templateData = TemplateTable.getAll();
+      const hydratedTemplate = templateData.map((item) => mapRowToTemplate(item))
+      hydratedTemplate.forEach(t => console.log(t.sectionType))
+      setTemplates(hydratedTemplate)
+    }
+    init()
   },[])
 
   const createResumeComponent = () => {
