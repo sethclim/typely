@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 
 import {
     arrayMove,
-  SortableContext
+    SortableContext
 } from '@dnd-kit/sortable';
 import { ResumeSectionConfigTable } from "../db/tables";
 
