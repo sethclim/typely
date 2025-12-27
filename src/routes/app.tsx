@@ -8,6 +8,7 @@ import { ResumeProvider } from '../context/resume/ResumeProvider';
 import { DB } from '../db';
 import { ResumeConfigTable } from '../db/tables';
 import { ResumeConfigRow } from '../db/types';
+import { ResumeSidebarContent } from '../components/ResumeSidebarContent';
 // import { CreateDemoResume } from '../helpers/CreateDemoResume';
 
 
@@ -64,12 +65,13 @@ function HomeComponent() {
     <ResumeProvider resumeId={activeId}>
         <Header expanded={expanded} setExpanded={setExpanded} />
         <div className='grow flex flex-row'>
-            <Sidebar
-                resumes={resumes}
+        
+            <Sidebar expanded={expanded}>
+                <ResumeSidebarContent  resumes={resumes}
                 activeId={activeId}
                 onSelect={setActiveId}
-                expanded={expanded}
-            />
+                expanded={expanded} />
+            </Sidebar>
             <ResumeView />
         </div>
         <Footer />
