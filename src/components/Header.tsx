@@ -1,9 +1,11 @@
 import { ChevronDoubleRightIcon } from "@heroicons/react/20/solid"
 import { ChevronDoubleLeftIcon } from "@heroicons/react/20/solid"
+import { ReactNode } from "react"
 
 export type HeaderProps = {
     expanded : boolean
     setExpanded: React.Dispatch<React.SetStateAction<boolean>>
+    children? : ReactNode
 }
 
 export const Header = (props : HeaderProps) =>{
@@ -24,6 +26,7 @@ export const Header = (props : HeaderProps) =>{
             <div className="flex flex-col justify-center">
                 <h3 className="text-white text-3xl font-bold">TYPELY</h3>
             </div>
+            {props.children}
         </div>
     )
 }

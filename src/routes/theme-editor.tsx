@@ -1,5 +1,5 @@
 import { Editor, Monaco } from '@monaco-editor/react'
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import { Header } from '../components/Header';
 import { Sidebar } from '../components/Sidebar';
 import { Footer } from '../components/Footer';
@@ -110,7 +110,13 @@ function RouteComponent() {
     return (
 
         <>
-            <Header expanded={expanded} setExpanded={setExpanded} />
+            <Header expanded={expanded} setExpanded={setExpanded} >
+              <div className='w-full flex justify-end items-center pr-30'>
+                <Link to="/app">
+                  <a className='text-grey hover:text-mywhite'>BACK</a>
+                </Link>
+              </div>
+            </Header>
             <div className='grow flex flex-row'>
                 <Sidebar
                     expanded={expanded}
@@ -124,13 +130,13 @@ function RouteComponent() {
                   </div>
                 </Sidebar>
                 <Editor 
-                    height="h-full" 
-                    defaultLanguage="latex" 
-                    value={template?.content} 
-                    // defaultValue="% some comment\n\\section{Hello $x^2$}"
-                    theme="latex-dark"
-                    onMount={handleEditorDidMount}
-                    onChange={handleEditorChange}
+                  height="h-full" 
+                  defaultLanguage="latex" 
+                  value={template?.content} 
+                  // defaultValue="% some comment\n\\section{Hello $x^2$}"
+                  theme="latex-dark"
+                  onMount={handleEditorDidMount}
+                  onChange={handleEditorChange}
                 />
             </div>
             <Footer />
