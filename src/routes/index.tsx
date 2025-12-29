@@ -4,14 +4,12 @@ export const Route = createFileRoute('/')({
   component: RouteComponent,
 })
 
-
 export const Hero = () => {
   return (
     <div className="relative w-full h-[70vh] flex flex-col items-center justify-start overflow-hidden bg-gradient-to-br from-darkest via-darker to-darkest">
-     
-        <div className="flex w-full justify-start bg-black/20 backdrop-blur-md min-h-15 items-center p-4">
-            <h3 className="text-white text-3xl font-bold">TYPELY</h3>
-        </div>
+      <div className="flex w-full justify-start bg-black/20 backdrop-blur-md min-h-15 items-center p-4">
+          <h3 className="text-white text-3xl font-bold">TYPELY</h3>
+      </div>
      
       {/* Gradient mesh blobs */}
       <div className="absolute w-[600px] h-[600px] bg-primary/30 rounded-full blur-[150px] -top-40 -left-20" />
@@ -29,7 +27,7 @@ export const Hero = () => {
             </p>
 
             <Link
-                to="/app"
+                to="/onBoarding"
                 className="px-6 py-3 bg-white text-black font-semibold rounded-xl shadow-md hover:bg-white/90 transition inline-block"
                 >
                 Start Building
