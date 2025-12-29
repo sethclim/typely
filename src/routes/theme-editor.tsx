@@ -15,15 +15,47 @@ export const Route = createFileRoute('/theme-editor')({
   component: RouteComponent,
 })
 
+function useSaveShortcut(onSave: () => void) {
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // For Windows/Linux: ctrlKey + 's'
+      // For Mac: metaKey (Cmd) + 's'
+      if ((event.ctrlKey || event.metaKey) && event.key === 's') {
+        event.preventDefault(); // Prevent the browser's save dialog
+        onSave();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [onSave]);
+}
+
 function RouteComponent() {
 
     const [expanded, setExpanded] = useState(true);
 
     const [templates, setTemplates] = useState<Array<Template>>();
 
-    const [code, setCode] = useState<string | undefined>(undefined)
+    const [template, setTemplate] = useState<Template | undefined>(undefined)
+    const [activeChanges, setActiveChanges] = useState<string | undefined>(undefined)
 
-    // const monaco = useMonaco();
+    
+    const saveChange = () => {
+        if(!template || !activeChanges)
+          return
+        console.log('Saving...');
+        TemplateTable.update(template.id, activeChanges)
+    }
+
+    useSaveShortcut(saveChange);
+
+    const handleEditorChange = (text : string | undefined) => {
+        setActiveChanges(text)
+    }
+
 
     function handleEditorDidMount(editor: monacoEditor.editor.IStandaloneCodeEditor , monaco: Monaco) {
   
@@ -60,8 +92,10 @@ function RouteComponent() {
         await DB.ready;
        
         const templateData = TemplateTable.getAll();
-        const hydratedTemplate = templateData.map((item) => mapRowToTemplate(item))
-        setTemplates(hydratedTemplate)
+        const hydratedTemplates = templateData.map((item) => mapRowToTemplate(item))
+        setTemplates(hydratedTemplates)
+        if(hydratedTemplates.length > 0)
+          setTemplate(hydratedTemplates[0])
     }
 
     useEffect(() => {
@@ -81,20 +115,22 @@ function RouteComponent() {
                 <Sidebar
                     expanded={expanded}
                 >
+                  <div className='min-w-50 flex flex-col gap-2'>
                     {
                         templates?.map(t => (
-                            <button className='text-mywhite' onClick={() => setCode(t.content)}>{t.name}</button>
+                            <button className='text-mywhite text-left p-2 bg-darker hover:bg-darkest hover:text-primary mx-2' onClick={() => setTemplate(t)}>{t.name}</button>
                         ))
                     }
+                  </div>
                 </Sidebar>
                 <Editor 
                     height="h-full" 
                     defaultLanguage="latex" 
-                    value={code} 
-                    defaultValue="% some comment\n\\section{Hello $x^2$}"
+                    value={template?.content} 
+                    // defaultValue="% some comment\n\\section{Hello $x^2$}"
                     theme="latex-dark"
                     onMount={handleEditorDidMount}
-                    // onChange={handleEditorChange}
+                    onChange={handleEditorChange}
                 />
             </div>
             <Footer />
