@@ -27,6 +27,7 @@ function RouteComponent() {
 
     function handleEditorDidMount(editor: monacoEditor.editor.IStandaloneCodeEditor , monaco: Monaco) {
   
+      monaco.languages.register({ id: "latex" });
       monaco.languages.setMonarchTokensProvider("latex", myLang);
       monaco.editor.defineTheme("latex-dark", {
         base: "vs-dark",
@@ -36,6 +37,7 @@ function RouteComponent() {
           { token: "string.math", foreground: "4EC9B0" },
           { token: "comment", foreground: "6A9955" },
           { token: "delimiter.brace", foreground: "D4D4D4" },
+          { token: "placeholder", foreground: "FF9E64", fontStyle: "bold underline" },
         ],
         colors: {
           "editor.background": "#0F1117",
@@ -88,7 +90,7 @@ function RouteComponent() {
                 <Editor 
                     height="h-full" 
                     defaultLanguage="latex" 
-                    // value={code} 
+                    value={code} 
                     defaultValue="% some comment\n\\section{Hello $x^2$}"
                     theme="latex-dark"
                     onMount={handleEditorDidMount}
