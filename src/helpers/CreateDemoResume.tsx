@@ -435,7 +435,7 @@ export const CreateDemoResume = (info : IntakeInfo) =>{
 
     let skillsLatex = ""
 
-    info.skills.forEach((skillIn, i) => {
+    info.skills.forEach((_, i) => {
         skillsLatex = skillsLatex.concat(`\\textbf{[[SKILL_LABEL_${i}]]:} [[Point_${i}]] \\newline\n`)
     })
 

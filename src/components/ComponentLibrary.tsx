@@ -207,7 +207,7 @@ const AddBar = (props: AddBarProps) => {
 export const ComponentLibrary = () => {
 
     const [dataItems, setDataItems] = useState<Array<DataItem>>();
-    const [templates, setTemplates] = useState<Array<Template>>();
+    // const [templates, setTemplates] = useState<Array<Template>>();
 
     const [level, setLevel] = useState("DataItems");
     const [isDataItemModalOpen, setIsOpenDataItemModal] = useState(false);
@@ -219,9 +219,9 @@ export const ComponentLibrary = () => {
         const hydrated = data.map((item) => mapRowToDataItem(item))
         setDataItems(hydrated)
 
-        const templateData = TemplateTable.getAll();
-        const hydratedTemplate = templateData.map((item) => mapRowToTemplate(item))
-        setTemplates(hydratedTemplate)
+        // const templateData = TemplateTable.getAll();
+        // const hydratedTemplate = templateData.map((item) => mapRowToTemplate(item))
+        // setTemplates(hydratedTemplate)
     }
 
     useEffect(() => {
