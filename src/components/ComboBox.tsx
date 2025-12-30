@@ -30,7 +30,7 @@ export default function ComboBox(props : ComboBoxProps) {
 
   return (
     <div className="w-64 text-mywhite my-2">
-      <Combobox value={props.selected} onChange={props.onSelectedChange}>
+      <Combobox immediate value={props.selected} onChange={props.onSelectedChange} >
         <div className="relative">
           <ComboboxInput
             className="w-full rounded-lg border border-gray-300 py-2 pl-3 pr-10 text-sm

@@ -34,7 +34,7 @@ export const OutputView = (props : OutputViewProps) => {
 
     useEffect(() => {
         const init = async() => {
-            let { data: users } = await supabase
+            const { data: users } = await supabase
               .from('users')
               .select('compile_count')
 
@@ -152,7 +152,7 @@ export const OutputView = (props : OutputViewProps) => {
                     try{
                         await compileLatex(props.resume.uuid, latex);
                     }
-                    catch(ex){
+                    catch{
                         if(pdfData !== null)
                         {
                             setPdfUrl(pdfData.url);

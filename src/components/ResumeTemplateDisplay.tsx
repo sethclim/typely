@@ -125,7 +125,7 @@ export const ResumeSectionCard = (props : ResumeTemplateDisplayProps) => {
                         {props.resumeSection.sectionType}
                     </div>
                 </div>
-                <TemplateItemDisplay template={props.resumeSection.template}  section_id={props.resumeSection.id} />
+                {/* <TemplateItemDisplay template={props.resumeSection.template}  section_id={props.resumeSection.id} /> */}
                 <DataItemDisplay data={props.resumeSection.items} section_id={props.resumeSection.id} />
             </div>
             <div className="pl-2">

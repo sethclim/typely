@@ -1,14 +1,14 @@
 
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useResume } from '../context/resume/ResumeContext'
-import { ResumeSectionConfigTable, ResumeSectionDataTable } from '../db/tables';
+import { ResumeSectionConfigTable, ResumeSectionDataTable, TemplateTable } from '../db/tables';
 
 import Modal from "./Modal";
 import ComboBox from './ComboBox';
 
-import { ComponentLibrary, DataItemComponent, TemplateItemComponent } from './ComponentLibrary';
+import { ComponentLibrary, DataItemComponent, mapRowToTemplate, TemplateItemComponent } from './ComponentLibrary';
 
 import 'react-pdf/dist/Page/TextLayer.css';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
@@ -23,6 +23,7 @@ import { Panel, PanelResizeHandle, PanelGroup } from 'react-resizable-panels';
 
 import { OutputView } from './OutputView';
 import { CurrentResumeBlockViewer } from './CurrentResumeBlockViewer';
+import { DB } from '../db';
 
 type ReplaceDataItemInfo = {
   section_id : string
@@ -35,8 +36,11 @@ export const ResumeView = () => {
   const [isNewResumeOpen, setIsNewRsumeOpen] = useState(false);
   const [isReplaceDataItemOpen, setReplaceDataItemOpen] = useState(false);
   const [replaceDataItemData, setReplaceDataItemData] = useState<ReplaceDataItemInfo | null>(null);
-  const [selected, setSelected] = useState<string | null>(null);
+  const [selectedType, setSelectedType] = useState<string | null>(null);
+  const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
   const [title, setTitle] = useState<string | null>(null);
+
+  const [templates, setTemplates] = useState<Array<Template>>([])
 
   const [isDragging, setIsDragging] = useState(false);
 
@@ -44,19 +48,30 @@ export const ResumeView = () => {
   const [draggingDataTemplate, setDraggingDataTemplate]= useState<Template | null>(null);
   const [draggingDataSection, setDraggingDataSection]= useState<ResumeSection | null>(null);
 
+  useEffect(()=>{
+    const init = async() =>{
+      await DB.ready
+      const templateData = TemplateTable.getAll();
+      const hydratedTemplate = templateData.map((item) => mapRowToTemplate(item))
+      hydratedTemplate.forEach(t => console.log(t.sectionType))
+      setTemplates(hydratedTemplate)
+    }
+    init()
+  },[])
+
   const createResumeComponent = () => {
-    if (myResume === null || selected == null || title == undefined)
+    if (myResume === null || selectedType == null || title == undefined)
       return;
 
     ResumeSectionConfigTable.insert({
       "resume_id": myResume!.id,
       "title": title,
-      "template_id": -1,
+      "template_id": selectedTemplate ? templates.find(t => t.name == selectedTemplate)?.id ?? -1 : -1,
       "section_order": 0, //TODO needs to be the last one in the list
-      "section_type": selected!
+      "section_type": selectedType!
     })
 
-    setSelected(null);
+    setSelectedType(null);
     setIsNewRsumeOpen(false);
   }
 
@@ -170,6 +185,19 @@ export const ResumeView = () => {
   const mouseSensor = useSensor(MouseSensor, { activationConstraint });
   const sensors = useSensors(mouseSensor);
 
+
+  const onSelectedTypeChange = (value: string | null) => {
+    setSelectedType(value)
+
+    const filtered = templates.find(t => t.sectionType == value?.toLowerCase())
+
+    if(filtered)
+      setSelectedTemplate(filtered.name)
+    else{
+       setSelectedTemplate("")
+    }
+  }
+  
   return (
     <DndContext onDragStart={handleDragStart}  onDragEnd={handleDragEnd} sensors={sensors} >
       <div className='flex flex-1 flex-row w-lvw justify-start bg-darkest p-4 gap-2'>
@@ -202,10 +230,14 @@ export const ResumeView = () => {
          <Modal isOpen={isNewResumeOpen} onClose={() => setIsNewRsumeOpen(false)} width='w-100'>
           <h2 className="text-xl font-bold mb-4 text-mywhite">New Resume Block</h2>
           <form>
-            <p className="text-grey">Title</p>
+            <p className="text-grey">Block Title</p>
             <input className='bg-gray-200 w-64 p-1 my-2' value={title ?? ""} onChange={(e) => setTitle(e.target.value)}  />
             <p className="text-grey">Type</p>
-            <ComboBox selected={selected} onSelectedChange={setSelected} options={["Skills"]} />
+            <ComboBox selected={selectedType} onSelectedChange={onSelectedTypeChange} options={["Header", "Skills", "Experience", "Project", "Education"]} />
+            <div className={selectedType ? "visible" : "invisible"}>
+              <p className="text-grey">Template</p>
+              <ComboBox selected={selectedTemplate} onSelectedChange={setSelectedTemplate} options={templates.map(t => t.name)} />
+            </div>
           </form>
           <div className='flex flex-row gap-4'>
             <button
@@ -226,12 +258,6 @@ export const ResumeView = () => {
         <Modal isOpen={isReplaceDataItemOpen} onClose={() => setReplaceDataItemOpen(false)} width='w-100'>
           <h2 className="text-xl text-center font-bold mb-4 text-mywhite">{replaceDataItemData?.active.title} has same keys as {replaceDataItemData?.match.title}</h2>
           <h2 className="text-xl text-center font-bold mb-4 text-red-400">Do You Want To Replace?</h2>
-          {/* <form>
-            <p className="text-black">Title</p>
-            <input className='bg-gray-200 w-64' value={title ?? ""} onChange={(e) => setTitle(e.target.value)}  />
-            <p className="text-black">Type</p>
-            <ComboBox selected={selected} onSelectedChange={setSelected} options={["Skills"]} />
-          </form> */}
           <div className='flex justify-center flex-row gap-4'>
             <button
               className="mt-4 px-4 py-2 bg-dark text-white hover:bg-grey hover:text-darkest rounded"

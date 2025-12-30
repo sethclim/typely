@@ -240,7 +240,7 @@ export const ComponentLibrary = () => {
             <h3 className="text-xl text-bold text-grey">Component Library</h3>
 
             <ThreeWaySlider
-                options={["DataItems", "Templates", "Instances"]}
+                options={["DataItems", "Instances"]}
                 value={level}
                 onChange={setLevel}
                 className="w-full"
@@ -266,7 +266,7 @@ export const ComponentLibrary = () => {
                         )
                     : null
                 }
-                {
+                {/* {
                     (level == "Templates") ?  
                     <>
                         <AddBar title="Add Template" action={setIsOpenTemplateModal} />
@@ -283,7 +283,7 @@ export const ComponentLibrary = () => {
                         </div> 
                     </>
                     : null
-                }
+                } */}
 
             <AddDetailsModal isOpen={isDataItemModalOpen} setIsOpen={setIsOpenDataItemModal}  />
             <AddTemplateModal isOpen={isTemplateModalOpen} setIsOpen={setIsOpenTemplateModal}  />

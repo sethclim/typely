@@ -12,8 +12,9 @@ const ResumeId = 1
 
 export const CreateDemoResume = (info : IntakeInfo) =>{
 
-    let sectionId = 1
     let dataItemId = 1
+
+    console.log("Creating Resume")
 
     ////////////////////////////////////////////////
     // RESUME CONFIG
@@ -30,8 +31,7 @@ export const CreateDemoResume = (info : IntakeInfo) =>{
     ////////////////////////////////////////////////
     // Header
     ///////////////////////////////////////////////
-    ResumeSectionConfigTable.insert({
-        "id": sectionId,
+    const headerSectionId = ResumeSectionConfigTable.insert({
         "title": "Custom Header",
         "resume_id": ResumeId,
         "template_id": 1,
@@ -67,7 +67,7 @@ export const CreateDemoResume = (info : IntakeInfo) =>{
     })
 
     ResumeSectionDataTable.insert({
-        section_id: sectionId,  
+        section_id: headerSectionId,  
         data_item_id: dataItemId
     })
 
@@ -88,25 +88,23 @@ export const CreateDemoResume = (info : IntakeInfo) =>{
     })
 
     ResumeSectionDataTable.insert({
-        section_id: sectionId,
+        section_id: headerSectionId,
         data_item_id: dataItemId
     })
 
     dataItemId++
-    sectionId++
 
     ////////////////////////////////////////////////
     // SKILLS
     ///////////////////////////////////////////////
-    ResumeSectionConfigTable.insert({
-        "id": sectionId,
+    const skillsSectionId = ResumeSectionConfigTable.insert({
+        // "id": sectionId,
         "title": "C++ Skills",
         "resume_id": ResumeId,
         "template_id": 2,
         "section_order": 1,
         "section_type": "skills"
     })
-
 
     const cplusSkills : Array<Array<string>> = []
     const skillLabels : Array<Array<string>> = []
@@ -127,7 +125,7 @@ export const CreateDemoResume = (info : IntakeInfo) =>{
     })
 
     ResumeSectionDataTable.insert({
-        section_id: sectionId,
+        section_id: skillsSectionId,
         data_item_id: dataItemId
     })
 
@@ -144,26 +142,25 @@ export const CreateDemoResume = (info : IntakeInfo) =>{
     })
 
     ResumeSectionDataTable.insert({
-        section_id: sectionId,
+        section_id: skillsSectionId,
         data_item_id: dataItemId
     })
 
     dataItemId++
-    sectionId++
 
     ////////////////////////////////////////////////
     // Project
     ///////////////////////////////////////////////
-    ResumeSectionConfigTable.insert({
-        "id": sectionId,
-        "title": "C++ Project",
-        "resume_id": ResumeId,
-        "template_id": 4,
-        "section_order": 8, 
-        "section_type": "project"
-    })
-
+    
     info.projects.forEach(proj =>{
+        const thisProjectSectionId = ResumeSectionConfigTable.insert({
+            // "id": sectionId,
+            "title": "C++ Project",
+            "resume_id": ResumeId,
+            "template_id": 4,
+            "section_order": 8, 
+            "section_type": "project"
+        })
         const project = [
             ["TITLE", proj.title],
             ["HIGHLIGHTS", "C++, Vulkan"],
@@ -185,20 +182,18 @@ export const CreateDemoResume = (info : IntakeInfo) =>{
         })
     
         ResumeSectionDataTable.insert({
-            section_id: sectionId,
+            section_id: thisProjectSectionId,
             data_item_id: dataItemId
         })
     
         dataItemId++
-        sectionId++
     })
     
     ////////////////////////////////////////////////
     // Education
     ///////////////////////////////////////////////
     info.education.forEach(edu =>{
-        ResumeSectionConfigTable.insert({
-            "id": sectionId,
+        const thisEducationSectionId = ResumeSectionConfigTable.insert({
             "title": "Education",
             "resume_id": ResumeId,
             "template_id": 5,
@@ -225,19 +220,17 @@ export const CreateDemoResume = (info : IntakeInfo) =>{
         })
 
         ResumeSectionDataTable.insert({
-            section_id: sectionId,
+            section_id: thisEducationSectionId,
             data_item_id: dataItemId
         })
 
         dataItemId++
-        sectionId++
     })
 
     ////////////////////////////////////////////////
     // Work section header
     ///////////////////////////////////////////////
-    ResumeSectionConfigTable.insert({
-        "id": sectionId,
+    const workTitleSectionId = ResumeSectionConfigTable.insert({
         "title": "Work Title Section",
         "resume_id": ResumeId,
         "template_id": 6,
@@ -261,18 +254,16 @@ export const CreateDemoResume = (info : IntakeInfo) =>{
     })
 
     ResumeSectionDataTable.insert({
-        section_id: sectionId,
+        section_id: workTitleSectionId,
         data_item_id: dataItemId
     })
 
     dataItemId++
-    sectionId++
 
     ////////////////////////////////////////////////
     // Project section header
     ///////////////////////////////////////////////
-    ResumeSectionConfigTable.insert({
-        "id": sectionId,
+    const projectHeaderSectionId = ResumeSectionConfigTable.insert({
         "title": "Project Title Section",
         "resume_id": ResumeId,
         "template_id": 6,
@@ -297,18 +288,16 @@ export const CreateDemoResume = (info : IntakeInfo) =>{
     
 
     ResumeSectionDataTable.insert({
-        section_id: sectionId,
+        section_id: projectHeaderSectionId,
         data_item_id: dataItemId
     })
 
     dataItemId++
-    sectionId++
 
     ////////////////////////////////////////////////
     // Education Section Header
     ///////////////////////////////////////////////
-    ResumeSectionConfigTable.insert({
-        "id": sectionId,
+    const educationTitleSectionId = ResumeSectionConfigTable.insert({
         "title": "Education Title Section",
         "resume_id": ResumeId,
         "template_id": 6,
@@ -332,19 +321,17 @@ export const CreateDemoResume = (info : IntakeInfo) =>{
     })
 
     ResumeSectionDataTable.insert({
-        section_id: sectionId,
+        section_id: educationTitleSectionId,
         data_item_id: dataItemId
     })
 
     dataItemId++
-    sectionId++
 
     ////////////////////////////////////////////////
     // Jobs
     ///////////////////////////////////////////////
     info.jobs.forEach(inJob => {
-        ResumeSectionConfigTable.insert({
-            "id": sectionId,
+        const thisJobSectionId = ResumeSectionConfigTable.insert({
             "title": "Current Job",
             "resume_id": ResumeId,
             "template_id": 3,
@@ -372,12 +359,11 @@ export const CreateDemoResume = (info : IntakeInfo) =>{
         })
 
         ResumeSectionDataTable.insert({
-            section_id: sectionId,
+            section_id: thisJobSectionId,
             data_item_id: dataItemId
         })
         
         dataItemId++
-        sectionId++
     })
 
 

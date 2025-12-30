@@ -124,26 +124,28 @@ export const ResumeConfigTable = {
 
 export const ResumeSectionConfigTable = {
   insert: ({
-    id,
     resume_id,
     title,
     section_type,
     template_id,
     section_order,
-  }: ResumeSectionConfigRow) => {
-    if (id === undefined) {
-      DB.runAndSave(
-        `INSERT INTO ${RESUME_SECTION_CONFIG_TABLE} (resume_id, title, section_type, template_id, section_order) VALUES (?, ?, ?, ?, ?)`,
-        [resume_id, title, section_type, template_id, section_order]
-      );
-    } else {
-      DB.runAndSave(
-        `INSERT INTO ${RESUME_SECTION_CONFIG_TABLE} (id, resume_id, title, section_type, template_id, section_order) VALUES (?, ?, ?, ?, ?, ?)`,
-        [id, resume_id, title, section_type, template_id, section_order]
-      );
-    }
+  }: ResumeSectionConfigRow): number => {
+    const stmt = DB.db.prepare(`
+      INSERT INTO ${RESUME_SECTION_CONFIG_TABLE}
+      (resume_id, title, section_type, template_id, section_order)
+      VALUES (?, ?, ?, ?, ?)
+      RETURNING id;
+    `);
 
+    stmt.bind([resume_id, title, section_type, template_id, section_order]);
+
+    stmt.step();
+    const row = stmt.getAsObject();
+    stmt.free();
+
+    const newId = row.id as number;
     DB.notifyTable(RESUME_CONFIG_TABLE);
+    return newId;
   },
   updateTemplate: (id: string, template_id: string) => {
     // console.log(

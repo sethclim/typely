@@ -89,15 +89,10 @@ export function ResumeIntakeForm() {
                     onGithubChange={setGithub}
                     summary={summary}
                     onSummaryChange={setSummary} />
-
                 <SkillsSection skillPoints={skillPoints} setSkillPoints={setSkillPoints} addSkill={addSkill} />
-
                 <ExperienceSection jobs={jobs} setJobs={setJobs} addJob={addJob} close={removeExperience} />
-
                 <ProjectsSection projects={projects} setProjects={setProjects} addProject={addProject} close={removeProject} />
-
                 <EducationSection education={education} setEducation={setEducation} addEducation={addEducation} close={removeEducation} />
-
                 <button onClick={() => Create()}>CREATE</button>
             </div>
         </div>

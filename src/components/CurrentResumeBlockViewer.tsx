@@ -3,11 +3,14 @@ import { ResumeConfig, ResumeSection } from "../types"
 import { ResumeSectionCard } from "./ResumeTemplateDisplay";
 import { useEffect, useState } from "react";
 
+import { PencilIcon } from '@heroicons/react/20/solid';
+
 import {
     arrayMove,
-  SortableContext
+    SortableContext
 } from '@dnd-kit/sortable';
 import { ResumeSectionConfigTable } from "../db/tables";
+import { Link } from "@tanstack/react-router";
 
 export type CurrentResumeBlockViewerProps = {
     resume? : ResumeConfig | null,
@@ -67,7 +70,21 @@ export const CurrentResumeBlockViewer = (props : CurrentResumeBlockViewerProps) 
 
     return (
         <div className='flex flex-col gap-4 p-4'>
-            <h4 className='text-white text-lg font-bold'>Resume Components</h4>
+            <h4 className='text-white text-lg font-bold'>Resume Blocks</h4>
+            <div className="flex flex-row  p-2 bg-dark m-2">
+                <div className="w-full flex flex-row justify-start items-center gap-2 text-grey" > 
+                    <p className="">Theme:</p>
+                    <div className="flex flex-row gap-2 items-center justify-center">
+                        <h4 className="">Engineering</h4>
+                        <Link to="/theme-editor">
+                            <PencilIcon className="h-4 w-4 text-grey hover:text-mywhite cursor-pointer" />
+                        </Link>
+                    </div>
+                </div>
+                <div className="flex flex-col justify-center">
+                    <button className='bg-darker text-grey rounded-lg w-30 p-2 m-2' onClick={() => props.setIsNewRsumeOpen(true)}>Add Block +</button>
+                </div>
+            </div>
             <div className='flex flex-col gap-4 bg-darkest p-2'>
             {
                 props.resume && 
@@ -84,7 +101,6 @@ export const CurrentResumeBlockViewer = (props : CurrentResumeBlockViewerProps) 
                     </SortableContext>
             }
             </div>
-            <button className='bg-dark text-grey rounded-lg' onClick={() => props.setIsNewRsumeOpen(true)}>Add New Component +</button>
         </div>
     )
 }
