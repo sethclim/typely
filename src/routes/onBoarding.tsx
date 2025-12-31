@@ -22,7 +22,7 @@ function RouteComponent() {
                             <ResumeStylePicker onSelect={onSelect} /> 
                             <div className='w-full h-full flex flex-row justify-end'>
                             {
-                                selected ? <button className='bg-green-500 p-2 text-white rounded-sm' onClick={() => setStage(1)}>Next</button> : null
+                                selected ? <button id="onboarding-next" className='bg-green-500 p-2 text-white rounded-sm' onClick={() => setStage(1)}>Next</button> : null
                             }
                             </div>
                         </>

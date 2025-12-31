@@ -29,6 +29,7 @@ export default function ResumeStylePicker({
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Engineering */}
         <div
+          id="engineering-card"
           onClick={() => pick("engineering")}
           className={`${baseCard} ${
             selected === "engineering" ? selectedRing : ""
