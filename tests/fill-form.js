@@ -28,7 +28,7 @@ import { chromium } from "@playwright/test";
     await page.click('#skills-add-btn');
 
     await page.fill("#skills-title-0", "Languages");
-    await page.fill("#skills-points-0", "C++, Rust, Python, Kotlin, C#");
+    await page.fill("#skills-points-0", "C++, Rust, Python, Kotlin, C\\#");
 
     await page.click('#skills-add-btn');
 

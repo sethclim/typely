@@ -1,3 +1,12 @@
+export interface Theme {
+    id: number;
+    name: string;
+    description: string;
+    sty_source: string;
+    is_system: boolean;
+    owner_user_id?: string;
+    created_at: string;
+}
 export interface DataItemType {
     id: number;
     name: string;
@@ -37,4 +46,5 @@ export interface ResumeConfig {
     createdAt: string;
     updatedAt: string;
     sections: ResumeSection[];
+    theme: Theme;
 }
