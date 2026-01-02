@@ -26,7 +26,7 @@ const mapThemeRowToTheme = (themeRow : ThemeDataRow) : Theme => {
   return t
 }
 
-export const Route = createFileRoute('/theme-editor')({
+export const Route = createFileRoute('/theme-editor/$themeId')({
   component: RouteComponent,
 })
 
@@ -59,6 +59,7 @@ type ActiveCode = {
 }
 
 function RouteComponent() {
+    const { themeId } = Route.useParams()
     const [expanded, setExpanded] = useState(true);
     const [templates, setTemplates] = useState<Array<Template>>();
     const [theme, setTheme] = useState<Theme>();
@@ -131,10 +132,8 @@ function RouteComponent() {
         const templateData = TemplateTable.getAll();
         const hydratedTemplates = templateData.map((item) => mapRowToTemplate(item))
 
-
-        const theme = mapThemeRowToTheme(ThemeTable.get(0)[0])
+        const theme = mapThemeRowToTheme(ThemeTable.get(parseInt(themeId))[0])
         setTheme(theme)
-
 
         setTemplates(hydratedTemplates)
         if(hydratedTemplates.length > 0)

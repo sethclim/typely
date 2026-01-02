@@ -192,7 +192,6 @@ type AddBarProps = {
     title : string
     action : (state : boolean) => void
 }
-// bg-gradient-to-tr from-dark to-primary/50 my-8 rounded-sm
 const AddBar = (props: AddBarProps) => {
     return(
         <div className="bg-darkest flex flex-row justify-between items-center p-2 h-10">

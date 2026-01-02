@@ -304,10 +304,6 @@ export const TemplateTable = {
             "(?, ?, ?, ?, ?)",
             [name, theme_id, section_type, content, description]
         );
-        // DB.runAndSave(
-        //     `INSERT INTO ${RESUME_TEMPLATE_TABLE} (name, theme_id, section_type, content, description) VALUES (?, ?, ?, ?, ?)`,
-        //     [name, theme_id, section_type, content, description]
-        // );
 
         DB.notifyTable(RESUME_CONFIG_TABLE);
 
@@ -367,7 +363,7 @@ export const ThemeTable = {
     },
     get: (id: number) => {
         //TODO implement ID
-        const res = DB.exec(`SELECT * FROM ${THEME_TABLE}`);
+        const res = DB.exec(`SELECT * FROM ${THEME_TABLE} WHERE id =  ?`, [id]);
         if (res.length === 0) return [];
         const rows = mapRows<ThemeDataRow>(res[0].columns, res[0].values);
         console.log("rows!! " + JSON.stringify(rows));

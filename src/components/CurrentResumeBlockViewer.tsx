@@ -76,9 +76,13 @@ export const CurrentResumeBlockViewer = (props : CurrentResumeBlockViewerProps) 
                     <p className="">Theme:</p>
                     <div className="flex flex-row gap-2 items-center justify-center">
                         <h4 className="">Engineering</h4>
-                        <Link to="/theme-editor">
-                            <PencilIcon className="h-4 w-4 text-grey hover:text-mywhite cursor-pointer" />
-                        </Link>
+                        {
+                            props?.resume?.theme ? 
+                            <Link   to="/theme-editor/$themeId"
+                                    params={{ themeId: props.resume.theme.id.toString() }} >
+                                <PencilIcon className="h-4 w-4 text-grey hover:text-mywhite cursor-pointer" />
+                            </Link> : null
+                        }
                     </div>
                 </div>
                 <div className="flex flex-col justify-center">
