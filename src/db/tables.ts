@@ -27,7 +27,7 @@ function mapRows<T = any>(columns: string[], values: any[][]): T[] {
     });
 }
 
-export function getFullResumeQuery(resumeIdParam = "?"): string {
+function getFullResumeQuery(resumeIdParam = "?"): string {
     return `
     SELECT  rc.id,
             rc.uuid,
@@ -94,8 +94,40 @@ export function getFullResumeQuery(resumeIdParam = "?"): string {
     `.trim();
 }
 
-//LEFT JOIN ${TEMPLATE_TABLE} t ON t.id = rs.template_id
+function getFullThemesQuery(): string {
+    return `
+        SELECT
+        t.id,
+        t.name,
+        t.description,
+        t.sty_source,
+        t.is_system,
+        t.owner_user_id,
+        t.created_at,
 
+        COALESCE(
+            json_group_array(
+                json_object(
+                    'id', tp.id,
+                    'name', tp.name,
+                    'section_type', tp.section_type,
+                    'content', tp.content,
+                    'description', tp.description
+                )
+            ) FILTER (WHERE tp.id IS NOT NULL),
+            json('[]')
+        ) AS templates
+
+        FROM themes t
+        LEFT JOIN template tp
+            ON tp.theme_id = t.id
+
+        GROUP BY t.id
+        ORDER BY t.created_at DESC;
+    `;
+}
+
+//LEFT JOIN ${TEMPLATE_TABLE} t ON t.id = rs.template_id
 export const ResumeConfigTable = {
     insert: ({
         uuid,
@@ -337,6 +369,10 @@ export const TemplateTable = {
     subscribe: (cb: () => void) => DB.subscribe(RESUME_TEMPLATE_TABLE, cb),
 };
 
+export interface ThemeThemeDataRowWithTemplates extends ThemeDataRow {
+    templates: string;
+}
+
 export const ThemeTable = {
     insert: ({
         name,
@@ -377,6 +413,16 @@ export const ThemeTable = {
         ]);
 
         DB.notifyTable(THEME_TABLE);
+    },
+    getAll: () => {
+        const res = DB.exec(getFullThemesQuery());
+        if (res.length === 0) return [];
+        const rows = mapRows<ThemeThemeDataRowWithTemplates>(
+            res[0].columns,
+            res[0].values
+        );
+        console.log("rows!! " + JSON.stringify(rows));
+        return rows;
     },
     subscribe: (cb: () => void) => DB.subscribe(THEME_TABLE, cb),
 };

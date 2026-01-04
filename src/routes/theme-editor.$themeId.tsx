@@ -22,6 +22,7 @@ const mapThemeRowToTheme = (themeRow : ThemeDataRow) : Theme => {
     is_system: themeRow.is_system,
     owner_user_id: themeRow.owner_user_id,
     created_at: themeRow.created_at,
+    templates: []
   }
   return t
 }

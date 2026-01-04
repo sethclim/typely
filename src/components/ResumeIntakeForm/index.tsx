@@ -4,8 +4,13 @@ import { useRouter } from "@tanstack/react-router";
 
 import { Education, IntakeInfo, Job, Personal, Project, SkillPoint } from "./types"
 import { EducationSection, ExperienceSection, PersonalSection, ProjectsSection, SkillsSection } from "./sections";
+import { Theme } from "../../types";
 
-export function ResumeIntakeForm() {
+export type ResumeIntakeFormProps = {
+    theme : Theme
+} 
+
+export function ResumeIntakeForm(props: ResumeIntakeFormProps) {
     const router = useRouter()
     
     const [name, setName] = useState<string>();
@@ -49,7 +54,8 @@ export function ResumeIntakeForm() {
             skills : skillPoints,
             jobs,
             projects,
-            education
+            education,
+            theme: props.theme
         }
 
         CreateDemoResume(info)

@@ -1,17 +1,19 @@
 import { useState } from "react";
+import { Theme } from "../types";
 
-type ResumeStyle = "engineering" | "sales" | "design";
+// type ResumeStyle = "engineering" | "sales" | "design";
 
-export default function ResumeStylePicker({
-  onSelect,
-}: {
-  onSelect?: (style: ResumeStyle) => void;
-}) {
-  const [selected, setSelected] = useState<ResumeStyle | null>(null);
+export type ResumeStylePickerProps = {
+  onSelect?: (style: Theme) => void;
+  themes : Array<Theme>
+}
 
-  const pick = (style: ResumeStyle) => {
-    setSelected(style);
-    onSelect?.(style);
+export default function ResumeStylePicker(props: ResumeStylePickerProps) {
+  const [selected, setSelected] = useState<string | null>(null);
+
+  const pick = (theme: Theme) => {
+    setSelected(theme.name);
+    props.onSelect?.(theme);
   };
 
   const baseCard =
@@ -27,33 +29,38 @@ export default function ResumeStylePicker({
       </h2>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Engineering */}
-        <div
-          id="engineering-card"
-          onClick={() => pick("engineering")}
-          className={`${baseCard} ${
-            selected === "engineering" ? selectedRing : ""
-          }`}
-        >
-          <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-purple-600/20 to-indigo-500/10 pointer-events-none" />
+        {
+          /* Engineering */
+          props.themes.map(theme => (
+            <div
+              id="engineering-card"
+              onClick={() => pick(theme)}
+              className={`${baseCard} ${
+                (selected === theme.name) ? selectedRing : ""
+              }`}
+            >
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-purple-600/20 to-indigo-500/10 pointer-events-none" />
 
-          <h3 className="text-xl font-semibold text-white mb-2">
-            Engineering
-          </h3>
-          <p className="text-sm text-white/70">
-            Clean, structured, technical-forward layout. Perfect for software,
-            data, and systems roles.
-          </p>
+              <h3 className="text-xl font-semibold text-white mb-2">
+                {theme.name}
+              </h3>
+              <p className="text-sm text-white/70">
+                Clean, structured, technical-forward layout. Perfect for software,
+                data, and systems roles.
+              </p>
 
-          <ul className="mt-4 space-y-2 text-sm text-white/80">
-            <li>• Dense skill sections</li>
-            <li>• Minimal color</li>
-            <li>• Emphasis on projects & tooling</li>
-          </ul>
-        </div>
+              <ul className="mt-4 space-y-2 text-sm text-white/80">
+                <li>• Dense skill sections</li>
+                <li>• Minimal color</li>
+                <li>• Emphasis on projects & tooling</li>
+              </ul>
+            </div>
+          ))
+        }
+
 
         {/* Sales */}
-        <div
+        {/* <div
           onClick={() => pick("sales")}
           className={`${baseCard} ${
             selected === "sales" ? selectedRing : ""
@@ -73,10 +80,10 @@ export default function ResumeStylePicker({
             <li>• Strong callouts</li>
             <li>• Achievement-heavy bullets</li>
           </ul>
-        </div>
+        </div> */}
 
         {/* Design */}
-        <div
+        {/* <div
           onClick={() => pick("design")}
           className={`${baseCard} ${
             selected === "design" ? selectedRing : ""
@@ -96,7 +103,7 @@ export default function ResumeStylePicker({
             <li>• Portfolio-ready spacing</li>
             <li>• Brand-focused layout</li>
           </ul>
-        </div>
+        </div> */}
       </div>
     </div>
   );

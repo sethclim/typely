@@ -1,4 +1,5 @@
 import initSqlJs from "sql.js";
+import { InsertAllTemplates } from "../helpers/InsertAllTemplates";
 
 // const WASM_URL =
 //     "https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.wasm";
@@ -28,6 +29,8 @@ export class DBService {
             locateFile: (file) => `https://sql.js.org/dist/${file}`,
         });
 
+        console.log("INIT DATA SERVICE ");
+
         const savedData = localStorage.getItem(this.storageKey);
         this.db = savedData
             ? new this.SQL.Database(new Uint8Array(JSON.parse(savedData)))
@@ -37,6 +40,7 @@ export class DBService {
     }
 
     private async initTables() {
+        console.log("INIT TABLES");
         this.runAndSave(`PRAGMA foreign_keys = ON;`);
 
         this.runAndSave(`
@@ -137,6 +141,9 @@ export class DBService {
             CREATE INDEX IF NOT EXISTS idx_section_template ON resume_section_config(template_id);
             CREATE INDEX IF NOT EXISTS idx_data_type ON resume_data_item(type_id);
         `);
+
+        //FOR NOW
+        InsertAllTemplates();
     }
 
     run(sql: string, params: any = []) {
