@@ -25,67 +25,24 @@ export const CreateDemoResume = (info : IntakeInfo) =>{
 
     console.log("Creating Resume")
 
-    console.log("info.theme.templates " + JSON.stringify(info.theme.templates))
-
     const groupedTemplates = groupTemplatesBySectionType(info.theme.templates);
-
-    console.log("groupedTemplates " + JSON.stringify(groupedTemplates))
-
-    // const theme_id = ThemeTable.insert({
-    //     name : "engineering",
-    //     description : "",
-    //     sty_source : latexThemes.engineering.config,
-    //     is_system: true,
-    //     created_at: ""
-    // })
-    
-    // const headerLaTeX = `
-    // \\newcommand{\\AND}{\\unskip\\cleaders\\copy\\ANDbox\\hskip\\wd\\ANDbox\\ignorespaces}\\newsavebox\\ANDbox\\sbox\\ANDbox{$|$}\n\\begin{header}\n\\fontsize{31 pt}{31 pt}\\selectfont [[NAME]] 
-    // \\\\
-    // \\vspace{1 pt}
-    // \\normalsize
-    // \\mbox{Waterloo, ON}%
-    // \\kern 5.0 pt%
-    // \\AND%
-    // \\kern 5.0 pt%
-    // \\mbox{\\hrefWithoutArrow{tel:+01-[[PHONE]]}{+1 [[PHONE]]}}%
-    // \\kern 5.0 pt%
-    // \\AND%
-    // \\kern 5.0 pt%
-    // \\mbox{\\hrefWithoutArrow{mailto:[[EMAIL]]}{[[EMAIL]]}}%
-    // \\kern 5.0 pt%
-    // \\vspace{-3pt} %
-    // \\par
-    // \\kern-6pt %
-    // \\kern 5.0 pt%
-    // \\mbox{\\hrefWithoutArrow{[[LINKEDIN]]}{\\textcolor[HTML]{0366d6}{[[LINKEDIN]]}}}%
-    // \\kern 5.0 pt%
-    // \\AND%
-    // \\kern 5.0 pt%
-    // \\mbox{\\hrefWithoutArrow{[[WEBSITE]]}{\\textcolor[HTML]{0366d6}{[[WEBSITE]]}}}%
-    // \\kern 5.0 pt%
-    // \\AND%
-    // \\kern 5.0 pt%
-    // \\mbox{\\hrefWithoutArrow{[[GITHUB]]}{\\textcolor[HTML]{0366d6}{[[GITHUB]]}}}%
-    // \n\\end{header} 
-    // \n\\vspace{0.2cm}`;
-
-    // const headerTemplateId = TemplateTable.insert({
-    //     "name": "header template",
-    //     "description": "this is a header template",
-    //     "section_type": "header",
-    //     "created_at" : Date.now().toString(),
-    //     "content": headerLaTeX,
-    //     theme_id : theme_id
-    // })
-
-    //------------------------------------------------------
 
     let skillsLatex = ""
 
-    info.skills.forEach((_, i) => {
-        skillsLatex = skillsLatex.concat(`\\textbf{[[SKILL_LABEL_${i}]]:} [[Point_${i}]] \\newline\n`)
-    })
+    console.log("Theme " + info.theme.name)
+
+    if(info.theme.name == "engineering")
+    {
+        info.skills.forEach((_, i) => {
+            skillsLatex = skillsLatex.concat(`\\textbf{[[SKILL_LABEL_${i}]]:} [[Point_${i}]] \\newline\n`)
+        })
+    }else if (info.theme.name == "colorful"){
+        skillsLatex += "\\tab \\begin{tabular}{r p{0.7\\textwidth}}"
+        info.skills.forEach((_, i) => {
+           skillsLatex += `\\texttt{\\large [[SKILL_LABEL_${i}]]} & [[Point_${i}]] \\\\ \n`
+        })
+        skillsLatex += "\\end{tabular}\\\\~\\\\"
+    }
 
     const skillsTemplateId = TemplateTable.insert({
         "name": "skills template",
@@ -96,91 +53,6 @@ export const CreateDemoResume = (info : IntakeInfo) =>{
         theme_id : info.theme.id
     })
 
-    //------------------------------------------------------
-
-    //  const expLatex = `
-        // \\begin{twocolentry}{
-        //     05/2022 – 04/2023
-        // }
-        // \\fontsize{11 pt}{11 pt}\\textbf{[[TITLE]]}, [[COMPANY]] - Toronto ON, CA\\end{twocolentry}
-
-        // \\vspace{0.10 cm}
-        // \\begin{onecolentry}
-        //     \\begin{highlights}
-        //         \\item [[POINT1]]
-        //         \\item [[POINT2]]
-        //         \\item [[POINT3]]
-        //         \\item [[POINT4]]
-        //     \\end{highlights}
-        // \\end{onecolentry}
-        // \n\\vspace{0.20 cm}
-    //  `
-
-    // const experienceTemplateId = TemplateTable.insert({
-    //     "name": "Exp template",
-    //     "description": "this show's my experience",
-    //     "section_type": "experience",
-    //     "created_at" : Date.now().toString(),
-    //     "content": expLatex,
-    //     theme_id : theme_id
-    // })
-
-    // const proj_template = `
-        // \\begin{twocolentry_proj}{
-        // \\mbox{\\hrefWithoutArrow{[[URL]]}{\\textcolor[HTML]{0366d6}{[[URL]]}}}
-        // }{5.6cm}
-        // \\fontsize{11 pt}{11 pt}\\textbf{[[TITLE]]} - [[HIGHLIGHTS]]
-        // \\end{twocolentry_proj}
-        // \\begin{onecolentry}
-        //     \\begin{highlights}
-        //         \\item [[POINT1]]
-        //         \\item [[POINT2]]
-        //         \\item [[POINT3]]
-        //         \\item [[POINT4]]
-        //     \\end{highlights}
-        // \\end{onecolentry}
-    // `
-
-    // const projectTemplateId = TemplateTable.insert({
-    //     "name": "Project template",
-    //     "description": "this show's my project",
-    //     "section_type": "project",
-    //     "created_at" : Date.now().toString(),
-    //     "content": proj_template,
-    //     theme_id : theme_id
-    // })
-
-    // const edu_template = `
-    //     \\begin{twocolentry}{
-    //         [[START_DATE]] – [[END_DATE]]
-    //     }
-    //     \\vspace{0.10 cm}
-    //     \\textbf{[[UNI]]}, [[PROGRAM]] [[GPA]] 
-    //     \\end{twocolentry}
-    // `
-    // const eduTemplateId = TemplateTable.insert({
-    //     "name": "Education Template",
-    //     "description": "this show's my education",
-    //     "section_type": "education",
-    //     "created_at" : Date.now().toString(),
-    //     "content": edu_template,
-    //     theme_id : theme_id
-    // })
-
-    // const section_template = `
-        // \\section{[[TITLE]]}
-        // \\vspace{[[SPACE]]}
-    // `
-    // const sectionTemplateId = TemplateTable.insert({
-    //     "name": "section title",
-    //     "description": "header section",
-    //     "section_type": "section",
-    //     "created_at" : Date.now().toString(),
-    //     "content": section_template,
-    //     theme_id : theme_id
-    // })
-
-    //------------------------------------------------------------------------------
 
     const infoDataItemTypeId = ResumeDataItemTypeTable.insert({
         name : "info"
@@ -332,7 +204,6 @@ export const CreateDemoResume = (info : IntakeInfo) =>{
     
     info.projects.forEach(proj =>{
         const thisProjectSectionId = ResumeSectionConfigTable.insert({
-            // "id": sectionId,
             "title": "C++ Project",
             "resume_id": ResumeId,
             "template_id": groupedTemplates["project"][0].id,
@@ -492,6 +363,39 @@ export const CreateDemoResume = (info : IntakeInfo) =>{
         section_id: educationTitleSectionId,
         data_item_id: eduSectionDataItemId
     })
+
+
+    if (info.theme.name == "colorful"){
+        ////////////////////////////////////////////////
+        // Skills Section Header
+        ///////////////////////////////////////////////
+        const skillsTitleSectionId = ResumeSectionConfigTable.insert({
+            "title": "Skills Title Section",
+            "resume_id": ResumeId,
+            "template_id": groupedTemplates["section"][0].id,
+            "section_order": 10,
+            "section_type": "section"
+        })
+    
+        const skills_title = [
+            ["TITLE", "Skills"],
+            ["SPACE", "0cm"],
+        ]
+    
+        const skillsSectionDataItemId = ResumeDataItemTable.insert({
+            title: "Skills Section Title",
+            description: "education",
+            data: JSON.stringify(skills_title),
+            type_id: skillsTitleSectionId,
+            "created_at" : Date.now().toString(),
+            "updated_at" : Date.now().toString(),
+        })
+    
+        ResumeSectionDataTable.insert({
+            section_id: skillsTitleSectionId,
+            data_item_id: skillsSectionDataItemId
+        })
+    }
 
     ////////////////////////////////////////////////
     // Jobs

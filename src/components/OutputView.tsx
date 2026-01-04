@@ -143,8 +143,8 @@ export const OutputView = (props : OutputViewProps) => {
                 const sty_source = props.resume.theme.sty_source
                 const templatedLatexResume = performTemplating()
 
-                const docuClass = "\\documentclass[10pt, letterpaper]{article}"
-                const latex = docuClass.concat(sty_source, "\n", templatedLatexResume)
+                // const docuClass = "\\documentclass[10pt, letterpaper]{article}"
+                const latex = "".concat(sty_source, "\n", templatedLatexResume)
                 
                 const newHash = await hashString(latex);
                 console.log(`pdfData ${JSON.stringify(pdfData)} newHash ${newHash}`)

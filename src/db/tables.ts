@@ -366,6 +366,17 @@ export const TemplateTable = {
         DB.notifyTable(RESUME_TEMPLATE_TABLE);
         DB.notifyTable(RESUME_CONFIG_TABLE);
     },
+    getByThemeId: (themeId: number) => {
+        const res = DB.exec(
+            `SELECT * FROM ${RESUME_TEMPLATE_TABLE} WHERE theme_id = ?`,
+            [themeId]
+        );
+        if (res.length <= 0) return [];
+
+        const rows = mapRows<TemplateRow>(res[0].columns, res[0].values);
+        // console.log("template rows!! " + JSON.stringify(rows));
+        return rows;
+    },
     subscribe: (cb: () => void) => DB.subscribe(RESUME_TEMPLATE_TABLE, cb),
 };
 

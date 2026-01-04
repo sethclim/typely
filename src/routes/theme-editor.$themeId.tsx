@@ -130,11 +130,11 @@ function RouteComponent() {
     const fetchDataForLib = async () => {
         await DB.ready;
        
-        const templateData = TemplateTable.getAll();
-        const hydratedTemplates = templateData.map((item) => mapRowToTemplate(item))
-
         const theme = mapThemeRowToTheme(ThemeTable.get(parseInt(themeId))[0])
         setTheme(theme)
+        
+        const templateData = TemplateTable.getByThemeId(theme.id);
+        const hydratedTemplates = templateData.map((item) => mapRowToTemplate(item))
 
         setTemplates(hydratedTemplates)
         if(hydratedTemplates.length > 0)
@@ -176,44 +176,44 @@ function RouteComponent() {
     }
 
     return (
-        <>
-            <Header expanded={expanded} setExpanded={setExpanded} >
-              <div className='w-full flex justify-end items-center pr-30'>
-                <Link to="/app">
-                  <a className='text-grey hover:text-mywhite'>BACK</a>
-                </Link>
-              </div>
-            </Header>
-            <div className='grow flex flex-row'>
-                <Sidebar
-                    expanded={expanded}
-                >
-                  <div>
-                    <h2 className='text-mywhite m-2'>CONFIG</h2>
-                      <div className='min-w-50 flex flex-col gap-2'>
-                        <button className='text-mywhite text-left p-2 bg-darker hover:bg-darkest hover:text-primary mx-2' onClick={()=>onPickConfig(theme)} >config</button>
-                      </div>
-                    <h2 className='text-mywhite m-2'>TEMPLATES</h2>
-                    <div className='min-w-50 flex flex-col gap-2'>                
-                      {
-                          templates?.map(t => (
-                              <button className='text-mywhite text-left p-2 bg-darker hover:bg-darkest hover:text-primary mx-2' onClick={() => onPickTemplate(t)}>{t.name}</button>
-                          ))
-                      }
-                    </div>
+      <>
+        <Header expanded={expanded} setExpanded={setExpanded} >
+          <div className='w-full flex justify-end items-center pr-30'>
+            <Link to="/app">
+              <a className='text-grey hover:text-mywhite'>BACK</a>
+            </Link>
+          </div>
+        </Header>
+        <div className='grow flex flex-row'>
+            <Sidebar
+                expanded={expanded}
+            >
+              <div>
+                <h2 className='text-mywhite m-2'>CONFIG</h2>
+                  <div className='min-w-50 flex flex-col gap-2'>
+                    <button className='text-mywhite text-left p-2 bg-darker hover:bg-darkest hover:text-primary mx-2' onClick={()=>onPickConfig(theme)} >config</button>
                   </div>
-                </Sidebar>
-                <Editor 
-                  height="h-full" 
-                  defaultLanguage="latex" 
-                  value={activeCode?.content} 
-                  // defaultValue="% some comment\n\\section{Hello $x^2$}"
-                  theme="latex-dark"
-                  onMount={handleEditorDidMount}
-                  onChange={handleEditorChange}
-                />
-            </div>
-            <Footer />
-        </>
+                <h2 className='text-mywhite m-2'>TEMPLATES</h2>
+                <div className='min-w-50 flex flex-col gap-2'>                
+                  {
+                      templates?.map(t => (
+                          <button className='text-mywhite text-left p-2 bg-darker hover:bg-darkest hover:text-primary mx-2' onClick={() => onPickTemplate(t)}>{t.name}</button>
+                      ))
+                  }
+                </div>
+              </div>
+            </Sidebar>
+            <Editor 
+              height="h-full" 
+              defaultLanguage="latex" 
+              value={activeCode?.content} 
+              // defaultValue="% some comment\n\\section{Hello $x^2$}"
+              theme="latex-dark"
+              onMount={handleEditorDidMount}
+              onChange={handleEditorChange}
+            />
+        </div>
+        <Footer />
+      </>
     )
 }

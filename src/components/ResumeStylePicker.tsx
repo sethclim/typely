@@ -33,7 +33,7 @@ export default function ResumeStylePicker(props: ResumeStylePickerProps) {
           /* Engineering */
           props.themes.map(theme => (
             <div
-              id="engineering-card"
+              id={`${theme.name}-card`}
               onClick={() => pick(theme)}
               className={`${baseCard} ${
                 (selected === theme.name) ? selectedRing : ""
