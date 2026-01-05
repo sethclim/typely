@@ -7,7 +7,7 @@ import {
     ResumeDataItemTypeTable, 
     TemplateTable, 
 } from "../db/tables"
-import { Template } from "../types";
+import { Template, Theme } from "../types";
 
 export const ORDER_KEYS = [
   "Header",
@@ -34,7 +34,7 @@ function groupTemplatesBySectionType(templates: Template[]) {
 
 type CountMap = Record<OrderKey, number>;
 
-export const CreateDemoResume = (info : IntakeInfo) =>{
+export const CreateDemoResume = (info : IntakeInfo, themes : Theme[]) =>{
 
     const counts: CountMap = {
         Header: 1,
@@ -63,31 +63,49 @@ export const CreateDemoResume = (info : IntakeInfo) =>{
 
     const groupedTemplates = groupTemplatesBySectionType(info.theme.templates);
 
-    let skillsLatex = ""
+
+    const skillsTemplateIds = {
+        eng: -1,
+        color: -1
+    }
+
+    themes.forEach(t => {
+        console.log("t " + t.name)
+        let skillsLatex = ""
+        if(t.name == "engineering"){
+            info.skills.forEach((_, i) => {
+                skillsLatex = skillsLatex.concat(`\\textbf{[[SKILL_LABEL_${i}]]:} [[Point_${i}]] \\newline\n`)
+            })
+            const skillsTemplateId = TemplateTable.insert({
+                "name": "skills template",
+                "description": "this is a s template",
+                "section_type": "skills",
+                "created_at" : Date.now().toString(),
+                "content": skillsLatex,
+                theme_id :  t.id
+            })
+            skillsTemplateIds.eng = skillsTemplateId
+        }else if(t.name == "colorful"){
+            skillsLatex += "\\tab \\begin{tabular}{r p{0.7\\textwidth}}"
+            info.skills.forEach((_, i) => {
+                skillsLatex += `\\texttt{\\large [[SKILL_LABEL_${i}]]} & [[Point_${i}]] \\\\ \n`
+            })
+            skillsLatex += "\\end{tabular}\\\\~\\\\"
+            const skillsTemplateId = TemplateTable.insert({
+                "name": "skills template",
+                "description": "this is a s template",
+                "section_type": "skills",
+                "created_at" : Date.now().toString(),
+                "content": skillsLatex,
+                theme_id : t.id
+            })
+            skillsTemplateIds.color = skillsTemplateId
+        }
+
+    })
 
     console.log("Theme " + info.theme.name)
 
-    if(info.theme.name == "engineering")
-    {
-        info.skills.forEach((_, i) => {
-            skillsLatex = skillsLatex.concat(`\\textbf{[[SKILL_LABEL_${i}]]:} [[Point_${i}]] \\newline\n`)
-        })
-    }else if (info.theme.name == "colorful"){
-        skillsLatex += "\\tab \\begin{tabular}{r p{0.7\\textwidth}}"
-        info.skills.forEach((_, i) => {
-           skillsLatex += `\\texttt{\\large [[SKILL_LABEL_${i}]]} & [[Point_${i}]] \\\\ \n`
-        })
-        skillsLatex += "\\end{tabular}\\\\~\\\\"
-    }
-
-    const skillsTemplateId = TemplateTable.insert({
-        "name": "skills template",
-        "description": "this is a s template",
-        "section_type": "header",
-        "created_at" : Date.now().toString(),
-        "content": skillsLatex,
-        theme_id : info.theme.id
-    })
 
 
     const infoDataItemTypeId = ResumeDataItemTypeTable.insert({
@@ -191,7 +209,7 @@ export const CreateDemoResume = (info : IntakeInfo) =>{
         // "id": sectionId,
         "title": "C++ Skills",
         "resume_id": ResumeId,
-        "template_id": skillsTemplateId,
+        "template_id": info.theme.name === "engineering" ? skillsTemplateIds.eng : skillsTemplateIds.color,
         "section_order": finalPositions.get("Skills")![0],
         "section_type": "skills"
     })

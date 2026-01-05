@@ -1,5 +1,5 @@
 import { DragEndEvent, useDndMonitor } from "@dnd-kit/core";
-import { ResumeConfig, ResumeSection } from "../types"
+import { ResumeConfig, ResumeSection, Theme } from "../types"
 import { ResumeSectionCard } from "./ResumeTemplateDisplay";
 import { useEffect, useState } from "react";
 
@@ -9,8 +9,11 @@ import {
     arrayMove,
     SortableContext
 } from '@dnd-kit/sortable';
-import { ResumeSectionConfigTable } from "../db/tables";
+import { RESUME_CONFIG_TABLE, ResumeConfigTable, ResumeSectionConfigTable, ThemeTable } from "../db/tables";
 import { Link } from "@tanstack/react-router";
+import ComboBox from "./ComboBox";
+import { DB } from "../db";
+import { useThemes } from "../context/themes/ThemesContext";
 
 export type CurrentResumeBlockViewerProps = {
     resume? : ResumeConfig | null,
@@ -56,7 +59,6 @@ export const CurrentResumeBlockViewer = (props : CurrentResumeBlockViewerProps) 
         }   
     };
 
-
     useEffect(() => {
         if (reordered) {
             sections.forEach((section, index) => {
@@ -68,6 +70,53 @@ export const CurrentResumeBlockViewer = (props : CurrentResumeBlockViewerProps) 
         }
     }, [sections, reordered]);
 
+    const { themes } = useThemes()
+
+    const [activeTheme, setActiveTheme] = useState(props.resume?.theme.name ?? null)
+
+    useEffect(()=>{
+        if(props.resume)
+            setActiveTheme(props.resume.theme.name)
+    },[props.resume])
+
+    const changeThemeForResume = (newThemeName: string | null) => {
+        console.log("newTheme " + newThemeName)
+        if(!newThemeName || !props.resume)
+            return
+
+        setActiveTheme(newThemeName)
+
+
+        // console.log("@themes " + JSON.stringify(themes))
+
+        const newTheme = themes.filter(t => t.name === newThemeName.toLowerCase())[0]
+
+        console.log("@newTheme " + JSON.stringify(newTheme))
+
+        // Change resume config theme
+        // change sections to point to right template from new theme
+
+        ResumeConfigTable.updateTheme({
+            id: props.resume.id, 
+            theme_id: newTheme.id, 
+            updated_at: Date.now().toString(),
+            notify: false
+        })
+        
+        props.resume?.sections.forEach(section => {
+
+            console.log("section.sectionType " + section.sectionType)
+            
+            const newTemplateForSection = newTheme.templates.filter(t => t.sectionType === section.sectionType)[0]
+            console.log("@newTemplateForSection " + JSON.stringify(newTemplateForSection))
+            
+            ResumeSectionConfigTable.updateTemplate(section.id.toString(), newTemplateForSection.id.toString(), false)
+        })
+        DB.notifyTable(RESUME_CONFIG_TABLE)
+    }
+
+
+
     return (
         <div className='flex flex-col gap-4 p-4'>
             <h4 className='text-white text-lg font-bold'>Resume Blocks</h4>
@@ -75,7 +124,10 @@ export const CurrentResumeBlockViewer = (props : CurrentResumeBlockViewerProps) 
                 <div className="w-full flex flex-row justify-start items-center gap-2 text-grey" > 
                     <p className="">Theme:</p>
                     <div className="flex flex-row gap-2 items-center justify-center">
-                        <h4 className="">Engineering</h4>
+                        <ComboBox 
+                            options={["Engineering", "Colorful"]} 
+                            selected={activeTheme} 
+                            onSelectedChange={(v) => changeThemeForResume(v)} />
                         {
                             props?.resume?.theme ? 
                             <Link   to="/theme-editor/$themeId"

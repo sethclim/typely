@@ -51,7 +51,7 @@ export const ResumeSidebarContent = ({ resumes, activeId, onSelect, expanded } :
     
         console.log("ON SUBMIT")
     
-        ResumeConfigTable.update({
+        ResumeConfigTable.updateName({
             "id": rename,
             "name" : newName,
             "updated_at" : Date.now().toString(),

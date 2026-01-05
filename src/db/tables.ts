@@ -9,7 +9,7 @@ import {
     ThemeDataRow,
 } from "./types";
 
-const RESUME_CONFIG_TABLE = "resume_config";
+export const RESUME_CONFIG_TABLE = "resume_config";
 const RESUME_SECTION_CONFIG_TABLE = "resume_section_config";
 const RESUME_SECTION_DATA_TABLE = "resume_section_data";
 const RESUME_DATA_ITEM_TABLE = "resume_data_item";
@@ -127,6 +127,12 @@ function getFullThemesQuery(): string {
     `;
 }
 
+type UpdateResumeConfigThemeProps = Required<
+    Pick<ResumeConfigRow, "id" | "theme_id" | "updated_at">
+> & {
+    notify: boolean;
+};
+
 //LEFT JOIN ${TEMPLATE_TABLE} t ON t.id = rs.template_id
 export const ResumeConfigTable = {
     insert: ({
@@ -158,12 +164,24 @@ export const ResumeConfigTable = {
         // console.log("getAllResumeConfig rows!! " + JSON.stringify(rows));
         return rows;
     },
-    update: ({ id, name, updated_at }: ResumeConfigRow) => {
+    updateName: ({ id, name, updated_at }: ResumeConfigRow) => {
         DB.runAndSave(
             `UPDATE ${RESUME_CONFIG_TABLE} SET name = ?, updated_at = ? WHERE id = ?`,
             [name, updated_at, id]
         );
         DB.notifyTable(RESUME_CONFIG_TABLE);
+    },
+    updateTheme: ({
+        id,
+        theme_id,
+        updated_at,
+        notify = true,
+    }: UpdateResumeConfigThemeProps) => {
+        DB.runAndSave(
+            `UPDATE ${RESUME_CONFIG_TABLE} SET theme_id = ?, updated_at = ? WHERE id = ?`,
+            [theme_id, updated_at, id]
+        );
+        if (notify) DB.notifyTable(RESUME_CONFIG_TABLE);
     },
     delete: (id: number) => {
         DB.runAndSave(`DELETE FROM ${RESUME_CONFIG_TABLE}  WHERE id = ?`, [id]);
@@ -197,16 +215,16 @@ export const ResumeSectionConfigTable = {
         DB.notifyTable(RESUME_CONFIG_TABLE);
         return newId;
     },
-    updateTemplate: (id: string, template_id: string) => {
-        // console.log(
-        //     `[ResumeSectionConfigTable] id: ${id} template_id: ${template_id}`
-        // );
+    updateTemplate: (
+        id: string,
+        template_id: string,
+        notify: boolean = true
+    ) => {
         DB.runAndSave(
             `UPDATE ${RESUME_SECTION_CONFIG_TABLE} SET template_id = ? WHERE id = ?`,
             [template_id, id]
         );
-
-        DB.notifyTable(RESUME_CONFIG_TABLE);
+        if (notify) DB.notifyTable(RESUME_CONFIG_TABLE);
     },
     updateOrder: (id: string, newOrder: number) => {
         // console.log(`id ${id} newOrder ${newOrder}`);
@@ -338,6 +356,7 @@ export const TemplateTable = {
         );
 
         DB.notifyTable(RESUME_CONFIG_TABLE);
+        DB.notifyTable(RESUME_TEMPLATE_TABLE);
 
         return newId;
     },

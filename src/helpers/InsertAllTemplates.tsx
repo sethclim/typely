@@ -10,7 +10,7 @@ export const InsertAllTemplates = () =>{
 
 
     for (const [name, theme] of Object.entries(latexThemes)) {
-        console.log(name)
+        // console.log(name)
         const theme_id = ThemeTable.insert({
             name : name,
             description : "",
@@ -20,8 +20,8 @@ export const InsertAllTemplates = () =>{
         })
 
         for (const [name, template] of Object.entries(theme.templates)) {
-            console.log(`    ${name}`)
-            const headerTemplateId = TemplateTable.insert({
+            // console.log(`    ${name}`)
+            TemplateTable.insert({
                 "name": `${name} template`,
                 "description": `this is a ${name} template`,
                 "section_type": name,
