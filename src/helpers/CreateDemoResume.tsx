@@ -9,8 +9,21 @@ import {
 } from "../db/tables"
 import { Template } from "../types";
 
-const ResumeId = 1
+export const ORDER_KEYS = [
+  "Header",
+  "SkillsSection",
+  "Skills",
+  "ExperienceSection",
+  "Experience",
+  "ProjectSection",
+  "Project",
+  "EducationSection",
+  "Education",
+] as const;
 
+export type OrderKey = typeof ORDER_KEYS[number];
+
+const ResumeId = 1
 
 function groupTemplatesBySectionType(templates: Template[]) {
     return templates.reduce<Record<string, Template[]>>((acc, tpl) => {
@@ -19,7 +32,30 @@ function groupTemplatesBySectionType(templates: Template[]) {
     }, {});
 }
 
+type CountMap = Record<OrderKey, number>;
+
 export const CreateDemoResume = (info : IntakeInfo) =>{
+
+    const counts: CountMap = {
+        Header: 1,
+        SkillsSection: info.skills.length ? 1 : 0,
+        Skills: info.skills.length,
+        ExperienceSection: info.jobs.length ? 1 : 0,
+        Experience: info.jobs.length,
+        ProjectSection: info.projects.length ? 1 : 0,
+        Project: info.projects.length,
+        EducationSection: info.education.length ? 1 : 0,
+        Education: info.education.length,
+    };
+
+    const finalPositions = new Map<OrderKey, number[]>();
+    let cursor = 0;
+
+    for (const key of ORDER_KEYS) {
+        const n = counts[key];
+        finalPositions.set(key, Array.from({ length: n }, (_, i) => cursor + i));
+        cursor += n;
+    }
 
     let dataItemId = 1
 
@@ -94,7 +130,7 @@ export const CreateDemoResume = (info : IntakeInfo) =>{
         "title": "Custom Header",
         "resume_id": ResumeId,
         "template_id": groupedTemplates["header"][0].id,
-        "section_order": 0,
+        "section_order": finalPositions.get("Header")![0],
         "section_type": "header"
     })
 
@@ -156,7 +192,7 @@ export const CreateDemoResume = (info : IntakeInfo) =>{
         "title": "C++ Skills",
         "resume_id": ResumeId,
         "template_id": skillsTemplateId,
-        "section_order": 1,
+        "section_order": finalPositions.get("Skills")![0],
         "section_type": "skills"
     })
 
@@ -201,13 +237,12 @@ export const CreateDemoResume = (info : IntakeInfo) =>{
     ////////////////////////////////////////////////
     // Project
     ///////////////////////////////////////////////
-    
-    info.projects.forEach(proj =>{
+    info.projects.forEach((proj, i) =>{
         const thisProjectSectionId = ResumeSectionConfigTable.insert({
             "title": "C++ Project",
             "resume_id": ResumeId,
             "template_id": groupedTemplates["project"][0].id,
-            "section_order": 8, 
+            "section_order": finalPositions.get("Project")![i], 
             "section_type": "project"
         })
         const project = [
@@ -239,12 +274,12 @@ export const CreateDemoResume = (info : IntakeInfo) =>{
     ////////////////////////////////////////////////
     // Education
     ///////////////////////////////////////////////
-    info.education.forEach(edu =>{
+    info.education.forEach((edu, i) =>{
         const thisEducationSectionId = ResumeSectionConfigTable.insert({
             "title": "Education",
             "resume_id": ResumeId,
             "template_id": groupedTemplates["education"][0].id,
-            "section_order": 11,
+            "section_order": finalPositions.get("Education")![i],
             "section_type": "education"
         })
 
@@ -280,7 +315,7 @@ export const CreateDemoResume = (info : IntakeInfo) =>{
         "title": "Work Title Section",
         "resume_id": ResumeId,
         "template_id": groupedTemplates["section"][0].id,
-        "section_order": 2,
+        "section_order": finalPositions.get("ExperienceSection")![0],
         "section_type": "section"
     })
 
@@ -310,7 +345,7 @@ export const CreateDemoResume = (info : IntakeInfo) =>{
         "title": "Project Title Section",
         "resume_id": ResumeId,
         "template_id": groupedTemplates["section"][0].id,
-        "section_order": 7,
+        "section_order": finalPositions.get("ProjectSection")![0],
         "section_type": "section"
     })
 
@@ -341,7 +376,7 @@ export const CreateDemoResume = (info : IntakeInfo) =>{
         "title": "Education Title Section",
         "resume_id": ResumeId,
         "template_id": groupedTemplates["section"][0].id,
-        "section_order": 9,
+        "section_order": finalPositions.get("EducationSection")![0],
         "section_type": "section"
     })
 
@@ -373,7 +408,7 @@ export const CreateDemoResume = (info : IntakeInfo) =>{
             "title": "Skills Title Section",
             "resume_id": ResumeId,
             "template_id": groupedTemplates["section"][0].id,
-            "section_order": 10,
+            "section_order": finalPositions.get("SkillsSection")![0],
             "section_type": "section"
         })
     
@@ -405,7 +440,7 @@ export const CreateDemoResume = (info : IntakeInfo) =>{
             "title": `Job ${i + 1}`,
             "resume_id": ResumeId,
             "template_id": groupedTemplates["experience"][0].id,
-            "section_order": 3,
+            "section_order": finalPositions.get("Experience")![i],
             "section_type": "experience"
         })
 

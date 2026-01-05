@@ -11,7 +11,7 @@ import { chromium } from "@playwright/test";
     console.log("Connected to:", page.url());
 
     await page.waitForSelector('#engineering-card', { state: 'visible' });
-    await page.click('#colorful-card');
+    await page.click('#engineering-card');
 
     await page.waitForSelector('#onboarding-next', { state: 'visible' });
     await page.click('#onboarding-next');
