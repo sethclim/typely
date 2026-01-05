@@ -24,7 +24,8 @@ export type Education = {
 };
 
 export type Personal = {
-    name: string,
+    fname: string,
+    lname: string,
     email: string,
     phone?: string,
     location?: string,

@@ -16,8 +16,9 @@ import { chromium } from "@playwright/test";
     await page.waitForSelector('#onboarding-next', { state: 'visible' });
     await page.click('#onboarding-next');
 
-    await page.waitForSelector("#full-name-input");
-    await page.fill("#full-name-input", "John Doe");
+    await page.waitForSelector("#fname-input");
+    await page.fill("#fname-input", "John");
+    await page.fill("#lname-input", "Doe");
     await page.fill("#email-input", "johndoe@gmail.com");
     await page.fill("#phone-input", "111-111-1111");
     await page.fill("#location-input", "Toronto ON");

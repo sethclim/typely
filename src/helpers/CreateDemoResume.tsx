@@ -185,7 +185,8 @@ export const CreateDemoResume = (info : IntakeInfo, themes : Theme[]) =>{
 
 
     const name = [
-        ["NAME", info.personal.name]
+        ["FNAME", info.personal.fname],
+        ["LNAME", info.personal.lname]
     ]
 
     const myNameDataItemId = ResumeDataItemTable.insert({

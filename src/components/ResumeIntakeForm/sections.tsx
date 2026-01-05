@@ -4,8 +4,11 @@ import { Education, Job, Project, SkillPoint } from "./types"
 import { AddButton, Card, Section, Input, Textarea } from "./ui"
 
 export type PersonalSectionProps = {
-  name?: string
-  onNameChange: (v: string) => void
+  fname?: string
+  onFNameChange: (v: string) => void
+
+  lname?: string
+  onLNameChange: (v: string) => void
 
   email?: string
   onEmailChange: (v: string) => void
@@ -27,8 +30,10 @@ export type PersonalSectionProps = {
 }
 
 export const PersonalSection = ({
-  name,
-  onNameChange,
+  fname,
+  onFNameChange,
+  lname,
+  onLNameChange,
   email,
   onEmailChange,
   phone,
@@ -44,7 +49,8 @@ export const PersonalSection = ({
 }: PersonalSectionProps) => {
   return (
     <Section title="Personal Information">
-      <Input input_id="full-name-input" label="Full Name" value={name} onChange={onNameChange} />
+      <Input input_id="fname-input" label="First Name" value={fname} onChange={onFNameChange} />
+      <Input input_id="lname-input" label="Last Name" value={lname} onChange={onLNameChange} />
       <Input input_id="email-input" label="Email" value={email} onChange={onEmailChange} />
       <Input input_id="phone-input" label="Phone (Optional)" value={phone} onChange={onPhoneChange} />
       <Input input_id="location-input" label="Location (Optional)" value={location} onChange={onLocationChange} />

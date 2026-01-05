@@ -14,7 +14,8 @@ export type ResumeIntakeFormProps = {
 export function ResumeIntakeForm(props: ResumeIntakeFormProps) {
     const router = useRouter()
     
-    const [name, setName] = useState<string>();
+    const [fname, setFName] = useState<string>();
+    const [lname, setLName] = useState<string>();
     const [email, setEmail] = useState<string>();
     const [phone, setPhone] = useState<string>();
     const [location, setLocation] = useState<string>();
@@ -39,11 +40,12 @@ export function ResumeIntakeForm(props: ResumeIntakeFormProps) {
 
     const Create = () => {
 
-        if(!name || !email)
+        if(!fname || !lname || !email)
             return
 
         const p : Personal = {
-            name,
+            fname,
+            lname,
             email,
             phone,
             location,
@@ -84,8 +86,10 @@ export function ResumeIntakeForm(props: ResumeIntakeFormProps) {
         <div className="min-h-screen w-full bg-gradient-to-br from-black via-zinc-900 to-purple-950 text-white p-10">
             <div className="max-w-4xl mx-auto space-y-10">
                 <PersonalSection 
-                    name={name} 
-                    onNameChange={setName}
+                    fname={fname} 
+                    onFNameChange={setFName}
+                    lname={lname} 
+                    onLNameChange={setLName}
                     email={email}
                     onEmailChange={setEmail}
                     phone={phone}
