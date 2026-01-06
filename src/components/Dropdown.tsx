@@ -1,5 +1,5 @@
-import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from "@headlessui/react"
-import { useState } from "react"
+import { Portal, Listbox, ListboxButton, ListboxOption, ListboxOptions } from "@headlessui/react"
+import { useRef, useState } from "react"
 
 export type DropdownProps = {
   options: string[]
@@ -9,39 +9,33 @@ export type DropdownProps = {
 export function Dropdown({ options, onSelected }: DropdownProps) {
   const [value, setValue] = useState(options[0])
 
-  const onValueSet = (v: string) => {
-    setValue(v)
-    onSelected(v)
-  }
-
   return (
-    <Listbox value={value} onChange={onValueSet}>
-      <div className="relative inline-block w-56">
-        <ListboxButton className="w-full border px-3 py-2 text-left rounded bg-dark">
+    <Listbox value={value} onChange={(v) => { setValue(v); onSelected(v) }}>
+      <div className="relative min-w-30">
+        <ListboxButton className="w-full border px-3 py-2 bg-dark text-left">
           {value}
         </ListboxButton>
 
-        <ListboxOptions
-          className="
-            absolute z-50 mt-1 w-full
-            rounded border bg-darkest shadow-lg
-            max-h-60 overflow-auto
-          "
-        >
-          {options.map((t) => (
-            <ListboxOption
-              key={t}
-              value={t}
-              className={({ active }) =>
-                `cursor-pointer px-3 py-2 ${
-                  active ? "bg-dark" : ""
-                }`
-              }
-            >
-              {t}
-            </ListboxOption>
-          ))}
-        </ListboxOptions>
+        <Portal>
+          <ListboxOptions
+            anchor="bottom start"
+            className="
+              z-[9999]
+              mt-1 w-56
+              rounded border bg-darkest shadow-lg
+            "
+          >
+            {options.map((t) => (
+              <ListboxOption
+                key={t}
+                value={t}
+                className="cursor-pointer px-3 py-2 hover:bg-dark text-mywhite"
+              >
+                {t}
+              </ListboxOption>
+            ))}
+          </ListboxOptions>
+        </Portal>
       </div>
     </Listbox>
   )

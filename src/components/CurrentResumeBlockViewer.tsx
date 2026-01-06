@@ -121,7 +121,7 @@ export const CurrentResumeBlockViewer = (props : CurrentResumeBlockViewerProps) 
     return (
         <div className='flex flex-col gap-4 p-4'>
             <h4 className='text-white text-lg font-bold'>Resume Blocks</h4>
-            <div className="flex flex-row  p-2 bg-dark m-2">
+            <div className="flex flex-row  p-2 bg-dark m-2 overflow-hidden">
                 <div className="w-full flex flex-row justify-start items-center gap-2 text-grey" > 
                     <p className="">Theme:</p>
                     <div className="flex flex-row gap-2 items-center justify-center">
