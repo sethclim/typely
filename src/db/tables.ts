@@ -6,14 +6,16 @@ import {
     ResumeSectionConfigRow,
     ResumeSectionDataRow,
     TemplateRow,
+    ThemeDataRow,
 } from "./types";
 
-const RESUME_CONFIG_TABLE = "resume_config";
+export const RESUME_CONFIG_TABLE = "resume_config";
 const RESUME_SECTION_CONFIG_TABLE = "resume_section_config";
 const RESUME_SECTION_DATA_TABLE = "resume_section_data";
 const RESUME_DATA_ITEM_TABLE = "resume_data_item";
 const RESUME_DATA_ITEM_TYPE_TABLE = "resume_data_item_type";
 const RESUME_TEMPLATE_TABLE = "template";
+const THEME_TABLE = "themes";
 
 function mapRows<T = any>(columns: string[], values: any[][]): T[] {
     return values.map((row) => {
@@ -25,11 +27,20 @@ function mapRows<T = any>(columns: string[], values: any[][]): T[] {
     });
 }
 
-export function getFullResumeQuery(resumeIdParam = "?"): string {
+function getFullResumeQuery(resumeIdParam = "?"): string {
     return `
-    SELECT rc.id,
-           rc.uuid,
-           rc.name,
+    SELECT  rc.id,
+            rc.uuid,
+            rc.name,
+            json_object(
+                'id', th.id,
+                'name', th.name,
+                'description', th.description,
+                'sty_source', th.sty_source,
+                'is_system', th.is_system,
+                'owner_user_id', th.owner_user_id,
+                'created_at', th.created_at
+           ) AS theme,
            COALESCE(
              json_group_array(
                json_object(
@@ -75,6 +86,7 @@ export function getFullResumeQuery(resumeIdParam = "?"): string {
              json('[]')
            ) AS sections
     FROM ${RESUME_CONFIG_TABLE} rc
+    LEFT JOIN themes th ON th.id = rc.theme_id
     LEFT JOIN ${RESUME_SECTION_CONFIG_TABLE} rs ON rs.resume_id = rc.id
     LEFT JOIN ${RESUME_TEMPLATE_TABLE} t ON t.id = rs.template_id
     WHERE rc.id = ${resumeIdParam}
@@ -82,13 +94,57 @@ export function getFullResumeQuery(resumeIdParam = "?"): string {
     `.trim();
 }
 
-//LEFT JOIN ${TEMPLATE_TABLE} t ON t.id = rs.template_id
+function getFullThemesQuery(): string {
+    return `
+        SELECT
+        t.id,
+        t.name,
+        t.description,
+        t.sty_source,
+        t.is_system,
+        t.owner_user_id,
+        t.created_at,
 
+        COALESCE(
+            json_group_array(
+                json_object(
+                    'id', tp.id,
+                    'name', tp.name,
+                    'section_type', tp.section_type,
+                    'content', tp.content,
+                    'description', tp.description
+                )
+            ) FILTER (WHERE tp.id IS NOT NULL),
+            json('[]')
+        ) AS templates
+
+        FROM themes t
+        LEFT JOIN template tp
+            ON tp.theme_id = t.id
+
+        GROUP BY t.id
+        ORDER BY t.created_at DESC;
+    `;
+}
+
+type UpdateResumeConfigThemeProps = Required<
+    Pick<ResumeConfigRow, "id" | "theme_id" | "updated_at">
+> & {
+    notify: boolean;
+};
+
+//LEFT JOIN ${TEMPLATE_TABLE} t ON t.id = rs.template_id
 export const ResumeConfigTable = {
-    insert: ({ uuid, name, created_at, updated_at }: ResumeConfigRow) => {
+    insert: ({
+        uuid,
+        name,
+        created_at,
+        updated_at,
+        theme_id,
+    }: ResumeConfigRow) => {
         DB.runAndSave(
-            `INSERT INTO ${RESUME_CONFIG_TABLE} (uuid, name, created_at, updated_at) VALUES (?, ?, ?, ?)`,
-            [uuid, name, created_at, updated_at]
+            `INSERT INTO ${RESUME_CONFIG_TABLE} (uuid, name, created_at, updated_at, theme_id) VALUES (?, ?, ?, ?, ?)`,
+            [uuid, name, created_at, updated_at, theme_id]
         );
 
         DB.notifyTable(RESUME_CONFIG_TABLE);
@@ -108,12 +164,24 @@ export const ResumeConfigTable = {
         // console.log("getAllResumeConfig rows!! " + JSON.stringify(rows));
         return rows;
     },
-    update: ({ id, name, updated_at }: ResumeConfigRow) => {
+    updateName: ({ id, name, updated_at }: ResumeConfigRow) => {
         DB.runAndSave(
             `UPDATE ${RESUME_CONFIG_TABLE} SET name = ?, updated_at = ? WHERE id = ?`,
             [name, updated_at, id]
         );
         DB.notifyTable(RESUME_CONFIG_TABLE);
+    },
+    updateTheme: ({
+        id,
+        theme_id,
+        updated_at,
+        notify = true,
+    }: UpdateResumeConfigThemeProps) => {
+        DB.runAndSave(
+            `UPDATE ${RESUME_CONFIG_TABLE} SET theme_id = ?, updated_at = ? WHERE id = ?`,
+            [theme_id, updated_at, id]
+        );
+        if (notify) DB.notifyTable(RESUME_CONFIG_TABLE);
     },
     delete: (id: number) => {
         DB.runAndSave(`DELETE FROM ${RESUME_CONFIG_TABLE}  WHERE id = ?`, [id]);
@@ -124,37 +192,39 @@ export const ResumeConfigTable = {
 
 export const ResumeSectionConfigTable = {
     insert: ({
-        id,
         resume_id,
         title,
         section_type,
         template_id,
         section_order,
-    }: ResumeSectionConfigRow) => {
-        if (id === undefined) {
-            DB.runAndSave(
-                `INSERT INTO ${RESUME_SECTION_CONFIG_TABLE} (resume_id, title, section_type, template_id, section_order) VALUES (?, ?, ?, ?, ?)`,
-                [resume_id, title, section_type, template_id, section_order]
-            );
-        } else {
-            DB.runAndSave(
-                `INSERT INTO ${RESUME_SECTION_CONFIG_TABLE} (id, resume_id, title, section_type, template_id, section_order) VALUES (?, ?, ?, ?, ?, ?)`,
-                [id, resume_id, title, section_type, template_id, section_order]
-            );
-        }
+    }: ResumeSectionConfigRow): number => {
+        const stmt = DB.db.prepare(`
+            INSERT INTO ${RESUME_SECTION_CONFIG_TABLE}
+            (resume_id, title, section_type, template_id, section_order)
+            VALUES (?, ?, ?, ?, ?)
+            RETURNING id;
+        `);
 
+        stmt.bind([resume_id, title, section_type, template_id, section_order]);
+
+        stmt.step();
+        const row = stmt.getAsObject();
+        stmt.free();
+
+        const newId = row.id as number;
         DB.notifyTable(RESUME_CONFIG_TABLE);
+        return newId;
     },
-    updateTemplate: (id: string, template_id: string) => {
-        // console.log(
-        //     `[ResumeSectionConfigTable] id: ${id} template_id: ${template_id}`
-        // );
+    updateTemplate: (
+        id: string,
+        template_id: string,
+        notify: boolean = true
+    ) => {
         DB.runAndSave(
             `UPDATE ${RESUME_SECTION_CONFIG_TABLE} SET template_id = ? WHERE id = ?`,
             [template_id, id]
         );
-
-        DB.notifyTable(RESUME_CONFIG_TABLE);
+        if (notify) DB.notifyTable(RESUME_CONFIG_TABLE);
     },
     updateOrder: (id: string, newOrder: number) => {
         // console.log(`id ${id} newOrder ${newOrder}`);
@@ -196,21 +266,31 @@ export const ResumeSectionDataTable = {
 };
 
 export const ResumeDataItemTable = {
-    insert: ({ id, title, description, data, type_id }: DataItemRow) => {
-        if (id !== undefined) {
-            // console.log(`ResumeDataItemTable insert with id ${id}`);
-            DB.runAndSave(
-                `INSERT INTO ${RESUME_DATA_ITEM_TABLE} (id, type_id, title, description, data) VALUES (?, ?, ?, ?, ?)`,
-                [id, type_id, title, description, data]
-            );
-        } else {
-            DB.runAndSave(
-                `INSERT INTO ${RESUME_DATA_ITEM_TABLE} (type_id, title, description, data) VALUES (?, ?, ?, ?)`,
-                [type_id, title, description, data]
-            );
-        }
+    insert: ({ title, description, data, type_id }: DataItemRow): number => {
+        // console.log(`ResumeDataItemTable insert with id ${id}`);
+        // DB.runAndSave(
+        //     `INSERT INTO ${RESUME_DATA_ITEM_TABLE} (type_id, title, description, data) VALUES (?, ?, ?, ?)`,
+        //     [type_id, title, description, data]
+        // );
+
+        const stmt = DB.db.prepare(`
+            INSERT INTO ${RESUME_DATA_ITEM_TABLE}
+            (type_id, title, description, data)
+            VALUES (?, ?, ?, ?)
+            RETURNING id;
+        `);
+
+        stmt.bind([type_id, title, description, data]);
+
+        stmt.step();
+        const row = stmt.getAsObject();
+        stmt.free();
+
+        const newId = row.id as number;
+
         DB.notifyTable(RESUME_DATA_ITEM_TABLE);
         DB.notifyTable(RESUME_CONFIG_TABLE);
+        return newId;
     },
     getAll: () => {
         const res = DB.exec(`SELECT * FROM ${RESUME_DATA_ITEM_TABLE}`);
@@ -246,27 +326,44 @@ export const ResumeDataItemTable = {
 };
 
 export const ResumeDataItemTypeTable = {
-    insert: ({ id, name }: DataItemTypeRow) => {
-        DB.runAndSave(
-            `INSERT INTO ${RESUME_DATA_ITEM_TYPE_TABLE} (id, name) VALUES (?, ?)`,
-            [id, name]
+    insert: ({ name }: DataItemTypeRow): number => {
+        const newId = DB.insertAndGetId(
+            RESUME_DATA_ITEM_TYPE_TABLE,
+            "(name)",
+            "(?)",
+            [name]
         );
 
         DB.notifyTable(RESUME_CONFIG_TABLE);
+
+        return newId;
     },
 };
 
 export const TemplateTable = {
-    insert: ({ name, section_type, content, description }: TemplateRow) => {
-        DB.runAndSave(
-            `INSERT INTO ${RESUME_TEMPLATE_TABLE} (name, section_type, content, description) VALUES (?, ?, ?, ?)`,
-            [name, section_type, content, description]
+    insert: ({
+        name,
+        theme_id,
+        section_type,
+        content,
+        description,
+    }: TemplateRow) => {
+        const newId = DB.insertAndGetId(
+            RESUME_TEMPLATE_TABLE,
+            "(name, theme_id, section_type, content, description)",
+            "(?, ?, ?, ?, ?)",
+            [name, theme_id, section_type, content, description]
         );
 
         DB.notifyTable(RESUME_CONFIG_TABLE);
+        DB.notifyTable(RESUME_TEMPLATE_TABLE);
+
+        return newId;
     },
     getAll: () => {
         const res = DB.exec(`SELECT * FROM ${RESUME_TEMPLATE_TABLE}`);
+        if (res.length <= 0) return [];
+
         const rows = mapRows<TemplateRow>(res[0].columns, res[0].values);
         // console.log("template rows!! " + JSON.stringify(rows));
         return rows;
@@ -288,5 +385,74 @@ export const TemplateTable = {
         DB.notifyTable(RESUME_TEMPLATE_TABLE);
         DB.notifyTable(RESUME_CONFIG_TABLE);
     },
+    getByThemeId: (themeId: number) => {
+        const res = DB.exec(
+            `SELECT * FROM ${RESUME_TEMPLATE_TABLE} WHERE theme_id = ?`,
+            [themeId]
+        );
+        if (res.length <= 0) return [];
+
+        const rows = mapRows<TemplateRow>(res[0].columns, res[0].values);
+        // console.log("template rows!! " + JSON.stringify(rows));
+        return rows;
+    },
     subscribe: (cb: () => void) => DB.subscribe(RESUME_TEMPLATE_TABLE, cb),
+};
+
+export interface ThemeThemeDataRowWithTemplates extends ThemeDataRow {
+    templates: string;
+}
+
+export const ThemeTable = {
+    insert: ({
+        name,
+        description,
+        sty_source,
+        is_system,
+        owner_user_id = "",
+        created_at,
+    }: ThemeDataRow): number => {
+        const newId = DB.insertAndGetId(
+            THEME_TABLE,
+            "(name, description, sty_source, is_system, owner_user_id, created_at)",
+            "(?, ?, ?, ?, ?, ?)",
+            [
+                name,
+                description,
+                sty_source,
+                is_system,
+                owner_user_id,
+                created_at,
+            ]
+        );
+        return newId;
+    },
+    get: (id: number) => {
+        //TODO implement ID
+        const res = DB.exec(`SELECT * FROM ${THEME_TABLE} WHERE id =  ?`, [id]);
+        if (res.length === 0) return [];
+        const rows = mapRows<ThemeDataRow>(res[0].columns, res[0].values);
+        console.log("rows!! " + JSON.stringify(rows));
+        return rows;
+    },
+    update: (id: number, content: string) => {
+        // console.log(`[RESUME_CONFIG_TABLE] id: ${id}`);
+        DB.runAndSave(`UPDATE ${THEME_TABLE} SET sty_source = ? WHERE id = ?`, [
+            content,
+            id,
+        ]);
+
+        DB.notifyTable(THEME_TABLE);
+    },
+    getAll: () => {
+        const res = DB.exec(getFullThemesQuery());
+        if (res.length === 0) return [];
+        const rows = mapRows<ThemeThemeDataRowWithTemplates>(
+            res[0].columns,
+            res[0].values
+        );
+        console.log("rows!! " + JSON.stringify(rows));
+        return rows;
+    },
+    subscribe: (cb: () => void) => DB.subscribe(THEME_TABLE, cb),
 };

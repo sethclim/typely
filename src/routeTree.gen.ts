@@ -10,14 +10,21 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as PricingRouteImport } from './routes/pricing'
+import { Route as OnBoardingRouteImport } from './routes/onBoarding'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ThemeEditorThemeIdRouteImport } from './routes/theme-editor.$themeId'
 
 const PricingRoute = PricingRouteImport.update({
   id: '/pricing',
   path: '/pricing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnBoardingRoute = OnBoardingRouteImport.update({
+  id: '/onBoarding',
+  path: '/onBoarding',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -40,20 +47,29 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ThemeEditorThemeIdRoute = ThemeEditorThemeIdRouteImport.update({
+  id: '/theme-editor/$themeId',
+  path: '/theme-editor/$themeId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRoute
   '/faq': typeof FaqRoute
   '/login': typeof LoginRoute
+  '/onBoarding': typeof OnBoardingRoute
   '/pricing': typeof PricingRoute
+  '/theme-editor/$themeId': typeof ThemeEditorThemeIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/app': typeof AppRoute
   '/faq': typeof FaqRoute
   '/login': typeof LoginRoute
+  '/onBoarding': typeof OnBoardingRoute
   '/pricing': typeof PricingRoute
+  '/theme-editor/$themeId': typeof ThemeEditorThemeIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -61,14 +77,38 @@ export interface FileRoutesById {
   '/app': typeof AppRoute
   '/faq': typeof FaqRoute
   '/login': typeof LoginRoute
+  '/onBoarding': typeof OnBoardingRoute
   '/pricing': typeof PricingRoute
+  '/theme-editor/$themeId': typeof ThemeEditorThemeIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/app' | '/faq' | '/login' | '/pricing'
+  fullPaths:
+    | '/'
+    | '/app'
+    | '/faq'
+    | '/login'
+    | '/onBoarding'
+    | '/pricing'
+    | '/theme-editor/$themeId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/app' | '/faq' | '/login' | '/pricing'
-  id: '__root__' | '/' | '/app' | '/faq' | '/login' | '/pricing'
+  to:
+    | '/'
+    | '/app'
+    | '/faq'
+    | '/login'
+    | '/onBoarding'
+    | '/pricing'
+    | '/theme-editor/$themeId'
+  id:
+    | '__root__'
+    | '/'
+    | '/app'
+    | '/faq'
+    | '/login'
+    | '/onBoarding'
+    | '/pricing'
+    | '/theme-editor/$themeId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -76,7 +116,9 @@ export interface RootRouteChildren {
   AppRoute: typeof AppRoute
   FaqRoute: typeof FaqRoute
   LoginRoute: typeof LoginRoute
+  OnBoardingRoute: typeof OnBoardingRoute
   PricingRoute: typeof PricingRoute
+  ThemeEditorThemeIdRoute: typeof ThemeEditorThemeIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -86,6 +128,13 @@ declare module '@tanstack/react-router' {
       path: '/pricing'
       fullPath: '/pricing'
       preLoaderRoute: typeof PricingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/onBoarding': {
+      id: '/onBoarding'
+      path: '/onBoarding'
+      fullPath: '/onBoarding'
+      preLoaderRoute: typeof OnBoardingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -116,6 +165,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/theme-editor/$themeId': {
+      id: '/theme-editor/$themeId'
+      path: '/theme-editor/$themeId'
+      fullPath: '/theme-editor/$themeId'
+      preLoaderRoute: typeof ThemeEditorThemeIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -124,7 +180,9 @@ const rootRouteChildren: RootRouteChildren = {
   AppRoute: AppRoute,
   FaqRoute: FaqRoute,
   LoginRoute: LoginRoute,
+  OnBoardingRoute: OnBoardingRoute,
   PricingRoute: PricingRoute,
+  ThemeEditorThemeIdRoute: ThemeEditorThemeIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

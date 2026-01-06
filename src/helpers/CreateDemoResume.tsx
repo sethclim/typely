@@ -1,33 +1,136 @@
-import { ResumeConfigTable, ResumeSectionConfigTable, ResumeSectionDataTable, ResumeDataItemTable, ResumeDataItemTypeTable, TemplateTable } from "../db/tables"
+import { IntakeInfo } from "../components/ResumeIntakeForm/types"
+import { 
+    ResumeConfigTable, 
+    ResumeSectionConfigTable, 
+    ResumeSectionDataTable, 
+    ResumeDataItemTable, 
+    ResumeDataItemTypeTable, 
+    TemplateTable, 
+} from "../db/tables"
+import { Template, Theme } from "../types";
 
-export const CreateDemoResume = () =>{
+export const ORDER_KEYS = [
+  "Header",
+  "SkillsSection",
+  "Skills",
+  "ExperienceSection",
+  "Experience",
+  "ProjectSection",
+  "Project",
+  "EducationSection",
+  "Education",
+] as const;
 
-    const ResumeId = 1
+export type OrderKey = typeof ORDER_KEYS[number];
 
-    const HeaderSectionId = 1
-    const SkillsSectionId = 2
-    const CurrentJobSectionId = 3
-    const PrevJobSectionId = 4
-    const OldJobSectionId = 5
-    const ProjectSectionId = 6
-    const EducationSectionId = 7
-    const WorkTitleSectionId = 8
-    const ProjectTitleSectionId = 9
-    const EducationTitleSectionId = 10
-    const FirstJobSectionId = 11
+const ResumeId = 1
 
-    const InfoDataItemId = 1
-    const SkillDataItemId = 2
-    const NameDataItemId = 3
-    const Job1DataItemId = 4
-    const Job2DataItemId = 5
-    const ProjectDataItemId = 6
-    const EducationDataItemId = 7
-    const WorkSectionDataItemId = 8
-    const ProjectSectionDataItemId = 9
-    const EducationSectionDataItemId = 10
-    const Job3DataItemId = 11
+function groupTemplatesBySectionType(templates: Template[]) {
+    return templates.reduce<Record<string, Template[]>>((acc, tpl) => {
+        (acc[tpl.sectionType] ??= []).push(tpl);
+        return acc;
+    }, {});
+}
 
+type CountMap = Record<OrderKey, number>;
+
+export const CreateDemoResume = (info : IntakeInfo, themes : Theme[]) =>{
+
+    const counts: CountMap = {
+        Header: 1,
+        SkillsSection: info.skills.length ? 1 : 0,
+        Skills: info.skills.length,
+        ExperienceSection: info.jobs.length ? 1 : 0,
+        Experience: info.jobs.length,
+        ProjectSection: info.projects.length ? 1 : 0,
+        Project: info.projects.length,
+        EducationSection: info.education.length ? 1 : 0,
+        Education: info.education.length,
+    };
+
+    const finalPositions = new Map<OrderKey, number[]>();
+    let cursor = 0;
+
+    for (const key of ORDER_KEYS) {
+        const n = counts[key];
+        finalPositions.set(key, Array.from({ length: n }, (_, i) => cursor + i));
+        cursor += n;
+    }
+
+    let dataItemId = 1
+
+    console.log("Creating Resume")
+
+    const groupedTemplates = groupTemplatesBySectionType(info.theme.templates);
+
+
+    const skillsTemplateIds = {
+        eng: -1,
+        color: -1
+    }
+
+    themes.forEach(t => {
+        console.log("t " + t.name)
+        let skillsLatex = ""
+        if(t.name == "engineering"){
+            info.skills.forEach((_, i) => {
+                skillsLatex = skillsLatex.concat(`\\textbf{[[SKILL_LABEL_${i}]]:} [[Point_${i}]] \\newline\n`)
+            })
+            const skillsTemplateId = TemplateTable.insert({
+                "name": "skills template",
+                "description": "this is a s template",
+                "section_type": "skills",
+                "created_at" : Date.now().toString(),
+                "content": skillsLatex,
+                theme_id :  t.id
+            })
+            skillsTemplateIds.eng = skillsTemplateId
+        }else if(t.name == "colorful"){
+            skillsLatex += "\\tab \\begin{tabular}{r p{0.7\\textwidth}}"
+            info.skills.forEach((_, i) => {
+                skillsLatex += `\\texttt{\\large [[SKILL_LABEL_${i}]]} & [[Point_${i}]] \\\\ \n`
+            })
+            skillsLatex += "\\end{tabular}\\\\~\\\\"
+            const skillsTemplateId = TemplateTable.insert({
+                "name": "skills template",
+                "description": "this is a s template",
+                "section_type": "skills",
+                "created_at" : Date.now().toString(),
+                "content": skillsLatex,
+                theme_id : t.id
+            })
+            skillsTemplateIds.color = skillsTemplateId
+        }
+
+    })
+
+    console.log("Theme " + info.theme.name)
+
+
+
+    const infoDataItemTypeId = ResumeDataItemTypeTable.insert({
+        name : "info"
+    })
+
+    const skillDataItemTypeId = ResumeDataItemTypeTable.insert({
+        name : "skill"
+    })
+
+    const expDataItemTypeId = ResumeDataItemTypeTable.insert({
+        name : "experience"
+    })
+
+    const projDataItemTypeId = ResumeDataItemTypeTable.insert({
+        name : "project"
+    })
+
+    const eduDataItemTypeId = ResumeDataItemTypeTable.insert({
+        name : "education"
+    })
+
+    ////////////////////////////////////////////////
+    // RESUME CONFIG
+    ///////////////////////////////////////////////
     const uuid = crypto.randomUUID();
     ResumeConfigTable.insert({
         uuid: uuid,
@@ -35,307 +138,204 @@ export const CreateDemoResume = () =>{
         "name" : "Demo Resume",
         "created_at" : Date.now().toString(),
         "updated_at" : Date.now().toString(),
+        theme_id : info.theme.id
     })
     
-    ResumeSectionConfigTable.insert({
-        "id": HeaderSectionId,
+    ////////////////////////////////////////////////
+    // Header
+    ///////////////////////////////////////////////
+    const headerSectionId = ResumeSectionConfigTable.insert({
         "title": "Custom Header",
         "resume_id": ResumeId,
-        "template_id": 1,
-        "section_order": 0,
+        "template_id": groupedTemplates["header"][0].id,
+        "section_order": finalPositions.get("Header")![0],
         "section_type": "header"
     })
 
-    ResumeSectionConfigTable.insert({
-        "id": SkillsSectionId,
-        "title": "C++ Skills",
-        "resume_id": ResumeId,
-        "template_id": 2,
-        "section_order": 1,
-        "section_type": "skills"
-    })
-
-    
-    ResumeSectionConfigTable.insert({
-        "id": CurrentJobSectionId,
-        "title": "Current Job",
-        "resume_id": ResumeId,
-        "template_id": 3,
-        "section_order": 3,
-        "section_type": "experience"
-    })
-    
-    ResumeSectionConfigTable.insert({
-        "id": PrevJobSectionId,
-        "title": "Previous Game Job",
-        "resume_id": ResumeId,
-        "template_id": 3,
-        "section_order": 4,
-        "section_type": "experience"
-    })
-    
-    ResumeSectionConfigTable.insert({
-        "id": OldJobSectionId,
-        "title": "Old Job",
-        "resume_id": ResumeId,
-        "template_id": 3,
-        "section_order": 5,
-        "section_type": "experience"
-    })
-    
-    ResumeSectionConfigTable.insert({
-        "id": ProjectSectionId,
-        "title": "C++ Project",
-        "resume_id": ResumeId,
-        "template_id": 4,
-        "section_order": 8, 
-        "section_type": "project"
-    })
-    
-    ResumeSectionConfigTable.insert({
-        "id": EducationSectionId,
-        "title": "Education",
-        "resume_id": ResumeId,
-        "template_id": 5,
-        "section_order": 11,
-        "section_type": "education"
-    })
-
-    ResumeSectionConfigTable.insert({
-        "id": WorkTitleSectionId,
-        "title": "Work Title Section",
-        "resume_id": ResumeId,
-        "template_id": 6,
-        "section_order": 2,
-        "section_type": "section"
-    })
-
-    ResumeSectionConfigTable.insert({
-        "id": ProjectTitleSectionId,
-        "title": "Project Title Section",
-        "resume_id": ResumeId,
-        "template_id": 6,
-        "section_order": 7,
-        "section_type": "section"
-    })
-
-    ResumeSectionConfigTable.insert({
-        "id": EducationTitleSectionId,
-        "title": "Education Title Section",
-        "resume_id": ResumeId,
-        "template_id": 6,
-        "section_order": 9,
-        "section_type": "section"
-    })
-
-    ResumeSectionConfigTable.insert({
-        "id": FirstJobSectionId,
-        "title": "First Job",
-        "resume_id": ResumeId,
-        "template_id": 3,
-        "section_order": 6,
-        "section_type": "experience"
-    })
-    
-    ResumeSectionDataTable.insert({
-        section_id: HeaderSectionId,  
-        data_item_id: InfoDataItemId
-    })
-
-    ResumeSectionDataTable.insert({
-        section_id: HeaderSectionId,
-        data_item_id: NameDataItemId
-    })
-
-    ResumeSectionDataTable.insert({
-        section_id: SkillsSectionId,
-        data_item_id: SkillDataItemId
-    })
-
-    ResumeSectionDataTable.insert({
-        section_id: CurrentJobSectionId,
-        data_item_id: Job1DataItemId
-    })
-
-    ResumeSectionDataTable.insert({
-        section_id: PrevJobSectionId,
-        data_item_id: Job2DataItemId
-    })
-
-    ResumeSectionDataTable.insert({
-        section_id: OldJobSectionId,
-        data_item_id: Job1DataItemId
-    })
-
-    ResumeSectionDataTable.insert({
-        section_id: ProjectSectionId,
-        data_item_id: ProjectDataItemId
-    })
-
-    ResumeSectionDataTable.insert({
-        section_id: EducationSectionId,
-        data_item_id: EducationDataItemId
-    })
-
-    ResumeSectionDataTable.insert({
-        section_id: WorkTitleSectionId,
-        data_item_id: WorkSectionDataItemId
-    })
-
-    ResumeSectionDataTable.insert({
-        section_id: ProjectTitleSectionId,
-        data_item_id: ProjectSectionDataItemId
-    })
-
-    ResumeSectionDataTable.insert({
-        section_id: EducationTitleSectionId,
-        data_item_id: EducationSectionDataItemId
-    })
-
-    ResumeSectionDataTable.insert({
-        section_id: FirstJobSectionId,
-        data_item_id: Job3DataItemId
-    })
-
     const me = [
-        ["EMAIL", "somebody@gmail.com"],
-        ["PHONE", "111-111-1111"],
-        ["GITHUB", "github.com/me"],
-        ["WEBSITE", "https://about-me.com"],
+        ["EMAIL", info.personal.email],
         ["LINKEDIN", "https://linkedin/me.com"]
     ]
 
-    ResumeDataItemTable.insert({
-        "id": InfoDataItemId,
+    if(info.personal.phone){
+        me.push(["PHONE", info.personal.phone])
+    }
+
+    if(info.personal.github){
+        me.push(["GITHUB", info.personal.github])
+    }
+
+    if(info.personal.website){
+        me.push(["WEBSITE", info.personal.website],)
+    }
+
+    const myInfoDataItemId = ResumeDataItemTable.insert({
         title: "My Info",
         description: "about me info",
         data: JSON.stringify(me),
-        type_id: 1,
+        type_id: infoDataItemTypeId,
         "created_at" : Date.now().toString(),
         "updated_at" : Date.now().toString(),
     })
 
-    const cplusSkills = [
-        ["LANGUAGES", "C++, GO, Rust, C\\#, Python, Typescript, Lua, HLSL/GLSL"],
-        ["VR","Unity, Vive, HoloLens, Quest, Unity XR Interation Tool Kit"],
-        ["FRAMEWORKS", "Vulkan, OpenGL, JUCE, Skia, Dear ImGui, GLFW, GLM, Kubernetes, WebRTC"],
-        ["GENERAL", "OOP, Functional, Git, Docker, CI/CD (Terraform, GitHub Actions), SQL, AWS"]
+    ResumeSectionDataTable.insert({
+        section_id: headerSectionId,  
+        data_item_id: myInfoDataItemId
+    })
+
+
+    const name = [
+        ["FNAME", info.personal.fname],
+        ["LNAME", info.personal.lname]
     ]
 
-    ResumeDataItemTable.insert({
-        "id": SkillDataItemId,
+    const myNameDataItemId = ResumeDataItemTable.insert({
+        title: "My Name",
+        description: "name",
+        data: JSON.stringify(name),
+        type_id: infoDataItemTypeId,
+        "created_at" : Date.now().toString(),
+        "updated_at" : Date.now().toString(),
+    })
+
+    ResumeSectionDataTable.insert({
+        section_id: headerSectionId,
+        data_item_id: myNameDataItemId
+    })
+
+    ////////////////////////////////////////////////
+    // SKILLS
+    ///////////////////////////////////////////////
+    const skillsSectionId = ResumeSectionConfigTable.insert({
+        // "id": sectionId,
+        "title": "C++ Skills",
+        "resume_id": ResumeId,
+        "template_id": info.theme.name === "engineering" ? skillsTemplateIds.eng : skillsTemplateIds.color,
+        "section_order": finalPositions.get("Skills")![0],
+        "section_type": "skills"
+    })
+
+    const cplusSkills : Array<Array<string>> = []
+    const skillLabels : Array<Array<string>> = []
+
+    info.skills.forEach((skillIn, i) => {
+        cplusSkills.push([`Point_${i}`, skillIn.skills],)
+        skillLabels.push([`SKILL_LABEL_${i}`, skillIn.title])
+    })
+
+    const skillsDataItemId = ResumeDataItemTable.insert({
         title: "C++ Skills",
         description: "my c++ skills",
         data: JSON.stringify(cplusSkills),
-        type_id: 2,
+        type_id: skillDataItemTypeId,
         "created_at" : Date.now().toString(),
         "updated_at" : Date.now().toString(),
     })
 
-    ResumeDataItemTable.insert({
-        "id": NameDataItemId,
-        title: "My Name",
-        description: "name",
-        data: '[["NAME", "John Doe"]]',
-        type_id: 1,
+    ResumeSectionDataTable.insert({
+        section_id: skillsSectionId,
+        data_item_id: skillsDataItemId
+    })
+
+
+    const skillsLabelsDataItemId = ResumeDataItemTable.insert({
+        "id": dataItemId,
+        title: "Skills Labels",
+        description: "my skills labels",
+        data: JSON.stringify(skillLabels),
+        type_id: skillDataItemTypeId,
         "created_at" : Date.now().toString(),
         "updated_at" : Date.now().toString(),
     })
 
-    const job1 = [
-        ["TITLE", "Software Developer"],
-        ["COMPANY", "Acme Corp"],
-        ["POINT1", "Developed scalable REST APIs and optimized MySQL queries to improve application performance and reliability."],
-        ["POINT2", "Improved key KPIs by 130\\% through targeted backend optimizations and data-driven performance tuning."],
-        ["POINT3", "Participated in daily standups and cross-team planning to keep development aligned and unblock dependencies."],
-        ["POINT4", "Implemented system efficiencies that reduced operational overhead, saving the company over \\$300,000 annually."]
-    ];
-
-    ResumeDataItemTable.insert({
-        id: Job1DataItemId,
-        title: "Acme Corp",
-        description: "current job",
-        data: JSON.stringify(job1),
-        type_id: 3,
-        "created_at" : Date.now().toString(),
-        "updated_at" : Date.now().toString(),
+    ResumeSectionDataTable.insert({
+        section_id: skillsSectionId,
+        data_item_id: skillsLabelsDataItemId
     })
 
-    const job2 = [
-        ["TITLE", "Game Developer"],
-        ["COMPANY", "Game Company"],
-        ["POINT1", "Designed and implemented a complete multiplayer gameplay loop in Unity, handling networking, synchronization, and game-state management."],
-        ["POINT2", "Built a responsive and scalable character movement system using physics, animation blending, and custom input handling."],
-        ["POINT3", "Developed an abstracted networking layer that decoupled gameplay logic from the underlying network implementation for easier iteration."],
-        ["POINT4", "Collaborated with designers, artists, and engineers to deliver polished features and resolve cross-disciplinary issues during rapid development cycles."]
-    ];
-
-    ResumeDataItemTable.insert({
-        id: Job2DataItemId,
-        title: "XYZ Interactive",
-        description: "old job",
-        data: JSON.stringify(job2),
-        type_id: 3,
-        "created_at" : Date.now().toString(),
-        "updated_at" : Date.now().toString(),
-    })
-
-    const job3 = [
-        ["TITLE", "Full-Stack Developer"],
-        ["COMPANY", "Brightwave Solutions"],
-        ["POINT1", "Built and maintained full-stack features using React, Node.js, and PostgreSQL for a high-traffic SaaS platform."],
-        ["POINT2", "Implemented CI/CD pipelines that reduced deployment times and improved release reliability across environments."],
-        ["POINT3", "Optimized frontend performance, cutting load times by over 40\\% through code splitting and bundle analysis."],
-        ["POINT4", "Worked closely with product and UX teams to deliver user-focused features on rapid iteration cycles."]
-    ];
-
+    ////////////////////////////////////////////////
+    // Project
+    ///////////////////////////////////////////////
+    info.projects.forEach((proj, i) =>{
+        const thisProjectSectionId = ResumeSectionConfigTable.insert({
+            "title": "C++ Project",
+            "resume_id": ResumeId,
+            "template_id": groupedTemplates["project"][0].id,
+            "section_order": finalPositions.get("Project")![i], 
+            "section_type": "project"
+        })
+        const project = [
+            ["TITLE", proj.title],
+            ["HIGHLIGHTS", "C++, Vulkan"],
+            ["URL", "https://github/my-raytracer"],
+            ["POINT1", proj.pointOne],
+            ["POINT2", proj.pointTwo],
+            ["POINT3", proj.pointThree],
+            ["POINT4", proj.pointFour]
+        ];
     
-    ResumeDataItemTable.insert({
-        id: Job3DataItemId,
-        title: "Brightwave Solutions",
-        description: "First Job",
-        data: JSON.stringify(job3),
-        type_id: 3,
-        "created_at" : Date.now().toString(),
-        "updated_at" : Date.now().toString(),
+        const projectDataItemId = ResumeDataItemTable.insert({
+            title: "Project",
+            description: "raytracer",
+            data: JSON.stringify(project),
+            type_id: projDataItemTypeId,
+            "created_at" : Date.now().toString(),
+            "updated_at" : Date.now().toString(),
+        })
+    
+        ResumeSectionDataTable.insert({
+            section_id: thisProjectSectionId,
+            data_item_id: projectDataItemId
+        })
+    
+    })
+    
+    ////////////////////////////////////////////////
+    // Education
+    ///////////////////////////////////////////////
+    info.education.forEach((edu, i) =>{
+        const thisEducationSectionId = ResumeSectionConfigTable.insert({
+            "title": "Education",
+            "resume_id": ResumeId,
+            "template_id": groupedTemplates["education"][0].id,
+            "section_order": finalPositions.get("Education")![i],
+            "section_type": "education"
+        })
+
+        const uni = [
+            ["UNI", edu.school],
+            ["PROGRAM", edu.program],
+            ["START_DATE", edu.startDate],
+            ["END_DATE", edu.endDate],
+            ["GPA", "4.0"]
+        ]
+    
+        const eduDataItemId = ResumeDataItemTable.insert({
+            id: dataItemId,
+            title: "University",
+            description: "undergrad",
+            data: JSON.stringify(uni),
+            type_id: eduDataItemTypeId,
+            "created_at" : Date.now().toString(),
+            "updated_at" : Date.now().toString(),
+        })
+
+        ResumeSectionDataTable.insert({
+            section_id: thisEducationSectionId,
+            data_item_id: eduDataItemId
+        })
+
     })
 
-    const raytracer = [
-        ["TITLE", "Vulkan RayTracer"],
-        ["HIGHLIGHTS", "C++, Vulkan"],
-        ["URL", "https://github/my-raytracer"],
-        ["POINT1", "Built a custom Vulkan-based ray tracer from scratch, including acceleration structures and GPU-driven rendering pipelines."],
-        ["POINT2", "Implemented dielectric materials with physically-based light behavior, including refraction, Fresnel effects, and total internal reflection."],
-        ["POINT3", "Added support for multiple BRDF shading models to enable realistic metal, diffuse, and glass surface interactions."],
-        ["POINT4", "Optimized GPU workloads using descriptor sets, memory barriers, and command buffer batching for high-performance rendering."]
-    ];
-
-    ResumeDataItemTable.insert({
-        id: ProjectDataItemId,
-        title: "Project",
-        description: "raytracer",
-        data: JSON.stringify(raytracer),
-        type_id: 3,
-        "created_at" : Date.now().toString(),
-        "updated_at" : Date.now().toString(),
-    })
-
-    const uni = [
-        ["UNI", "University of Waterloo"],
-        ["PROGRAM", "Honours Bachelor Computer Science"],
-        ["START_DATE", "SEPT 2024"],
-        ["END_DATE", "MAY 2028"],
-        ["GPA", "4.0"]
-    ]
-
-    ResumeDataItemTable.insert({
-        id: EducationDataItemId,
-        title: "Uni",
-        description: "undergrad",
-        data: JSON.stringify(uni),
-        type_id: 3,
-        "created_at" : Date.now().toString(),
-        "updated_at" : Date.now().toString(),
+    ////////////////////////////////////////////////
+    // Work section header
+    ///////////////////////////////////////////////
+    const workTitleSectionId = ResumeSectionConfigTable.insert({
+        "title": "Work Title Section",
+        "resume_id": ResumeId,
+        "template_id": groupedTemplates["section"][0].id,
+        "section_order": finalPositions.get("ExperienceSection")![0],
+        "section_type": "section"
     })
 
     const work_title = [
@@ -343,14 +343,29 @@ export const CreateDemoResume = () =>{
         ["SPACE", "0cm"],
     ]
 
-    ResumeDataItemTable.insert({
-        id: WorkSectionDataItemId,
+    const experienceSectionDataItemId = ResumeDataItemTable.insert({
         title: "Work Experience Title",
         description: "undergrad",
         data: JSON.stringify(work_title),
-        type_id: 3,
+        type_id: expDataItemTypeId,
         "created_at" : Date.now().toString(),
         "updated_at" : Date.now().toString(),
+    })
+
+    ResumeSectionDataTable.insert({
+        section_id: workTitleSectionId,
+        data_item_id: experienceSectionDataItemId
+    })
+
+    ////////////////////////////////////////////////
+    // Project section header
+    ///////////////////////////////////////////////
+    const projectHeaderSectionId = ResumeSectionConfigTable.insert({
+        "title": "Project Title Section",
+        "resume_id": ResumeId,
+        "template_id": groupedTemplates["section"][0].id,
+        "section_order": finalPositions.get("ProjectSection")![0],
+        "section_type": "section"
     })
 
     const project_title = [
@@ -358,14 +373,30 @@ export const CreateDemoResume = () =>{
         ["SPACE", "0cm"],
     ]
 
-    ResumeDataItemTable.insert({
-        id: ProjectSectionDataItemId,
+    const projectSectionDataItemId = ResumeDataItemTable.insert({
         title: "Project Section Title",
         description: "projects",
         data: JSON.stringify(project_title),
-        type_id: 3,
+        type_id: projDataItemTypeId,
         "created_at" : Date.now().toString(),
         "updated_at" : Date.now().toString(),
+    })
+    
+
+    ResumeSectionDataTable.insert({
+        section_id: projectHeaderSectionId,
+        data_item_id: projectSectionDataItemId
+    })
+
+    ////////////////////////////////////////////////
+    // Education Section Header
+    ///////////////////////////////////////////////
+    const educationTitleSectionId = ResumeSectionConfigTable.insert({
+        "title": "Education Title Section",
+        "resume_id": ResumeId,
+        "template_id": groupedTemplates["section"][0].id,
+        "section_order": finalPositions.get("EducationSection")![0],
+        "section_type": "section"
     })
 
     const edu_title = [
@@ -373,173 +404,87 @@ export const CreateDemoResume = () =>{
         ["SPACE", "0cm"],
     ]
 
-    ResumeDataItemTable.insert({
-        id: EducationSectionDataItemId,
+    const eduSectionDataItemId = ResumeDataItemTable.insert({
         title: "Education Section Title",
         description: "education",
         data: JSON.stringify(edu_title),
-        type_id: 3,
+        type_id: eduDataItemTypeId,
         "created_at" : Date.now().toString(),
         "updated_at" : Date.now().toString(),
     })
 
-
-    ResumeDataItemTypeTable.insert({
-        "id": 1,
-        name : "email"
-    })
-
-    ResumeDataItemTypeTable.insert({
-        "id": 2,
-        name : "skill"
-    })
-
-    ResumeDataItemTypeTable.insert({
-        "id": 3,
-        name : "experience"
-    })
-
-    ResumeDataItemTypeTable.insert({
-        "id": 4,
-        name : "project"
-    })
-
-    ResumeDataItemTypeTable.insert({
-        "id": 5,
-        name : "education"
+    ResumeSectionDataTable.insert({
+        section_id: educationTitleSectionId,
+        data_item_id: eduSectionDataItemId
     })
 
 
-    const headerLaTeX = `
-    \\newcommand{\\AND}{\\unskip\\cleaders\\copy\\ANDbox\\hskip\\wd\\ANDbox\\ignorespaces}\\newsavebox\\ANDbox\\sbox\\ANDbox{$|$}\n\\begin{header}\n\\fontsize{31 pt}{31 pt}\\selectfont [[NAME]] 
-    \\\\
-    \\vspace{1 pt}
-    \\normalsize
-    \\mbox{Waterloo, ON}%
-    \\kern 5.0 pt%
-    \\AND%
-    \\kern 5.0 pt%
-    \\mbox{\\hrefWithoutArrow{tel:+01-[[PHONE]]}{+1 [[PHONE]]}}%
-    \\kern 5.0 pt%
-    \\AND%
-    \\kern 5.0 pt%
-    \\mbox{\\hrefWithoutArrow{mailto:[[EMAIL]]}{[[EMAIL]]}}%
-    \\kern 5.0 pt%
-    \\vspace{-3pt} %
-    \\par
-    \\kern-6pt %
-    \\kern 5.0 pt%
-    \\mbox{\\hrefWithoutArrow{[[LINKEDIN]]}{\\textcolor[HTML]{0366d6}{[[LINKEDIN]]}}}%
-    \\kern 5.0 pt%
-    \\AND%
-    \\kern 5.0 pt%
-    \\mbox{\\hrefWithoutArrow{[[WEBSITE]]}{\\textcolor[HTML]{0366d6}{[[WEBSITE]]}}}%
-    \\kern 5.0 pt%
-    \\AND%
-    \\kern 5.0 pt%
-    \\mbox{\\hrefWithoutArrow{[[GITHUB]]}{\\textcolor[HTML]{0366d6}{[[GITHUB]]}}}%
-    \n\\end{header} 
-    \n\\vspace{0.2cm}`;
+    if (info.theme.name == "colorful"){
+        ////////////////////////////////////////////////
+        // Skills Section Header
+        ///////////////////////////////////////////////
+        const skillsTitleSectionId = ResumeSectionConfigTable.insert({
+            "title": "Skills Title Section",
+            "resume_id": ResumeId,
+            "template_id": groupedTemplates["section"][0].id,
+            "section_order": finalPositions.get("SkillsSection")![0],
+            "section_type": "section"
+        })
+    
+        const skills_title = [
+            ["TITLE", "Skills"],
+            ["SPACE", "0cm"],
+        ]
+    
+        const skillsSectionDataItemId = ResumeDataItemTable.insert({
+            title: "Skills Section Title",
+            description: "education",
+            data: JSON.stringify(skills_title),
+            type_id: skillsTitleSectionId,
+            "created_at" : Date.now().toString(),
+            "updated_at" : Date.now().toString(),
+        })
+    
+        ResumeSectionDataTable.insert({
+            section_id: skillsTitleSectionId,
+            data_item_id: skillsSectionDataItemId
+        })
+    }
 
-    TemplateTable.insert({
-        "id": 1,
-        "name": "header template",
-        "description": "this is a header template",
-        "section_type": "header",
-        "created_at" : Date.now().toString(),
-        "content": headerLaTeX
+    ////////////////////////////////////////////////
+    // Jobs
+    ///////////////////////////////////////////////
+    info.jobs.forEach((inJob, i) => {
+        const thisJobSectionId = ResumeSectionConfigTable.insert({
+            "title": `Job ${i + 1}`,
+            "resume_id": ResumeId,
+            "template_id": groupedTemplates["experience"][0].id,
+            "section_order": finalPositions.get("Experience")![i],
+            "section_type": "experience"
+        })
+
+        const jobData = [
+            ["TITLE", inJob.title],
+            ["COMPANY", inJob.company],
+            ["POINT1", inJob.pointOne],
+            ["POINT2", inJob.pointTwo],
+            ["POINT3", inJob.pointThree],
+            ["POINT4", inJob.pointFour]
+        ];
+
+        const experienceDataItemId = ResumeDataItemTable.insert({
+            title: `${inJob.title}@${inJob.company}`,
+            description: "current job",
+            data: JSON.stringify(jobData),
+            type_id: expDataItemTypeId,
+            "created_at" : Date.now().toString(),
+            "updated_at" : Date.now().toString(),
+        })
+
+        ResumeSectionDataTable.insert({
+            section_id: thisJobSectionId,
+            data_item_id: experienceDataItemId
+        })
     })
 
-    const skillsLatex = `\\textbf{Languages:} [[LANGUAGES]] \\newline\n\\textbf{AR/VR:} [[VR]] \\newline\n\\textbf{Frameworks:} [[FRAMEWORKS]]  \\newline\n\\textbf{General:} [[GENERAL]]`
-
-    TemplateTable.insert({
-        "id": 2,
-        "name": "skills template",
-        "description": "this is a s template",
-        "section_type": "header",
-        "created_at" : Date.now().toString(),
-        "content": skillsLatex
-    })
-
-     const expLatex = `
-        \\begin{twocolentry}{
-            05/2022 – 04/2023
-        }
-        \\fontsize{11 pt}{11 pt}\\textbf{[[TITLE]]}, [[COMPANY]] - Toronto ON, CA\\end{twocolentry}
-
-        \\vspace{0.10 cm}
-        \\begin{onecolentry}
-            \\begin{highlights}
-                \\item [[POINT1]]
-                \\item [[POINT2]]
-                \\item [[POINT3]]
-                \\item [[POINT4]]
-            \\end{highlights}
-        \\end{onecolentry}
-        \n\\vspace{0.20 cm}
-     `
-
-    TemplateTable.insert({
-        "id": 3,
-        "name": "Exp template",
-        "description": "this show's my experience",
-        "section_type": "experience",
-        "created_at" : Date.now().toString(),
-        "content": expLatex
-    })
-
-    const proj_template = `
-        \\begin{twocolentry_proj}{
-        \\mbox{\\hrefWithoutArrow{[[URL]]}{\\textcolor[HTML]{0366d6}{[[URL]]}}}
-        }{5.6cm}
-        \\fontsize{11 pt}{11 pt}\\textbf{[[TITLE]]} - [[HIGHLIGHTS]]
-        \\end{twocolentry_proj}
-        \\begin{onecolentry}
-            \\begin{highlights}
-                \\item [[POINT1]]
-                \\item [[POINT2]]
-                \\item [[POINT3]]
-                \\item [[POINT4]]
-            \\end{highlights}
-        \\end{onecolentry}
-    `
-
-    TemplateTable.insert({
-        "id": 4,
-        "name": "Project template",
-        "description": "this show's my project",
-        "section_type": "project",
-        "created_at" : Date.now().toString(),
-        "content": proj_template
-    })
-
-    const edu_template = `
-        \\begin{twocolentry}{
-            [[START_DATE]] – [[END_DATE]]
-        }
-        \\vspace{0.10 cm}
-        \\textbf{[[UNI]]}, [[PROGRAM]] [[GPA]] 
-        \\end{twocolentry}
-    `
-    TemplateTable.insert({
-        "id": 5,
-        "name": "Education Template",
-        "description": "this show's my education",
-        "section_type": "education",
-        "created_at" : Date.now().toString(),
-        "content": edu_template
-    })
-
-    const section_template = `
-        \\section{[[TITLE]]}
-        \\vspace{[[SPACE]]}
-    `
-    TemplateTable.insert({
-        "id": 6,
-        "name": "section title",
-        "description": "header section",
-        "section_type": "section",
-        "created_at" : Date.now().toString(),
-        "content": section_template
-    })
 }

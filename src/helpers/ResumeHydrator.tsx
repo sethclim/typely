@@ -1,4 +1,4 @@
-import { ResumeConfig, ResumeSection } from "../types";
+import { ResumeConfig, ResumeSection, Theme } from "../types";
 
 export function hydrateResume(raw: any[]): ResumeConfig | null {
   if (!raw || raw.length === 0) return null;
@@ -6,7 +6,7 @@ export function hydrateResume(raw: any[]): ResumeConfig | null {
   const row = raw[0];
   const values = row.values[0];
 
-  const [id, uuid, name, sectionsJson] = values;
+  const [id, uuid, name, themeJSON, sectionsJson] = values;
 
   let sections: ResumeSection[] = [];
   try {
@@ -53,6 +53,8 @@ export function hydrateResume(raw: any[]): ResumeConfig | null {
   sections.sort((a, b) => a.order - b.order);
   // console.log(`copy ${sections.length}`)
 
+  let theme : Theme = JSON.parse(themeJSON)
+
   return {
     id,
     uuid,
@@ -60,5 +62,6 @@ export function hydrateResume(raw: any[]): ResumeConfig | null {
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
     sections,
+    theme
   };
 }

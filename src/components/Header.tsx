@@ -1,3 +1,4 @@
+import { ReactNode } from "react"
 import { ChevronDoubleRightIcon } from "@heroicons/react/20/solid"
 import { ChevronDoubleLeftIcon } from "@heroicons/react/20/solid"
 import { Link } from "@tanstack/react-router"
@@ -7,9 +8,10 @@ export type HeaderProps = {
     expanded? : boolean
     setExpanded?: React.Dispatch<React.SetStateAction<boolean>>
     bg?: string
+    children? : ReactNode
 }
 
-export const Header = ({expanded, setExpanded, bg="bg-darker"} : HeaderProps) =>{
+export const Header = ({expanded, setExpanded, children, bg="bg-darker"} : HeaderProps) =>{
     return(
         <div className={clsx(["flex w-full min-h-15 p-2 border-b-1 border-grey/20",  bg])}>
             <div className="flex flex-col justify-end mr-4">
@@ -32,6 +34,7 @@ export const Header = ({expanded, setExpanded, bg="bg-darker"} : HeaderProps) =>
                     <h3 className="text-white text-3xl font-bold">TYPELY</h3>
                 </Link>
             </div>
+            {children}
         </div>
     )
 }

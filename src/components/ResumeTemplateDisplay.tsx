@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { DataItem, ResumeSection, Template } from "../types"
+import { DataItem, ResumeSection } from "../types"
 // @ts-ignore
 import SyntaxHighlighter from 'react-syntax-highlighter';
 // @ts-ignore
@@ -50,47 +50,47 @@ const DataItemDisplay = (props : DataItemDisplayProps) => {
     )
 }
 
-type TemplateItemDisplayProps = {
-    template : Template | undefined
-    section_id : number
-}
+// type TemplateItemDisplayProps = {
+//     template : Template | undefined
+//     section_id : number
+// }
 
-const TemplateItemDisplay = (props : TemplateItemDisplayProps) => {
-    const {isOver, setNodeRef, active} = useDroppable({
-        id: `template-${props.section_id}`,
-        data: props.template
-    });
+// const TemplateItemDisplay = (props : TemplateItemDisplayProps) => {
+//     const {isOver, setNodeRef, active} = useDroppable({
+//         id: `template-${props.section_id}`,
+//         data: props.template
+//     });
 
-    const [bgColor, setBGColor] = useState('');
+//     const [bgColor, setBGColor] = useState('');
 
-    useEffect(()=>{
-        (isOver && active?.id.toString().startsWith("template-"))  ? setBGColor('bg-green-900 ') : setBGColor('')
-    },[isOver])
+//     useEffect(()=>{
+//         (isOver && active?.id.toString().startsWith("template-"))  ? setBGColor('bg-green-900 ') : setBGColor('')
+//     },[isOver])
 
-    return (
-        <div ref={setNodeRef} className="min-w-0 flex flex-col w-full items-start justify-start min-h-5 pt-2">
-            <Toggle 
-                buttonStyle={clsx(["min-w-0 flex justify-between items-center px-2  py-1 text-sm font-medium text-left text-grey bg-darkest rounded-sm", bgColor])}
-                panelStyle={clsx(["min-w-0 pt-4 bg-darkest  w-full overflow-hidden", bgColor])}
-                barContents={
-                    <div className="min-w-0 flex flex-row">
-                        <p className="text-grey text-md font-bold mr-2">Template:</p>
-                        <p className="text-grey text-md">{props.template?.name}</p>
-                    </div>
-                }
-            >
-                {/* <SyntaxHighlighter className="text-left" language="latex" style={atomOneDark} wrapLongLines={true}  >
-                    {props.template?.content}
-                </SyntaxHighlighter> */}
-                <div className="min-w-0">
-                    <SyntaxHighlighter className="flex-1 w-full min-w-0 overflow-x-auto text-left" language="latex" style={atomOneDark} wrapLongLines={true}  >
-                        {props.template?.content}
-                    </SyntaxHighlighter>
-                </div>
-            </Toggle>
-        </div>
-    )
-}
+//     return (
+//         <div ref={setNodeRef} className="min-w-0 flex flex-col w-full items-start justify-start min-h-5 pt-2">
+//             <Toggle 
+//                 buttonStyle={clsx(["min-w-0 flex justify-between items-center px-2  py-1 text-sm font-medium text-left text-grey bg-darkest rounded-sm", bgColor])}
+//                 panelStyle={clsx(["min-w-0 pt-4 bg-darkest  w-full overflow-hidden", bgColor])}
+//                 barContents={
+//                     <div className="min-w-0 flex flex-row">
+//                         <p className="text-grey text-md font-bold mr-2">Template:</p>
+//                         <p className="text-grey text-md">{props.template?.name}</p>
+//                     </div>
+//                 }
+//             >
+//                 {/* <SyntaxHighlighter className="text-left" language="latex" style={atomOneDark} wrapLongLines={true}  >
+//                     {props.template?.content}
+//                 </SyntaxHighlighter> */}
+//                 <div className="min-w-0">
+//                     <SyntaxHighlighter className="flex-1 w-full min-w-0 overflow-x-auto text-left" language="latex" style={atomOneDark} wrapLongLines={true}  >
+//                         {props.template?.content}
+//                     </SyntaxHighlighter>
+//                 </div>
+//             </Toggle>
+//         </div>
+//     )
+// }
 
 type ResumeTemplateDisplayProps = {
     resumeSection : ResumeSection
@@ -125,7 +125,7 @@ export const ResumeSectionCard = (props : ResumeTemplateDisplayProps) => {
                         {props.resumeSection.sectionType}
                     </div>
                 </div>
-                <TemplateItemDisplay template={props.resumeSection.template}  section_id={props.resumeSection.id} />
+                {/* <TemplateItemDisplay template={props.resumeSection.template}  section_id={props.resumeSection.id} /> */}
                 <DataItemDisplay data={props.resumeSection.items} section_id={props.resumeSection.id} />
             </div>
             <div className="pl-2">

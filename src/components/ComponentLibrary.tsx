@@ -192,7 +192,6 @@ type AddBarProps = {
     title : string
     action : (state : boolean) => void
 }
-// bg-gradient-to-tr from-dark to-primary/50 my-8 rounded-sm
 const AddBar = (props: AddBarProps) => {
     return(
         <div className="bg-darkest flex flex-row justify-between items-center p-2 h-10">
@@ -207,7 +206,7 @@ const AddBar = (props: AddBarProps) => {
 export const ComponentLibrary = () => {
 
     const [dataItems, setDataItems] = useState<Array<DataItem>>();
-    const [templates, setTemplates] = useState<Array<Template>>();
+    // const [templates, setTemplates] = useState<Array<Template>>();
 
     const [level, setLevel] = useState("DataItems");
     const [isDataItemModalOpen, setIsOpenDataItemModal] = useState(false);
@@ -219,9 +218,9 @@ export const ComponentLibrary = () => {
         const hydrated = data.map((item) => mapRowToDataItem(item))
         setDataItems(hydrated)
 
-        const templateData = TemplateTable.getAll();
-        const hydratedTemplate = templateData.map((item) => mapRowToTemplate(item))
-        setTemplates(hydratedTemplate)
+        // const templateData = TemplateTable.getAll();
+        // const hydratedTemplate = templateData.map((item) => mapRowToTemplate(item))
+        // setTemplates(hydratedTemplate)
     }
 
     useEffect(() => {
@@ -240,7 +239,7 @@ export const ComponentLibrary = () => {
             <h3 className="text-xl text-bold text-grey">Component Library</h3>
 
             <ThreeWaySlider
-                options={["DataItems", "Templates", "Instances"]}
+                options={["DataItems", "Instances"]}
                 value={level}
                 onChange={setLevel}
                 className="w-full"
@@ -266,7 +265,7 @@ export const ComponentLibrary = () => {
                         )
                     : null
                 }
-                {
+                {/* {
                     (level == "Templates") ?  
                     <>
                         <AddBar title="Add Template" action={setIsOpenTemplateModal} />
@@ -283,7 +282,7 @@ export const ComponentLibrary = () => {
                         </div> 
                     </>
                     : null
-                }
+                } */}
 
             <AddDetailsModal isOpen={isDataItemModalOpen} setIsOpen={setIsOpenDataItemModal}  />
             <AddTemplateModal isOpen={isTemplateModalOpen} setIsOpen={setIsOpenTemplateModal}  />
