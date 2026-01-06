@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { Combobox, ComboboxInput, ComboboxOption, ComboboxOptions } from "@headlessui/react";
 
-// const options = ["Apple", "Banana", "Orange"];
-
 type ComboBoxProps = {
     options : Array<string>,
     selected: string | null;
@@ -11,7 +9,6 @@ type ComboBoxProps = {
 
 export default function ComboBox(props : ComboBoxProps) {
   const [query, setQuery] = useState("");
-//   const [selected, setSelected] = useState<string | null>(null);
   const [items, setItems] = useState(props.options);
 
   const filtered =

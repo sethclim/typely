@@ -14,6 +14,7 @@ import { Link } from "@tanstack/react-router";
 import ComboBox from "./ComboBox";
 import { DB } from "../db";
 import { useThemes } from "../context/themes/ThemesContext";
+import { Dropdown } from "./Dropdown";
 
 export type CurrentResumeBlockViewerProps = {
     resume? : ResumeConfig | null,
@@ -124,10 +125,10 @@ export const CurrentResumeBlockViewer = (props : CurrentResumeBlockViewerProps) 
                 <div className="w-full flex flex-row justify-start items-center gap-2 text-grey" > 
                     <p className="">Theme:</p>
                     <div className="flex flex-row gap-2 items-center justify-center">
-                        <ComboBox 
+                        <Dropdown 
                             options={["Engineering", "Colorful"]} 
-                            selected={activeTheme} 
-                            onSelectedChange={(v) => changeThemeForResume(v)} />
+                            // selected={activeTheme} 
+                            onSelected={(v) => changeThemeForResume(v)} />
                         {
                             props?.resume?.theme ? 
                             <Link   to="/theme-editor/$themeId"
