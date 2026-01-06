@@ -4,11 +4,18 @@ import { useRouter } from "@tanstack/react-router";
 
 import { Education, IntakeInfo, Job, Personal, Project, SkillPoint } from "./types"
 import { EducationSection, ExperienceSection, PersonalSection, ProjectsSection, SkillsSection } from "./sections";
+import { Theme } from "../../types";
+import { useThemes } from "../../context/themes/ThemesContext";
 
-export function ResumeIntakeForm() {
+export type ResumeIntakeFormProps = {
+    theme : Theme
+} 
+
+export function ResumeIntakeForm(props: ResumeIntakeFormProps) {
     const router = useRouter()
     
-    const [name, setName] = useState<string>();
+    const [fname, setFName] = useState<string>();
+    const [lname, setLName] = useState<string>();
     const [email, setEmail] = useState<string>();
     const [phone, setPhone] = useState<string>();
     const [location, setLocation] = useState<string>();
@@ -21,6 +28,8 @@ export function ResumeIntakeForm() {
     const [projects, setProjects] = useState<Project[]>([]);
     const [education, setEducation] = useState<Education[]>([]);
 
+    const { themes } = useThemes() 
+
     const addJob = () => setJobs([...jobs, { company: "", title: "", startDate: "", endDate: "", pointOne: "", pointTwo : "", pointThree: "", pointFour: "" }]);
 
     const addSkill = () => setSkillPoints([...skillPoints, { title: "", skills: ""}]);
@@ -31,11 +40,12 @@ export function ResumeIntakeForm() {
 
     const Create = () => {
 
-        if(!name || !email)
+        if(!fname || !lname || !email)
             return
 
         const p : Personal = {
-            name,
+            fname,
+            lname,
             email,
             phone,
             location,
@@ -49,10 +59,11 @@ export function ResumeIntakeForm() {
             skills : skillPoints,
             jobs,
             projects,
-            education
+            education,
+            theme: props.theme
         }
 
-        CreateDemoResume(info)
+        CreateDemoResume(info, themes)
 
         router.navigate({
             to: '/app',
@@ -75,8 +86,10 @@ export function ResumeIntakeForm() {
         <div className="min-h-screen w-full bg-gradient-to-br from-black via-zinc-900 to-purple-950 text-white p-10">
             <div className="max-w-4xl mx-auto space-y-10">
                 <PersonalSection 
-                    name={name} 
-                    onNameChange={setName}
+                    fname={fname} 
+                    onFNameChange={setFName}
+                    lname={lname} 
+                    onLNameChange={setLName}
                     email={email}
                     onEmailChange={setEmail}
                     phone={phone}

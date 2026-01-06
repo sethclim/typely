@@ -9,19 +9,14 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as ThemeEditorRouteImport } from './routes/theme-editor'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as OnBoardingRouteImport } from './routes/onBoarding'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ThemeEditorThemeIdRouteImport } from './routes/theme-editor.$themeId'
 
-const ThemeEditorRoute = ThemeEditorRouteImport.update({
-  id: '/theme-editor',
-  path: '/theme-editor',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const PricingRoute = PricingRouteImport.update({
   id: '/pricing',
   path: '/pricing',
@@ -52,6 +47,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ThemeEditorThemeIdRoute = ThemeEditorThemeIdRouteImport.update({
+  id: '/theme-editor/$themeId',
+  path: '/theme-editor/$themeId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -60,7 +60,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/onBoarding': typeof OnBoardingRoute
   '/pricing': typeof PricingRoute
-  '/theme-editor': typeof ThemeEditorRoute
+  '/theme-editor/$themeId': typeof ThemeEditorThemeIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -69,7 +69,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/onBoarding': typeof OnBoardingRoute
   '/pricing': typeof PricingRoute
-  '/theme-editor': typeof ThemeEditorRoute
+  '/theme-editor/$themeId': typeof ThemeEditorThemeIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -79,7 +79,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/onBoarding': typeof OnBoardingRoute
   '/pricing': typeof PricingRoute
-  '/theme-editor': typeof ThemeEditorRoute
+  '/theme-editor/$themeId': typeof ThemeEditorThemeIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -90,7 +90,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/onBoarding'
     | '/pricing'
-    | '/theme-editor'
+    | '/theme-editor/$themeId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -99,7 +99,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/onBoarding'
     | '/pricing'
-    | '/theme-editor'
+    | '/theme-editor/$themeId'
   id:
     | '__root__'
     | '/'
@@ -108,7 +108,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/onBoarding'
     | '/pricing'
-    | '/theme-editor'
+    | '/theme-editor/$themeId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -118,18 +118,11 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   OnBoardingRoute: typeof OnBoardingRoute
   PricingRoute: typeof PricingRoute
-  ThemeEditorRoute: typeof ThemeEditorRoute
+  ThemeEditorThemeIdRoute: typeof ThemeEditorThemeIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/theme-editor': {
-      id: '/theme-editor'
-      path: '/theme-editor'
-      fullPath: '/theme-editor'
-      preLoaderRoute: typeof ThemeEditorRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/pricing': {
       id: '/pricing'
       path: '/pricing'
@@ -172,6 +165,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/theme-editor/$themeId': {
+      id: '/theme-editor/$themeId'
+      path: '/theme-editor/$themeId'
+      fullPath: '/theme-editor/$themeId'
+      preLoaderRoute: typeof ThemeEditorThemeIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -182,7 +182,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   OnBoardingRoute: OnBoardingRoute,
   PricingRoute: PricingRoute,
-  ThemeEditorRoute: ThemeEditorRoute,
+  ThemeEditorThemeIdRoute: ThemeEditorThemeIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

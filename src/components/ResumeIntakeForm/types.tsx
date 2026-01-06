@@ -1,3 +1,5 @@
+import { Theme } from "../../types";
+
 export type Job = {
   company: string;
   title: string;
@@ -22,7 +24,8 @@ export type Education = {
 };
 
 export type Personal = {
-    name: string,
+    fname: string,
+    lname: string,
     email: string,
     phone?: string,
     location?: string,
@@ -45,4 +48,5 @@ export type IntakeInfo = {
     jobs : Array<Job>
     projects: Array<Project>
     education : Array<Education>
+    theme: Theme
 }

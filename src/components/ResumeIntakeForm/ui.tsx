@@ -39,12 +39,14 @@ export type InputProps = {
     label : string 
     value : string | undefined
     onChange : (v : string) => void
+    input_id? : string
 }
 
-export const Input = ({ label, value, onChange }: InputProps) => (
+export const Input = ({ label, value, onChange, input_id = "test" }: InputProps) => (
   <div className="flex flex-col items-center">
     <label className="text-sm text-white/70">{label}</label>
     <input
+      id={input_id}
       value={value}
       onChange={e => onChange(e.target.value)}
       className="w-full mt-1 px-3 py-2 rounded-lg bg-black/40 border border-white/10 focus:outline-none focus:ring-2 focus:ring-purple-500"
@@ -52,10 +54,11 @@ export const Input = ({ label, value, onChange }: InputProps) => (
   </div>
 );
 
-export const Textarea = ({ label, value, onChange }: InputProps) => (
+export const Textarea = ({ label, value, onChange, input_id }: InputProps) => (
   <div>
     <label className="text-sm text-white/70">{label}</label>
     <textarea
+      id={input_id}
       value={value}
       onChange={e => onChange(e.target.value)}
       rows={4}
@@ -66,10 +69,12 @@ export const Textarea = ({ label, value, onChange }: InputProps) => (
 
 export type AddButtonProps = {
     onClick : MouseEventHandler<HTMLButtonElement> | undefined
-    children : ReactNode
+    children : ReactNode,
+    id: string
 }
-export const AddButton = ({ children, onClick }: AddButtonProps) => (
+export const AddButton = ({ id, children, onClick }: AddButtonProps) => (
   <button
+    id={id}
     onClick={onClick}
     className="px-4 py-2 rounded-lg bg-purple-600/80 hover:bg-purple-600 transition"
   >
