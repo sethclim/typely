@@ -1,5 +1,5 @@
 import { DragEndEvent, useDndMonitor } from "@dnd-kit/core";
-import { ResumeConfig, ResumeSection, Theme } from "../types"
+import { ResumeConfig, ResumeSection } from "../types"
 import { ResumeSectionCard } from "./ResumeTemplateDisplay";
 import { useEffect, useState } from "react";
 
@@ -9,9 +9,8 @@ import {
     arrayMove,
     SortableContext
 } from '@dnd-kit/sortable';
-import { RESUME_CONFIG_TABLE, ResumeConfigTable, ResumeSectionConfigTable, ThemeTable } from "../db/tables";
+import { RESUME_CONFIG_TABLE, ResumeConfigTable, ResumeSectionConfigTable } from "../db/tables";
 import { Link } from "@tanstack/react-router";
-import ComboBox from "./ComboBox";
 import { DB } from "../db";
 import { useThemes } from "../context/themes/ThemesContext";
 import { Dropdown } from "./Dropdown";
@@ -73,7 +72,7 @@ export const CurrentResumeBlockViewer = (props : CurrentResumeBlockViewerProps) 
 
     const { themes } = useThemes()
 
-    const [activeTheme, setActiveTheme] = useState(props.resume?.theme.name ?? null)
+    const [activeTheme, setActiveTheme] = useState("")
 
     useEffect(()=>{
         if(props.resume)
@@ -127,7 +126,7 @@ export const CurrentResumeBlockViewer = (props : CurrentResumeBlockViewerProps) 
                     <div className="flex flex-row gap-2 items-center justify-center">
                         <Dropdown 
                             options={["Engineering", "Colorful"]} 
-                            // selected={activeTheme} 
+                            selected={activeTheme} 
                             onSelected={(v) => changeThemeForResume(v)} />
                         {
                             props?.resume?.theme ? 

@@ -1,13 +1,14 @@
 import { Portal, Listbox, ListboxButton, ListboxOption, ListboxOptions } from "@headlessui/react"
-import { useRef, useState } from "react"
+import { useState } from "react"
 
 export type DropdownProps = {
   options: string[]
+  selected: string,
   onSelected: (v: string) => void
 }
 
-export function Dropdown({ options, onSelected }: DropdownProps) {
-  const [value, setValue] = useState(options[0])
+export function Dropdown({ options, selected, onSelected }: DropdownProps) {
+  const [value, setValue] = useState(selected)
 
   return (
     <Listbox value={value} onChange={(v) => { setValue(v); onSelected(v) }}>

@@ -3,7 +3,7 @@ import ResumeStylePicker from '../components/ResumeStylePicker'
 import { useEffect, useState } from 'react'
 import { ResumeIntakeForm } from '../components/ResumeIntakeForm'
 import { DB } from '../db'
-import { TemplateTable, ThemeTable, ThemeThemeDataRowWithTemplates } from '../db/tables'
+import { ThemeTable, ThemeThemeDataRowWithTemplates } from '../db/tables'
 
 import { Template, Theme } from '../types'
 import { TemplateRow } from '../db/types'
@@ -43,16 +43,6 @@ const hydrateThemes = (rows : Array<ThemeThemeDataRowWithTemplates>) : Array<The
         return t
     })
 
-//   const t : Theme = {
-//     id: themeRow.id!,
-//     name: themeRow.name,
-//     description: themeRow.description,
-//     sty_source: themeRow.sty_source,
-//     is_system: themeRow.is_system,
-//     owner_user_id: themeRow.owner_user_id,
-//     created_at: themeRow.created_at,
-//     templates: []
-//   }
   return res
 }
 
@@ -96,7 +86,6 @@ function RouteComponent() {
                 {
                     (stage == 1 && selected) ? <ResumeIntakeForm theme={selected}  /> : null
                 }
-                
             </div>
         </div>
     )
