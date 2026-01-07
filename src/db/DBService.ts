@@ -1,6 +1,6 @@
 import initSqlJs from "sql.js";
 import { InsertAllTemplates } from "../helpers/InsertAllTemplates";
-import { loadFile, saveToFile } from "../services/OPFS";
+import { SQLiteAutoBackupService } from "./backupService";
 
 // const WASM_URL =
 //     "https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.wasm";
@@ -37,8 +37,8 @@ export class DBService {
             ? new this.SQL.Database(new Uint8Array(JSON.parse(savedData)))
             : new this.SQL.Database();
 
-        const data = this.db.export();
-        saveToFile(data);
+        const autoBackup = new SQLiteAutoBackupService(this.db);
+        autoBackup.start(120_000);
 
         return this.db;
     }
