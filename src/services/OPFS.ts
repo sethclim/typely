@@ -26,10 +26,25 @@ export async function loadFile() {
         const root = await getOPFSRoot();
         const handle = await root.getFileHandle(`database.sqlite`);
         const file = await handle.getFile();
-        const content = await file.text();
-        console.log("loaded content " + content);
-        return content;
+        // const content = await file.text();
+        console.log("loaded content " + file);
+        return file;
     } catch (err) {
         console.error(err);
+    }
+}
+
+export async function databaseExists(): Promise<boolean> {
+    try {
+        const root = await getOPFSRoot();
+
+        await root.getFileHandle("database.sqlite", { create: false });
+        return true;
+    } catch (err) {
+        if ((err as DOMException).name === "NotFoundError") {
+            return false;
+        }
+        console.error(err);
+        return false;
     }
 }
