@@ -1,5 +1,6 @@
 import initSqlJs from "sql.js";
 import { InsertAllTemplates } from "../helpers/InsertAllTemplates";
+import { loadFile, saveToFile } from "../services/OPFS";
 
 // const WASM_URL =
 //     "https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.wasm";
@@ -35,6 +36,9 @@ export class DBService {
         this.db = savedData
             ? new this.SQL.Database(new Uint8Array(JSON.parse(savedData)))
             : new this.SQL.Database();
+
+        const data = this.db.export();
+        saveToFile(data);
 
         return this.db;
     }
