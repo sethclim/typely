@@ -43,6 +43,10 @@ export class DBService {
         return this.db;
     }
 
+    restoreDB = (data: Uint8Array) => {
+        this.db = new this.SQL.Database(data);
+    };
+
     private async initTables() {
         console.log("INIT TABLES");
         this.runAndSave(`PRAGMA foreign_keys = ON;`);
