@@ -66,7 +66,7 @@ function RouteComponent() {
                             {
                                 oPFSSaveExists ? (
                                     <>
-                                     <p className='text-grey'>AUTOSAVE Backup</p>
+                                     <p className='text-grey'>Autosave Backup</p>
                                      <button className='bg-mywhite text-black p-2 rounded' onClick={onRestoreFromOPFS}>RESTORE</button>
                                     </>
                                 ) : null
