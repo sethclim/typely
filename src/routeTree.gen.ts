@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as OnBoardingRouteImport } from './routes/onBoarding'
 import { Route as LoginRouteImport } from './routes/login'
@@ -17,6 +18,11 @@ import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ThemeEditorThemeIdRouteImport } from './routes/theme-editor.$themeId'
 
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PricingRoute = PricingRouteImport.update({
   id: '/pricing',
   path: '/pricing',
@@ -60,6 +66,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/onBoarding': typeof OnBoardingRoute
   '/pricing': typeof PricingRoute
+  '/settings': typeof SettingsRoute
   '/theme-editor/$themeId': typeof ThemeEditorThemeIdRoute
 }
 export interface FileRoutesByTo {
@@ -69,6 +76,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/onBoarding': typeof OnBoardingRoute
   '/pricing': typeof PricingRoute
+  '/settings': typeof SettingsRoute
   '/theme-editor/$themeId': typeof ThemeEditorThemeIdRoute
 }
 export interface FileRoutesById {
@@ -79,6 +87,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/onBoarding': typeof OnBoardingRoute
   '/pricing': typeof PricingRoute
+  '/settings': typeof SettingsRoute
   '/theme-editor/$themeId': typeof ThemeEditorThemeIdRoute
 }
 export interface FileRouteTypes {
@@ -90,6 +99,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/onBoarding'
     | '/pricing'
+    | '/settings'
     | '/theme-editor/$themeId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -99,6 +109,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/onBoarding'
     | '/pricing'
+    | '/settings'
     | '/theme-editor/$themeId'
   id:
     | '__root__'
@@ -108,6 +119,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/onBoarding'
     | '/pricing'
+    | '/settings'
     | '/theme-editor/$themeId'
   fileRoutesById: FileRoutesById
 }
@@ -118,11 +130,19 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   OnBoardingRoute: typeof OnBoardingRoute
   PricingRoute: typeof PricingRoute
+  SettingsRoute: typeof SettingsRoute
   ThemeEditorThemeIdRoute: typeof ThemeEditorThemeIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/pricing': {
       id: '/pricing'
       path: '/pricing'
@@ -182,6 +202,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   OnBoardingRoute: OnBoardingRoute,
   PricingRoute: PricingRoute,
+  SettingsRoute: SettingsRoute,
   ThemeEditorThemeIdRoute: ThemeEditorThemeIdRoute,
 }
 export const routeTree = rootRouteImport
