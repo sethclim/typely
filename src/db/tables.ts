@@ -169,6 +169,8 @@ export const ResumeConfigTable = {
             })
             .returning();
 
+        DB.save();
+
         console.log(`[ResumeConfigTable] insert ${res}`);
 
         DB.notifyTable(RESUME_CONFIG_TABLE);
@@ -257,6 +259,8 @@ export const ResumeSectionConfigTable = {
             })
             .returning({ id: resumeSectionConfig.id });
 
+        DB.save();
+
         if (!result) return -1;
 
         const newId = result[0].id;
@@ -276,6 +280,8 @@ export const ResumeSectionConfigTable = {
             .set({ templateId: template_id })
             .where(eq(resumeSectionConfig.id, id));
 
+        DB.save();
+
         if (notify) DB.notifyTable(RESUME_CONFIG_TABLE);
     },
     updateOrder: async (id: number, newOrder: number) => {
@@ -293,6 +299,7 @@ export const ResumeSectionConfigTable = {
         await DB.db
             ?.delete(resumeSectionConfig)
             .where(eq(resumeSectionConfig.id, id));
+        DB.save();
         DB.notifyTable(RESUME_CONFIG_TABLE);
     },
 };
@@ -303,6 +310,7 @@ export const ResumeSectionDataTable = {
             sectionId: section_id,
             dataItemId: data_item_id,
         });
+        DB.save();
         DB.notifyTable(RESUME_CONFIG_TABLE);
     },
     delete: async ({ section_id, data_item_id }: ResumeSectionDataRow) => {
@@ -314,6 +322,7 @@ export const ResumeSectionDataTable = {
                     eq(resumeSectionData.dataItemId, data_item_id)
                 )
             );
+        DB.save();
         DB.notifyTable(RESUME_CONFIG_TABLE);
     },
 };
@@ -338,6 +347,8 @@ export const ResumeDataItemTable = {
         if (!result) return -1;
 
         const newId = result[0].id;
+
+        DB.save();
 
         DB.notifyTable(RESUME_DATA_ITEM_TABLE);
         DB.notifyTable(RESUME_CONFIG_TABLE);
@@ -368,7 +379,7 @@ export const ResumeDataItemTable = {
                 updatedAt: updated_at ?? new Date().toISOString(),
             })
             .where(eq(resumeDataItem.id, id));
-
+        DB.save();
         DB.notifyTable(RESUME_DATA_ITEM_TABLE);
         DB.notifyTable(RESUME_CONFIG_TABLE);
     },
@@ -376,6 +387,7 @@ export const ResumeDataItemTable = {
         if (!id) return;
 
         await DB.db?.delete(resumeDataItem).where(eq(resumeDataItem.id, id));
+        DB.save();
         DB.notifyTable(RESUME_DATA_ITEM_TABLE);
         DB.notifyTable(RESUME_CONFIG_TABLE);
     },
@@ -389,10 +401,10 @@ export const ResumeDataItemTypeTable = {
             .values({ name })
             .returning({ id: resumeDataItemType.id });
 
+        DB.save();
         if (!result) return -1;
 
         const newId = result[0].id;
-
         DB.notifyTable(RESUME_CONFIG_TABLE);
 
         return newId;
@@ -418,7 +430,7 @@ export const TemplateTable = {
                 description,
             })
             .returning({ id: template.id });
-
+        DB.save();
         if (!result) return -1;
 
         const newId = result[0].id;
@@ -438,14 +450,14 @@ export const TemplateTable = {
             ?.update(template)
             .set({ content })
             .where(eq(template.id, id));
-
+        DB.save();
         DB.notifyTable(RESUME_TEMPLATE_TABLE);
     },
     delete: async (id: number) => {
         if (!id) return;
 
         await DB.db?.delete(template).where(eq(template.id, id));
-
+        DB.save();
         DB.notifyTable(RESUME_TEMPLATE_TABLE);
         DB.notifyTable(RESUME_CONFIG_TABLE);
     },
@@ -485,7 +497,7 @@ export const ThemeTable = {
                 createdAt: created_at,
             })
             .returning({ id: themes.id });
-
+        DB.save();
         if (!result) return -1;
 
         const newId = result[0].id;
@@ -505,7 +517,7 @@ export const ThemeTable = {
             ?.update(themes)
             .set({ stySource: content })
             .where(eq(themes.id, id));
-
+        DB.save();
         DB.notifyTable(THEME_TABLE);
     },
     getAll: () => {
