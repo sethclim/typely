@@ -18,7 +18,7 @@ type AppliedRow = {
 };
 
 export async function migrate(db: SQLJsDatabase<any>) {
-    const res = db.run(sql`
+    db.run(sql`
         CREATE TABLE IF NOT EXISTS ${MIGRATIONS_TABLE} (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
@@ -45,10 +45,10 @@ export async function migrate(db: SQLJsDatabase<any>) {
                 .filter(Boolean);
 
             for (const stmt of statements) {
-                await tx.run(stmt);
+                tx.run(stmt);
             }
 
-            await tx.run(sql`
+            tx.run(sql`
                 INSERT INTO ${MIGRATIONS_TABLE} ("name", "hash", "created_at")
                 VALUES (
                 ${sql.raw(`'${migration.name}'`)},

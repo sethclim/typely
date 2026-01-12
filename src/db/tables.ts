@@ -21,10 +21,10 @@ import {
 } from "./types";
 
 export const RESUME_CONFIG_TABLE = "resume_config";
-const RESUME_SECTION_CONFIG_TABLE = "resume_section_config";
-const RESUME_SECTION_DATA_TABLE = "resume_section_data";
+// const RESUME_SECTION_CONFIG_TABLE = "resume_section_config";
+// const RESUME_SECTION_DATA_TABLE = "resume_section_data";
 const RESUME_DATA_ITEM_TABLE = "resume_data_item";
-const RESUME_DATA_ITEM_TYPE_TABLE = "resume_data_item_type";
+// const RESUME_DATA_ITEM_TYPE_TABLE = "resume_data_item_type";
 const RESUME_TEMPLATE_TABLE = "template";
 const THEME_TABLE = "themes";
 

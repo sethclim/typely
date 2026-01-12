@@ -1,11 +1,7 @@
 import { hydrateResume } from "../helpers/ResumeHydrator";
 import { DBService } from "./DBService";
 import { resumeConfig, resumeSectionConfig, resumeSectionData } from "./schema";
-import {
-    ResumeConfigTable,
-    // ResumeSectionConfigTable,
-    // ResumeSectionDataTable,
-} from "./tables";
+import { ResumeConfigTable } from "./tables";
 
 // Singleton DB instance
 export const DB = new DBService();

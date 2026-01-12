@@ -19,17 +19,18 @@ export const ResumeSidebarContent = ({ resumes, activeId, onSelect, expanded } :
     const [rename, setRename] = useState(-1)
     const [newName, setNewName] = useState<string | null>(null)
 
-     const [showDeleteModal, setShowDeleteModal] = useState(false)
-  const [deleteResume, setDeleteResume] = useState<ResumeConfigRow | null>()
-
+    const [showDeleteModal, setShowDeleteModal] = useState(false)
+    const [deleteResume, setDeleteResume] = useState<ResumeConfigRow | null>()
 
     const createResume = () => {
+      console.log("CREATE")
         const uuid = crypto.randomUUID();
         ResumeConfigTable.insert({
             uuid: uuid,
             "name" : "New Resume",
             "createdAt" : Date.now().toString(),
             "updatedAt" : Date.now().toString(),
+            "themeId" : 1
         })
       }
     
