@@ -34,7 +34,7 @@ function groupTemplatesBySectionType(templates: Template[]) {
 
 type CountMap = Record<OrderKey, number>;
 
-export const CreateDemoResume = (info : IntakeInfo, themes : Theme[]) =>{
+export const CreateDemoResume = async(info : IntakeInfo, themes : Theme[]) =>{
 
     const counts: CountMap = {
         Header: 1,
@@ -69,14 +69,14 @@ export const CreateDemoResume = (info : IntakeInfo, themes : Theme[]) =>{
         color: -1
     }
 
-    themes.forEach(t => {
+    themes.forEach(async t => {
         console.log("t " + t.name)
         let skillsLatex = ""
         if(t.name == "engineering"){
             info.skills.forEach((_, i) => {
                 skillsLatex = skillsLatex.concat(`\\textbf{[[SKILL_LABEL_${i}]]:} [[Point_${i}]] \\newline\n`)
             })
-            const skillsTemplateId = TemplateTable.insert({
+            const skillsTemplateId = await TemplateTable.insert({
                 "name": "skills template",
                 "description": "this is a s template",
                 "section_type": "skills",
@@ -91,7 +91,7 @@ export const CreateDemoResume = (info : IntakeInfo, themes : Theme[]) =>{
                 skillsLatex += `\\texttt{\\large [[SKILL_LABEL_${i}]]} & [[Point_${i}]] \\\\ \n`
             })
             skillsLatex += "\\end{tabular}\\\\~\\\\"
-            const skillsTemplateId = TemplateTable.insert({
+            const skillsTemplateId = await TemplateTable.insert({
                 "name": "skills template",
                 "description": "this is a s template",
                 "section_type": "skills",
@@ -108,23 +108,23 @@ export const CreateDemoResume = (info : IntakeInfo, themes : Theme[]) =>{
 
 
 
-    const infoDataItemTypeId = ResumeDataItemTypeTable.insert({
+    const infoDataItemTypeId = await ResumeDataItemTypeTable.insert({
         name : "info"
     })
 
-    const skillDataItemTypeId = ResumeDataItemTypeTable.insert({
+    const skillDataItemTypeId = await ResumeDataItemTypeTable.insert({
         name : "skill"
     })
 
-    const expDataItemTypeId = ResumeDataItemTypeTable.insert({
+    const expDataItemTypeId = await ResumeDataItemTypeTable.insert({
         name : "experience"
     })
 
-    const projDataItemTypeId = ResumeDataItemTypeTable.insert({
+    const projDataItemTypeId = await ResumeDataItemTypeTable.insert({
         name : "project"
     })
 
-    const eduDataItemTypeId = ResumeDataItemTypeTable.insert({
+    const eduDataItemTypeId = await ResumeDataItemTypeTable.insert({
         name : "education"
     })
 
@@ -136,15 +136,15 @@ export const CreateDemoResume = (info : IntakeInfo, themes : Theme[]) =>{
         uuid: uuid,
         "id": ResumeId,
         "name" : "Demo Resume",
-        "created_at" : Date.now().toString(),
-        "updated_at" : Date.now().toString(),
-        theme_id : info.theme.id
+        "createdAt" : Date.now().toString(),
+        "updatedAt" : Date.now().toString(),
+        themeId : info.theme.id
     })
     
     ////////////////////////////////////////////////
     // Header
     ///////////////////////////////////////////////
-    const headerSectionId = ResumeSectionConfigTable.insert({
+    const headerSectionId = await ResumeSectionConfigTable.insert({
         "title": "Custom Header",
         "resume_id": ResumeId,
         "template_id": groupedTemplates["header"][0].id,
@@ -169,7 +169,7 @@ export const CreateDemoResume = (info : IntakeInfo, themes : Theme[]) =>{
         me.push(["WEBSITE", info.personal.website],)
     }
 
-    const myInfoDataItemId = ResumeDataItemTable.insert({
+    const myInfoDataItemId = await ResumeDataItemTable.insert({
         title: "My Info",
         description: "about me info",
         data: JSON.stringify(me),
@@ -189,7 +189,7 @@ export const CreateDemoResume = (info : IntakeInfo, themes : Theme[]) =>{
         ["LNAME", info.personal.lname]
     ]
 
-    const myNameDataItemId = ResumeDataItemTable.insert({
+    const myNameDataItemId = await ResumeDataItemTable.insert({
         title: "My Name",
         description: "name",
         data: JSON.stringify(name),
@@ -206,7 +206,7 @@ export const CreateDemoResume = (info : IntakeInfo, themes : Theme[]) =>{
     ////////////////////////////////////////////////
     // SKILLS
     ///////////////////////////////////////////////
-    const skillsSectionId = ResumeSectionConfigTable.insert({
+    const skillsSectionId = await ResumeSectionConfigTable.insert({
         // "id": sectionId,
         "title": "C++ Skills",
         "resume_id": ResumeId,
@@ -223,7 +223,7 @@ export const CreateDemoResume = (info : IntakeInfo, themes : Theme[]) =>{
         skillLabels.push([`SKILL_LABEL_${i}`, skillIn.title])
     })
 
-    const skillsDataItemId = ResumeDataItemTable.insert({
+    const skillsDataItemId = await ResumeDataItemTable.insert({
         title: "C++ Skills",
         description: "my c++ skills",
         data: JSON.stringify(cplusSkills),
@@ -238,7 +238,7 @@ export const CreateDemoResume = (info : IntakeInfo, themes : Theme[]) =>{
     })
 
 
-    const skillsLabelsDataItemId = ResumeDataItemTable.insert({
+    const skillsLabelsDataItemId = await ResumeDataItemTable.insert({
         "id": dataItemId,
         title: "Skills Labels",
         description: "my skills labels",
@@ -256,8 +256,8 @@ export const CreateDemoResume = (info : IntakeInfo, themes : Theme[]) =>{
     ////////////////////////////////////////////////
     // Project
     ///////////////////////////////////////////////
-    info.projects.forEach((proj, i) =>{
-        const thisProjectSectionId = ResumeSectionConfigTable.insert({
+    info.projects.forEach(async(proj, i) =>{
+        const thisProjectSectionId = await ResumeSectionConfigTable.insert({
             "title": "C++ Project",
             "resume_id": ResumeId,
             "template_id": groupedTemplates["project"][0].id,
@@ -274,7 +274,7 @@ export const CreateDemoResume = (info : IntakeInfo, themes : Theme[]) =>{
             ["POINT4", proj.pointFour]
         ];
     
-        const projectDataItemId = ResumeDataItemTable.insert({
+        const projectDataItemId =  await ResumeDataItemTable.insert({
             title: "Project",
             description: "raytracer",
             data: JSON.stringify(project),
@@ -293,8 +293,8 @@ export const CreateDemoResume = (info : IntakeInfo, themes : Theme[]) =>{
     ////////////////////////////////////////////////
     // Education
     ///////////////////////////////////////////////
-    info.education.forEach((edu, i) =>{
-        const thisEducationSectionId = ResumeSectionConfigTable.insert({
+    info.education.forEach(async(edu, i) =>{
+        const thisEducationSectionId = await ResumeSectionConfigTable.insert({
             "title": "Education",
             "resume_id": ResumeId,
             "template_id": groupedTemplates["education"][0].id,
@@ -310,7 +310,7 @@ export const CreateDemoResume = (info : IntakeInfo, themes : Theme[]) =>{
             ["GPA", "4.0"]
         ]
     
-        const eduDataItemId = ResumeDataItemTable.insert({
+        const eduDataItemId = await ResumeDataItemTable.insert({
             id: dataItemId,
             title: "University",
             description: "undergrad",
@@ -330,7 +330,7 @@ export const CreateDemoResume = (info : IntakeInfo, themes : Theme[]) =>{
     ////////////////////////////////////////////////
     // Work section header
     ///////////////////////////////////////////////
-    const workTitleSectionId = ResumeSectionConfigTable.insert({
+    const workTitleSectionId = await ResumeSectionConfigTable.insert({
         "title": "Work Title Section",
         "resume_id": ResumeId,
         "template_id": groupedTemplates["section"][0].id,
@@ -343,7 +343,7 @@ export const CreateDemoResume = (info : IntakeInfo, themes : Theme[]) =>{
         ["SPACE", "0cm"],
     ]
 
-    const experienceSectionDataItemId = ResumeDataItemTable.insert({
+    const experienceSectionDataItemId = await ResumeDataItemTable.insert({
         title: "Work Experience Title",
         description: "undergrad",
         data: JSON.stringify(work_title),
@@ -360,7 +360,7 @@ export const CreateDemoResume = (info : IntakeInfo, themes : Theme[]) =>{
     ////////////////////////////////////////////////
     // Project section header
     ///////////////////////////////////////////////
-    const projectHeaderSectionId = ResumeSectionConfigTable.insert({
+    const projectHeaderSectionId = await ResumeSectionConfigTable.insert({
         "title": "Project Title Section",
         "resume_id": ResumeId,
         "template_id": groupedTemplates["section"][0].id,
@@ -373,7 +373,7 @@ export const CreateDemoResume = (info : IntakeInfo, themes : Theme[]) =>{
         ["SPACE", "0cm"],
     ]
 
-    const projectSectionDataItemId = ResumeDataItemTable.insert({
+    const projectSectionDataItemId = await ResumeDataItemTable.insert({
         title: "Project Section Title",
         description: "projects",
         data: JSON.stringify(project_title),
@@ -391,7 +391,7 @@ export const CreateDemoResume = (info : IntakeInfo, themes : Theme[]) =>{
     ////////////////////////////////////////////////
     // Education Section Header
     ///////////////////////////////////////////////
-    const educationTitleSectionId = ResumeSectionConfigTable.insert({
+    const educationTitleSectionId = await ResumeSectionConfigTable.insert({
         "title": "Education Title Section",
         "resume_id": ResumeId,
         "template_id": groupedTemplates["section"][0].id,
@@ -404,7 +404,7 @@ export const CreateDemoResume = (info : IntakeInfo, themes : Theme[]) =>{
         ["SPACE", "0cm"],
     ]
 
-    const eduSectionDataItemId = ResumeDataItemTable.insert({
+    const eduSectionDataItemId = await ResumeDataItemTable.insert({
         title: "Education Section Title",
         description: "education",
         data: JSON.stringify(edu_title),
@@ -423,7 +423,7 @@ export const CreateDemoResume = (info : IntakeInfo, themes : Theme[]) =>{
         ////////////////////////////////////////////////
         // Skills Section Header
         ///////////////////////////////////////////////
-        const skillsTitleSectionId = ResumeSectionConfigTable.insert({
+        const skillsTitleSectionId = await ResumeSectionConfigTable.insert({
             "title": "Skills Title Section",
             "resume_id": ResumeId,
             "template_id": groupedTemplates["section"][0].id,
@@ -436,7 +436,7 @@ export const CreateDemoResume = (info : IntakeInfo, themes : Theme[]) =>{
             ["SPACE", "0cm"],
         ]
     
-        const skillsSectionDataItemId = ResumeDataItemTable.insert({
+        const skillsSectionDataItemId = await ResumeDataItemTable.insert({
             title: "Skills Section Title",
             description: "education",
             data: JSON.stringify(skills_title),
@@ -454,8 +454,8 @@ export const CreateDemoResume = (info : IntakeInfo, themes : Theme[]) =>{
     ////////////////////////////////////////////////
     // Jobs
     ///////////////////////////////////////////////
-    info.jobs.forEach((inJob, i) => {
-        const thisJobSectionId = ResumeSectionConfigTable.insert({
+    info.jobs.forEach(async(inJob, i) => {
+        const thisJobSectionId = await ResumeSectionConfigTable.insert({
             "title": `Job ${i + 1}`,
             "resume_id": ResumeId,
             "template_id": groupedTemplates["experience"][0].id,
@@ -472,7 +472,7 @@ export const CreateDemoResume = (info : IntakeInfo, themes : Theme[]) =>{
             ["POINT4", inJob.pointFour]
         ];
 
-        const experienceDataItemId = ResumeDataItemTable.insert({
+        const experienceDataItemId = await ResumeDataItemTable.insert({
             title: `${inJob.title}@${inJob.company}`,
             description: "current job",
             data: JSON.stringify(jobData),

@@ -28,8 +28,8 @@ export const ResumeSidebarContent = ({ resumes, activeId, onSelect, expanded } :
         ResumeConfigTable.insert({
             uuid: uuid,
             "name" : "New Resume",
-            "created_at" : Date.now().toString(),
-            "updated_at" : Date.now().toString(),
+            "createdAt" : Date.now().toString(),
+            "updatedAt" : Date.now().toString(),
         })
       }
     
@@ -54,7 +54,7 @@ export const ResumeSidebarContent = ({ resumes, activeId, onSelect, expanded } :
         ResumeConfigTable.updateName({
             "id": rename,
             "name" : newName,
-            "updated_at" : Date.now().toString(),
+            "updatedAt" : Date.now().toString(),
         })
         setRename(-1)
       }
@@ -155,7 +155,7 @@ export const ResumeSidebarContent = ({ resumes, activeId, onSelect, expanded } :
                             className={`${
                               active ? "bg-dark" : ""
                             } flex w-full items-center gap-2 px-3 py-2 text-left text-grey`}
-                            onClick={() => onRename(r.name, r.id)}
+                            onClick={() => onRename(r.name, r.id ?? undefined)}
                           >
                             <PencilIcon className="h-4 w-4" />
                             Rename
@@ -169,7 +169,7 @@ export const ResumeSidebarContent = ({ resumes, activeId, onSelect, expanded } :
                             className={`${
                               active ? "bg-dark" : ""
                             } flex w-full items-center gap-2 px-3 py-2 text-left text-grey`}
-                            onClick={() => duplicateResume(r.id)}
+                            onClick={() => duplicateResume(r.id ?? undefined)}
                           >
                             <DocumentDuplicateIcon className="h-4 w-4" />
                             Duplicate

@@ -24,12 +24,12 @@ export interface TemplateRow {
 }
 
 export interface ResumeConfigRow {
-    id?: number;
-    uuid?: string;
+    id?: number | null;
+    uuid?: string | null;
     name: string;
-    created_at?: string;
-    updated_at: string;
-    theme_id?: number;
+    createdAt?: string | null;
+    updatedAt: string | null;
+    themeId?: number | null;
 }
 
 export interface ResumeSectionConfigRow {

@@ -120,7 +120,7 @@ export const ResumeView = () => {
       }
     }
     else if (overPrefix === "template" && activePrefix === "template"){
-      ResumeSectionConfigTable.updateTemplate(section_id, active_id)
+      ResumeSectionConfigTable.updateTemplate(parseInt(section_id), parseInt(active_id))
     }
     // else if(overPrefix === "section" && activePrefix === "section"){
     //   // console.log("THIS IS OVER!!!")
