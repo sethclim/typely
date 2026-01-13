@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { ThemesContext } from "./ThemesContext";
-import { TemplateTable, ThemeTable, ThemeThemeDataRowWithTemplates } from "../../db/tables";
+import { TemplateTable, ThemeTable } from "../../db/tables";
 import { DB } from "../../db";
 import { Template, Theme } from "../../types";
 import { TemplateRow } from "../../db/types";
+// import { TemplateRow } from "../../db/types";
 
 
 type ThemesProviderProps = {
   children: React.ReactNode;
 };
 
-const hydrateThemes = (rows : Array<ThemeThemeDataRowWithTemplates>) : Array<Theme> => {
+//TODO ThemeThemeDataRowWithTemplates
+const hydrateThemes = (rows : Array<any>) : Array<Theme> => {
     if (!rows || rows.length === 0) return [];
 
     const res = rows.map(themeRow => {
@@ -50,6 +52,7 @@ export const ThemesProvider: React.FC<ThemesProviderProps> = ({ children }) => {
 
     const fetchThemes = async () => {
         await DB.tablesReady;
+        //TODO
         const rows = ThemeTable.getAll();
         const themes = hydrateThemes(rows)
         // console.log("!THEMES " + JSON.stringify(themes))

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react"
 import { ResumeDataItemTable, TemplateTable,  } from '../db/tables';
-import { DataItemRow, TemplateRow } from "../db/types";
 import { DB } from "../db";
 import { DataItem, DataItemType, Template } from "../types";
 import ThreeWaySlider from "./ThreeWaySlider";
@@ -160,31 +159,47 @@ export const TemplateItemComponent = (props : TemplateItemComponentProps) => {
 }
 
 export function mapRowToDataItem(
-    row: DataItemRow,
+    row: {
+        id: number;
+        typeId: number;
+        title: string | null;
+        description: string | null;
+        data: string | null;
+        createdAt: string | null;
+        updatedAt: string | null;
+    },
     // type: DataItemType
 ): DataItem {
    const d : DataItemType = {id: 14, name: "TODO"}
     return {
         id: row.id!,
         type:  d,
-        title: row.title,
-        description: row.description,
+        title: row.title ?? undefined,
+        description: row.description ?? undefined,
         data: row.data ? JSON.parse(row.data) : [],
-        created_at: row.created_at!,
-        updated_at: row.updated_at
+        created_at: row.createdAt!,
+        updated_at: row.updatedAt!
     };
 }
 
 export function mapRowToTemplate(
-    row: TemplateRow,
+    row: {
+    id: number;
+    themeId: number;
+    name: string;
+    sectionType: string;
+    content: string;
+    description: string | null;
+    createdAt: string | null;
+},
 ): Template {
 //    const d : DataItemType = {id: 14, name: "TODO"}
     return {
         id: row.id!,
         name: row.name,
-        sectionType: row.section_type,
+        sectionType: row.sectionType,
         content: row.content,
-        description: row.description,
+        description: row.description ?? undefined,
     };
 }
 

@@ -3,7 +3,7 @@ import ResumeStylePicker from '../components/ResumeStylePicker'
 import { useEffect, useState } from 'react'
 import { ResumeIntakeForm } from '../components/ResumeIntakeForm'
 import { DB } from '../db'
-import { ThemeTable, ThemeThemeDataRowWithTemplates } from '../db/tables'
+import { ThemeTable } from '../db/tables'
 
 import { Template, Theme } from '../types'
 import { TemplateRow } from '../db/types'
@@ -12,7 +12,8 @@ export const Route = createFileRoute('/onBoarding')({
   component: RouteComponent,
 })
 
-const hydrateThemes = (rows : Array<ThemeThemeDataRowWithTemplates>) : Array<Theme> => {
+// ThemeThemeDataRowWithTemplates TODO
+const hydrateThemes = (rows : Array<any>) : Array<Theme> => {
     if (!rows || rows.length === 0) return [];
 
     const res = rows.map(themeRow => {

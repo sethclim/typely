@@ -3,15 +3,10 @@
 import { TemplateTable, ThemeTable } from "../db/tables"
 import { latexThemes } from "../latex/latexRegistry"
 
-
-
-export const InsertAllTemplates = () =>{
-
-
-
+export const InsertAllTemplates = async() =>{
     for (const [name, theme] of Object.entries(latexThemes)) {
         // console.log(name)
-        const theme_id = ThemeTable.insert({
+        const theme_id = await ThemeTable.insert({
             name : name,
             description : "",
             sty_source : theme.config,
@@ -32,7 +27,4 @@ export const InsertAllTemplates = () =>{
         }
 
     }
-
-
-
 }

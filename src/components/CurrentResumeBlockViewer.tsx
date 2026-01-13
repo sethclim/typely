@@ -62,7 +62,7 @@ export const CurrentResumeBlockViewer = (props : CurrentResumeBlockViewerProps) 
     useEffect(() => {
         if (reordered) {
             sections.forEach((section, index) => {
-                ResumeSectionConfigTable.updateOrder(section.id.toString(), index);
+                ResumeSectionConfigTable.updateOrder(section.id, index);
             });
 
             // Reset the flag
@@ -98,8 +98,8 @@ export const CurrentResumeBlockViewer = (props : CurrentResumeBlockViewerProps) 
 
         ResumeConfigTable.updateTheme({
             id: props.resume.id, 
-            theme_id: newTheme.id, 
-            updated_at: Date.now().toString(),
+            themeId: newTheme.id, 
+            updatedAt: Date.now().toString(),
             notify: false
         })
         
@@ -110,7 +110,7 @@ export const CurrentResumeBlockViewer = (props : CurrentResumeBlockViewerProps) 
             const newTemplateForSection = newTheme.templates.filter(t => t.sectionType === section.sectionType)[0]
             console.log("@newTemplateForSection " + JSON.stringify(newTemplateForSection))
             
-            ResumeSectionConfigTable.updateTemplate(section.id.toString(), newTemplateForSection.id.toString(), false)
+            ResumeSectionConfigTable.updateTemplate(section.id, newTemplateForSection.id, false)
         })
         DB.notifyTable(RESUME_CONFIG_TABLE)
     }

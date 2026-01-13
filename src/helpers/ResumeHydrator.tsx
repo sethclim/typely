@@ -4,13 +4,16 @@ export function hydrateResume(raw: any[]): ResumeConfig | null {
   if (!raw || raw.length === 0) return null;
 
   const row = raw[0];
-  const values = row.values[0];
 
-  const [id, uuid, name, themeJSON, sectionsJson] = values;
+  const id: number = row.id;
+  const uuid: string = row.uuid;
+  const name: string = row.name;
+  const themeJSON: string = row.theme;      
+  const sectionsJSON: string = row.sections;
 
   let sections: ResumeSection[] = [];
   try {
-    const parsedSections = JSON.parse(sectionsJson) as any[];
+    const parsedSections = JSON.parse(sectionsJSON) as any[];
 
     if (parsedSections.length === 1 && parsedSections[0].id === null){
       sections = []

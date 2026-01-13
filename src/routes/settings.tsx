@@ -23,7 +23,7 @@ function RouteComponent() {
     },[])
 
     const backUpSQLite = () => {
-        const data = DB.db.export();
+        const data = DB._rawDB?.export();
         const blob = new Blob([data], { type: "application/octet-stream" });
 
         const a = document.createElement("a");

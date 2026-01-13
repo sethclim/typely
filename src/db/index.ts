@@ -1,16 +1,13 @@
 import { hydrateResume } from "../helpers/ResumeHydrator";
 import { DBService } from "./DBService";
-import {
-    ResumeConfigTable,
-    ResumeSectionConfigTable,
-    ResumeSectionDataTable,
-} from "./tables";
+import { resumeConfig, resumeSectionConfig, resumeSectionData } from "./schema";
+import { ResumeConfigTable } from "./tables";
 
 // Singleton DB instance
 export const DB = new DBService();
 
-export const DuplicateResume = (id: number) => {
-    const resume_raw = ResumeConfigTable.getResumeConfig(id);
+export const DuplicateResume = async (id: number) => {
+    const resume_raw = await ResumeConfigTable.getResumeConfig(id);
     const resume = hydrateResume(resume_raw);
 
     if (!resume) return;
@@ -18,55 +15,59 @@ export const DuplicateResume = (id: number) => {
     console.log("resume " + JSON.stringify(resume));
 
     try {
+        // --- Step 1: Duplicate resume_config ---
         const uuid = crypto.randomUUID();
-        ResumeConfigTable.insert({
-            uuid: uuid,
-            name: resume.name + " - Copy",
-            created_at: Date.now().toString(),
-            updated_at: Date.now().toString(),
-        });
+        const newResumeResult = await DB.db
+            ?.insert(resumeConfig)
+            .values({
+                uuid,
+                name: resume.name + " - Copy",
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+                themeId: resume.theme?.id ?? null,
+            })
+            .returning({ id: resumeConfig.id });
 
-        const newResumeIdResult = DB.exec(`
-            SELECT id FROM resume_config
-            ORDER BY id DESC
-            LIMIT 1
-        `);
-        const newResumeId = newResumeIdResult[0].values[0][0];
-        console.log("newResumeId", newResumeId);
+        if (newResumeResult == undefined) throw Error("UNDEFINED");
 
-        // --- Step 2: Duplicate resume_section ---
-        for (const row of resume.sections) {
-            const sectionType = row.sectionType;
-            const title = row.title;
-            const order = row.order;
-            const template = row.template;
+        const newResumeId = newResumeResult[0].id;
+        DB.notifyTable("resume_config");
 
-            ResumeSectionConfigTable.insert({
-                resume_id: newResumeId,
-                title: title,
-                section_type: sectionType,
-                template_id: template?.id ?? -1,
-                section_order: order,
-            });
+        // --- Step 2: Duplicate resume_section_config + resume_section_data ---
+        for (const section of resume.sections) {
+            const templateId = section.template?.id ?? null;
 
-            const newSectionIdResult = DB.exec(`
-                SELECT id 
-                FROM resume_section_config 
-                WHERE resume_id = ${newResumeId} 
-                ORDER BY id DESC 
-                LIMIT 1
-            `);
+            if (templateId === null) throw Error("null templateId");
 
-            const newSectionId = newSectionIdResult[0].values[0][0];
+            // Insert section
+            const newSectionResult = await DB.db
+                ?.insert(resumeSectionConfig)
+                .values({
+                    resumeId: newResumeId,
+                    title: section.title,
+                    sectionType: section.sectionType,
+                    templateId,
+                    sectionOrder: section.order,
+                })
+                .returning({ id: resumeSectionConfig.id });
 
-            for (const item of row.items) {
-                ResumeSectionDataTable.insert({
-                    section_id: newSectionId,
-                    data_item_id: item.id,
+            if (newSectionResult == undefined)
+                throw Error("newSectionResult UNDEFINED");
+
+            const newSectionId = newSectionResult[0].id;
+            DB.notifyTable("resume_section_config");
+
+            // Insert all section data items (M2M)
+            for (const item of section.items) {
+                await DB.db?.insert(resumeSectionData).values({
+                    sectionId: newSectionId,
+                    dataItemId: item.id,
                 });
             }
+            DB.notifyTable("resume_section_data");
         }
     } catch (e) {
+        console.error("Failed to duplicate resume:", e);
         throw e;
     }
 };

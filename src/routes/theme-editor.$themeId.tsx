@@ -10,18 +10,27 @@ import { TemplateTable, ThemeTable } from '../db/tables';
 import { DB } from '../db';
 import { myLang } from '../components/editor/monaco/latex';
 import type * as monacoEditor from "monaco-editor";
-import { ThemeDataRow } from '../db/types';
+// import { ThemeDataRow } from '../db/types';
 
 
-const mapThemeRowToTheme = (themeRow : ThemeDataRow) : Theme => {
+const mapThemeRowToTheme = (themeRow : {
+    id: number;
+    name: string | null;
+    description: string | null;
+    stySource: string | null;
+    isSystem: boolean | null;
+    ownerUserId: string | null;
+    createdAt: string | null;
+} | null) : Theme => {
+  if (themeRow === null) throw Error("null themeRow")
   const t : Theme = {
     id: themeRow.id!,
-    name: themeRow.name,
-    description: themeRow.description,
-    sty_source: themeRow.sty_source,
-    is_system: themeRow.is_system,
-    owner_user_id: themeRow.owner_user_id,
-    created_at: themeRow.created_at,
+    name: themeRow.name!,
+    description: themeRow.description!,
+    sty_source: themeRow.stySource!,
+    is_system: themeRow.isSystem!,
+    owner_user_id: themeRow.ownerUserId!,
+    created_at: themeRow.createdAt!,
     templates: []
   }
   return t
@@ -129,8 +138,8 @@ function RouteComponent() {
 
     const fetchDataForLib = async () => {
         await DB.ready;
-       
-        const theme = mapThemeRowToTheme(ThemeTable.get(parseInt(themeId))[0])
+        const data = ThemeTable.get(parseInt(themeId))
+        const theme = mapThemeRowToTheme(data)
         setTheme(theme)
         
         const templateData = TemplateTable.getByThemeId(theme.id);
