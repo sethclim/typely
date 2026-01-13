@@ -3,6 +3,7 @@ import { InsertAllTemplates } from "../helpers/InsertAllTemplates";
 import { SQLiteAutoBackupService } from "./backupService";
 import { drizzle, SQLJsDatabase } from "drizzle-orm/sql-js";
 import { migrate } from "./migrator";
+import { ThemeTable } from "./tables";
 
 type Listener = () => void;
 
@@ -58,71 +59,14 @@ export class DBService {
 
         this.save();
 
-        InsertAllTemplates();
+        const res = ThemeTable.getAll();
+        if (res.length <= 0) InsertAllTemplates();
     }
-
-    // run(sql: string, params: any = []) {
-    //     this.db?.run(sql, params);
-    // }
-
-    // exec(sql: string, params: any = []) {
-    //     return this.db?.exec(sql, params);
-    // }
 
     save() {
         const data = this._rawDB?.export();
         localStorage.setItem(this.storageKey, JSON.stringify(Array.from(data)));
     }
-
-    // runAndSave(sql: string, params: any = []) {
-    //     this.run(sql, params);
-    //     this.save();
-    // }
-
-    // insertAndGetId(
-    //     table: string,
-    //     columns: string,
-    //     values: string,
-    //     data: Array<any>
-    // ): number {
-    //     const stmt = this.db.prepare(`
-    //         INSERT INTO ${table}
-    //         ${columns}
-    //         VALUES ${values}
-    //         RETURNING id;
-    //     `);
-
-    //     stmt.bind(data);
-
-    //     stmt.step();
-    //     const row = stmt.getAsObject();
-    //     stmt.free();
-
-    //     const newId = row.id as number;
-    //     return newId;
-    // }
-
-    /**
-     * Dynamic update helper
-     * table: string - table name
-     * id: number|string - row id to update
-     * fields: object - keys = columns to update, values = new values
-     */
-    // update(table: string, id: number, fields: any) {
-    //     const keys = Object.keys(fields);
-    //     if (keys.length === 0) return; // nothing to update
-
-    //     const setClause = keys.map((k) => `${k} = ?`).join(", ");
-    //     const values = keys.map((k) => fields[k]);
-
-    //     // Append id for WHERE clause
-    //     values.push(id);
-
-    //     const sql = `UPDATE ${table} SET ${setClause} WHERE id = ?`;
-    //     this.runAndSave(sql, values);
-
-    //     this.notifyTable(table);
-    // }
 
     subscribe(table: string, cb: Listener) {
         if (!this.tableListeners[table]) this.tableListeners[table] = [];
