@@ -1,10 +1,20 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
+import { useEffect, useState } from 'react';
+import { ResumeDataItemTable } from '../db/tables';
 
 export const Route = createFileRoute('/')({
   component: RouteComponent,
 })
 
 export const Hero = () => {
+  const [onboarded, setOnboarded] = useState(false)
+
+  useEffect(()=>{
+    const res = ResumeDataItemTable.getAll();
+    const onBoarded = res.length > 0
+    setOnboarded(onBoarded)
+  },[])
+
   return (
     <div className="relative w-full h-[70vh] flex flex-col items-center justify-start overflow-hidden bg-gradient-to-br from-darkest via-darker to-darkest">
       <div className="flex w-full justify-start bg-black/20 backdrop-blur-md min-h-15 items-center p-4">
@@ -27,7 +37,7 @@ export const Hero = () => {
             </p>
 
             <Link
-                to="/onBoarding"
+                to={onboarded ? "/app" : "/onBoarding"}
                 className="px-6 py-3 bg-white text-black font-semibold rounded-xl shadow-md hover:bg-white/90 transition inline-block"
                 >
                 Start Building
