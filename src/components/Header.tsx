@@ -4,6 +4,7 @@ import { ChevronDoubleLeftIcon } from "@heroicons/react/20/solid"
 import { Link } from "@tanstack/react-router"
 import clsx from "clsx"
 import { Listbox, ListboxButton, Portal, ListboxOptions, ListboxOption } from "@headlessui/react"
+import { useUser } from "../context/user/UserContext"
 
 export type HeaderProps = {
     expanded? : boolean
@@ -12,7 +13,9 @@ export type HeaderProps = {
     children? : ReactNode
 }
 
-export const Header = ({expanded, setExpanded, children, bg="bg-darker"} : HeaderProps) =>{
+export const Header = ({expanded, setExpanded, children, bg="bg-darker"} : HeaderProps) => {
+    const { user } = useUser()
+
     return(
         <div className={clsx(["flex w-full min-h-15 p-2 border-b-1 border-grey/20",  bg])}>
             <div className="flex flex-col justify-end mr-4">
@@ -38,15 +41,11 @@ export const Header = ({expanded, setExpanded, children, bg="bg-darker"} : Heade
             <div className="grow">
                 {children}
             </div>
-            {/* <button className="bg-white w-10 h-10 rounded-full">
-                
-            </button> */}
-
-              <Listbox value={"HAHA"} >
+              <Listbox>
                 <div className="relative min-w-30 ">
                   <ListboxButton className="border bg-white w-10 h-10 rounded-full text-left">
                     <div className="flex justify-center">
-                        <h3 className="font-bold">S</h3>
+                        <h3 className="font-bold">{user?.email?.charAt(0).toUpperCase() ?? "G"}</h3>
                     </div>
                   </ListboxButton>
             
