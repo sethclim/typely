@@ -15,6 +15,28 @@ type PDFViewProps = {
   pdfUrl? : string | null
 }
 
+function excapeLatexSymbolsInData(input: string): string {
+    const replacements: Record<string, string> = {
+        '\\': '\\textbackslash{}',
+        '&': '\\&',
+        '%': '\\%',
+        '$': '\\$',
+        '#': '\\#',
+        '_': '\\_',
+        '{': '\\{',
+        '}': '\\}',
+        '~': '\\textasciitilde{}',
+        '^': '\\textasciicircum{}',
+    };
+
+    // Build a regex that matches any of the special characters
+    const pattern = new RegExp(
+        `[${Object.keys(replacements).map(c => '\\' + c).join('')}]`,
+        'g'
+    );
+
+    return input.replace(pattern, (match) => replacements[match]);
+}
 
 export const ReplaceVariables = (section: ResumeSection) => {
   let str = section.template?.content || "";
@@ -24,7 +46,7 @@ export const ReplaceVariables = (section: ResumeSection) => {
   // Replace all [[KEY]] in one pass
   str = str.replace(/\[\[(.*?)\]\]/g, (_, key) => {
     key = key.trim();
-    const data = dict[key];
+    const data = excapeLatexSymbolsInData(dict[key]);
     // console.log("Replacing", key, "with", data);
     return data ?? "";
   });
