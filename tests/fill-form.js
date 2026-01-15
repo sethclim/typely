@@ -58,6 +58,7 @@ import fs from "fs/promises";
         await page.fill(`#exp-title-input-${i}`,  exp["title"]);
         await page.fill(`#exp-start-date-input-${i}`, exp["start-date"]);
         await page.fill(`#exp-end-date-input-${i}`, exp["end-date"]);
+        await page.fill(`#exp-location-input-${i}`,  exp["location"]);
         await page.fill(`#exp-point-one-input-${i}`, exp["point1"]);
         await page.fill(`#exp-point-two-input-${i}`,  exp["point2"]);
         await page.fill(`#exp-point-three-input-${i}`, exp["point3"]);

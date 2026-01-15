@@ -482,6 +482,9 @@ export const CreateDemoResume = async(info : IntakeInfo, themes : Theme[]) =>{
         const jobData = [
             ["TITLE", inJob.title],
             ["COMPANY", inJob.company],
+            ["START_DATE", inJob.startDate],
+            ["END_DATE", inJob.endDate],
+            ["LOCATION", inJob.location],
             ["POINT1", inJob.pointOne],
             ["POINT2", inJob.pointTwo],
             ["POINT3", inJob.pointThree],

@@ -3,6 +3,7 @@ import { Theme } from "../../types";
 export type Job = {
   company: string;
   title: string;
+  location: string;
   startDate: string;
   endDate: string;
   pointOne: string;

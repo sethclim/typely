@@ -30,7 +30,7 @@ export function ResumeIntakeForm(props: ResumeIntakeFormProps) {
 
     const { themes } = useThemes() 
 
-    const addJob = () => setJobs([...jobs, { company: "", title: "", startDate: "", endDate: "", pointOne: "", pointTwo : "", pointThree: "", pointFour: "" }]);
+    const addJob = () => setJobs([...jobs, { company: "", title: "", startDate: "", endDate: "", location : "", pointOne: "", pointTwo : "", pointThree: "", pointFour: "" }]);
 
     const addSkill = () => setSkillPoints([...skillPoints, { title: "", skills: ""}]);
 

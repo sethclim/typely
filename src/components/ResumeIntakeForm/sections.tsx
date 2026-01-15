@@ -136,6 +136,8 @@ export const ExperienceSection = (props : ExperienceProps) => {
                         <Input input_id={`exp-end-date-input-${i}`} label="End Date" value={job.endDate}
                         onChange={(v : string) => props.setJobs(j => j.map((x, idx) => idx === i ? { ...x, endDate: v } : x))} />
                     </div>
+                  <Input input_id={`exp-location-input-${i}`} label="Location" value={job.location}
+                        onChange={(v : string) => props.setJobs(j => j.map((x, idx) => idx === i ? { ...x, location: v } : x))} />
                   <Input input_id={`exp-point-one-input-${i}`} label="Point One" value={job.pointOne}
                         onChange={(v : string) => props.setJobs(j => j.map((x, idx) => idx === i ? { ...x, pointOne: v } : x))} />
                   <Input input_id={`exp-point-two-input-${i}`} label="Point Two" value={job.pointTwo}
