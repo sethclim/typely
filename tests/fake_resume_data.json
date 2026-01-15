@@ -1,0 +1,51 @@
+{
+    "experience": [
+        {
+            "company": "Nebula Systems",
+            "title": "Software Engineer",
+            "start-date": "2021-06",
+            "end-date": "2022-11",
+            "point1": "Developed and maintained full-stack web services using TypeScript, Node.js, and React, supporting over 50k monthly active users.",
+            "point2": "Designed REST and WebSocket APIs and improved request latency by 35% through caching and query optimization.",
+            "point3": "Led the migration from monolithic services to Docker-based microservices deployed on AWS.",
+            "point4": "Collaborated with product managers and designers to ship features under aggressive startup timelines."
+        },
+        {
+            "company": "Aurora Interactive",
+            "title": "Graphics & Engine Programmer",
+            "start-date": "2022-12",
+            "end-date": "2024-03",
+            "point1": "Built a Vulkan-based rendering pipeline in C++ with support for PBR materials and GPU-driven culling.",
+            "point2": "Implemented SIMD-accelerated math utilities, reducing frame time by 18% on complex scenes.",
+            "point3": "Integrated real-time networking features for a multiplayer prototype using custom UDP protocols.",
+            "point4": "Mentored junior developers on engine architecture and low-level debugging techniques."
+        },
+        {
+            "company": "CloudForge AI",
+            "title": "Machine Learning Platform Engineer",
+            "start-date": "2024-04",
+            "end-date": "2025-12",
+            "point1": "Designed containerized inference pipelines deployed on Kubernetes with horizontal auto-scaling.",
+            "point2": "Built Python and C++ tooling for dataset ingestion, preprocessing, and GPU-backed training workflows.",
+            "point3": "Automated CI/CD for ML models using GitHub Actions, Docker, and Terraform on AWS.",
+            "point4": "Worked cross-functionally with research teams to productionize experimental deep learning models."
+        }
+    ],
+    "projects" : [
+        {
+            "title": "Real-Time Collaborative UML Editor",
+            "point1": "Designed and implemented a C++ desktop application for creating and editing UML diagrams with a custom immediate-mode GUI.",
+            "point2": "Built a real-time collaboration layer using WebSockets to synchronize diagram state between multiple clients.",
+            "point3": "Implemented a local-first storage model with conflict resolution to support offline editing and seamless reconnection.",
+            "point4": "Optimized rendering performance with GPU-accelerated primitives, enabling smooth interaction with large diagrams."
+        }
+    ],
+    "education" : [
+        {
+            "school": "Northbridge University",
+            "program": "Bachelor of Software Engineering",
+            "start-date": "2018-09",
+            "end-date": "2022-05"
+        }
+    ]
+}

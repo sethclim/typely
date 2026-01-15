@@ -1,10 +1,14 @@
 import { chromium } from "@playwright/test";
+import fs from "fs/promises";
 
 (async () => {
     const browser = await chromium.connectOverCDP("http://127.0.0.1:9222");
 
     const context = browser.contexts()[0];
     const page = context.pages()[0]; // <-- your already open tab
+
+    const raw = await fs.readFile("./tests/fake_resume_data.json", "utf-8");
+    const data = JSON.parse(raw);
 
     await page.goto("http://localhost:5173/onBoarding");
 
@@ -47,33 +51,40 @@ import { chromium } from "@playwright/test";
     await page.fill("#skills-points-3", "Git, ");
 
     
-    for(let i = 0; i < 3; i++){
+    for (let i = 0; i < data.experience.length; i++) {
+        const exp = data.experience[i];
         await page.click('#job-add-btn');
-        await page.fill(`#exp-company-input-${i}`, "Meta");
-        await page.fill(`#exp-title-input-${i}`, "Software Engineer");
-        await page.fill(`#exp-start-date-input-${i}`, "May, 2022");
-        await page.fill(`#exp-end-date-input-${i}`, "June, 2024");
-        await page.fill(`#exp-point-one-input-${i}`, "I built an ads analytics tool used by 300 ad managers");
-        await page.fill(`#exp-point-two-input-${i}`, "I solo developed react");
-        await page.fill(`#exp-point-three-input-${i}`, "I build facebook marketplace");
-        await page.fill(`#exp-point-four-input-${i}`, "I cancelled the metaverse project +100 aura");
+        await page.fill(`#exp-company-input-${i}`, exp["company"]);
+        await page.fill(`#exp-title-input-${i}`,  exp["title"]);
+        await page.fill(`#exp-start-date-input-${i}`, exp["start-date"]);
+        await page.fill(`#exp-end-date-input-${i}`, exp["end-date"]);
+        await page.fill(`#exp-point-one-input-${i}`, exp["point1"]);
+        await page.fill(`#exp-point-two-input-${i}`,  exp["point2"]);
+        await page.fill(`#exp-point-three-input-${i}`, exp["point3"]);
+        await page.fill(`#exp-point-four-input-${i}`,  exp["point4"]);
+
     }
 
-    await page.click('#project-add-btn');
+    for (let i = 0; i < data.projects.length; i++) {
+        const project = data.projects[i];
+        await page.click('#project-add-btn');
 
-    await page.fill(`#proj-title-input-0`, "Vulkan Ray Tracer");
-    await page.fill(`#proj-point-one-input-0`, "managed low level GPU");
-    await page.fill(`#proj-point-two-input-0`, "developer raytracing engine");
-    await page.fill(`#proj-point-three-input-0`, "developed vector math library");
-    await page.fill(`#proj-point-four-input-0`, "optimized for realtime speeds");
+        await page.fill(`#proj-title-input-${i}`, project.title);
+        await page.fill(`#proj-point-one-input-${i}`, project.point1);
+        await page.fill(`#proj-point-two-input-${i}`, project.point2);
+        await page.fill(`#proj-point-three-input-${i}`, project.point3);
+        await page.fill(`#proj-point-four-input-${i}`, project.point4);
+    }
 
-    await page.click('#edu-add-btn');
+    for (let i = 0; i < data.education.length; i++) {
+        const edu = data.education[i];
+        await page.click('#edu-add-btn');
 
-    await page.fill(`#edu-school-input-0`, "University of Washington");
-    await page.fill(`#edu-program-input-0`, "Computer Engineering");
-    await page.fill(`#edu-start-date-input-0`, "Sept, 2015");
-    await page.fill(`#edu-end-date-input-0`, "June, 2019");
-
+        await page.fill(`#edu-school-input-${i}`, edu.school);
+        await page.fill(`#edu-program-input-${i}`, edu.program);
+        await page.fill(`#edu-start-date-input-${i}`, edu["start-date"]);
+        await page.fill(`#edu-end-date-input-${i}`, edu["end-date"]);
+    }
 
     console.log("Form filled. Script stopping.");
 
