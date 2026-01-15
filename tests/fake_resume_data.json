@@ -6,17 +6,17 @@
             "start-date": "2021-06",
             "end-date": "2022-11",
             "point1": "Developed and maintained full-stack web services using TypeScript, Node.js, and React, supporting over 50k monthly active users.",
-            "point2": "Designed REST and WebSocket APIs and improved request latency by 35% through caching and query optimization.",
+            "point2": "Designed REST and WebSocket APIs and improved request latency by 35\\% through caching and query optimization.",
             "point3": "Led the migration from monolithic services to Docker-based microservices deployed on AWS.",
             "point4": "Collaborated with product managers and designers to ship features under aggressive startup timelines."
         },
         {
             "company": "Aurora Interactive",
-            "title": "Graphics & Engine Programmer",
+            "title": "Graphics \\& Engine Programmer",
             "start-date": "2022-12",
             "end-date": "2024-03",
             "point1": "Built a Vulkan-based rendering pipeline in C++ with support for PBR materials and GPU-driven culling.",
-            "point2": "Implemented SIMD-accelerated math utilities, reducing frame time by 18% on complex scenes.",
+            "point2": "Implemented SIMD-accelerated math utilities, reducing frame time by 18\\% on complex scenes.",
             "point3": "Integrated real-time networking features for a multiplayer prototype using custom UDP protocols.",
             "point4": "Mentored junior developers on engine architecture and low-level debugging techniques."
         },

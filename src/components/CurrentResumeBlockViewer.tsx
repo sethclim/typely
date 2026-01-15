@@ -125,7 +125,7 @@ export const CurrentResumeBlockViewer = (props : CurrentResumeBlockViewerProps) 
                     <p className="">Theme:</p>
                     <div className="flex flex-row gap-2 items-center justify-center">
                         <Dropdown 
-                            options={["Engineering", "Colorful"]} 
+                            options={["Engineering", "Colorful", "Faang"]} 
                             selected={activeTheme} 
                             onSelected={(v) => changeThemeForResume(v)} />
                         {

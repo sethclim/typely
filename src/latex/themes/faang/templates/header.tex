@@ -1,0 +1,25 @@
+% -------------------------------
+% Header
+% -------------------------------
+
+\begingroup
+    % Name: uppercase, bold, large, centered
+    \hfil{\MakeUppercase{\LARGE\bf [[FNAME]] [[LNAME]]}}\hfil
+    \medskip\break
+\endgroup
+
+% First address line
+\begingroup
+    \def\\{$\diamond$ } % Replace line breaks with diamond
+    \centerline{+01-[[PHONE]] \\ San Francisco, CA}
+\endgroup
+\smallskip
+
+% Second address line
+\begingroup
+    \def\\{$\diamond$ } % Replace line breaks with diamond
+    \centerline{\href{mailto:[[EMAIL]]}{[[EMAIL]]} \\ 
+                \href{[[LINKEDIN]]}{LinkedIn} \\ 
+                \href{[[WEBSITE]]}{Website}}
+\endgroup
+\smallskip

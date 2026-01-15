@@ -64,9 +64,10 @@ export const CreateDemoResume = async(info : IntakeInfo, themes : Theme[]) =>{
     const groupedTemplates = groupTemplatesBySectionType(info.theme.templates);
 
 
-    const skillsTemplateIds = {
-        eng: -1,
-        color: -1
+    const skillsTemplateIds : Record<string, number> = {
+        engineering: -1,
+        colorful: -1,
+        faang: -1
     }
 
     themes.forEach(async t => {
@@ -78,13 +79,13 @@ export const CreateDemoResume = async(info : IntakeInfo, themes : Theme[]) =>{
             })
             const skillsTemplateId = await TemplateTable.insert({
                 "name": "skills template",
-                "description": "this is a s template",
+                "description": "this is a skills template",
                 "section_type": "skills",
                 "created_at" : Date.now().toString(),
                 "content": skillsLatex,
                 theme_id :  t.id
             })
-            skillsTemplateIds.eng = skillsTemplateId
+            skillsTemplateIds.engineering = skillsTemplateId
         }else if(t.name == "colorful"){
             skillsLatex += "\\tab \\begin{tabular}{r p{0.7\\textwidth}}"
             info.skills.forEach((_, i) => {
@@ -93,13 +94,29 @@ export const CreateDemoResume = async(info : IntakeInfo, themes : Theme[]) =>{
             skillsLatex += "\\end{tabular}\\\\~\\\\"
             const skillsTemplateId = await TemplateTable.insert({
                 "name": "skills template",
-                "description": "this is a s template",
+                "description": "this is a skills template",
                 "section_type": "skills",
                 "created_at" : Date.now().toString(),
                 "content": skillsLatex,
                 theme_id : t.id
             })
-            skillsTemplateIds.color = skillsTemplateId
+            skillsTemplateIds.colorful = skillsTemplateId
+        }
+        else if(t.name == "faang"){
+            skillsLatex += "\\begin{tabular}{ @{} >{\\bfseries}l @{\\hspace{6ex}} l }"
+            info.skills.forEach((_, i) => {
+                skillsLatex += `[[SKILL_LABEL_${i}]] & [[Point_${i}]] \\\\ \n`
+            })
+            skillsLatex += "\\end{tabular}\\\\"
+            const skillsTemplateId = await TemplateTable.insert({
+                "name": "skills template",
+                "description": "this is a skills template",
+                "section_type": "skills",
+                "created_at" : Date.now().toString(),
+                "content": skillsLatex,
+                theme_id : t.id
+            })
+            skillsTemplateIds.faang = skillsTemplateId
         }
 
     })
@@ -207,10 +224,9 @@ export const CreateDemoResume = async(info : IntakeInfo, themes : Theme[]) =>{
     // SKILLS
     ///////////////////////////////////////////////
     const skillsSectionId = await ResumeSectionConfigTable.insert({
-        // "id": sectionId,
         "title": "C++ Skills",
         "resume_id": ResumeId,
-        "template_id": info.theme.name === "engineering" ? skillsTemplateIds.eng : skillsTemplateIds.color,
+        "template_id": skillsTemplateIds[info.theme.name],
         "section_order": finalPositions.get("Skills")![0],
         "section_type": "skills"
     })
@@ -419,37 +435,37 @@ export const CreateDemoResume = async(info : IntakeInfo, themes : Theme[]) =>{
     })
 
 
-    if (info.theme.name == "colorful"){
-        ////////////////////////////////////////////////
-        // Skills Section Header
-        ///////////////////////////////////////////////
-        const skillsTitleSectionId = await ResumeSectionConfigTable.insert({
-            "title": "Skills Title Section",
-            "resume_id": ResumeId,
-            "template_id": groupedTemplates["section"][0].id,
-            "section_order": finalPositions.get("SkillsSection")![0],
-            "section_type": "section"
-        })
-    
-        const skills_title = [
-            ["TITLE", "Skills"],
-            ["SPACE", "0cm"],
-        ]
-    
-        const skillsSectionDataItemId = await ResumeDataItemTable.insert({
-            title: "Skills Section Title",
-            description: "education",
-            data: JSON.stringify(skills_title),
-            type_id: skillsTitleSectionId,
-            "created_at" : Date.now().toString(),
-            "updated_at" : Date.now().toString(),
-        })
-    
-        ResumeSectionDataTable.insert({
-            section_id: skillsTitleSectionId,
-            data_item_id: skillsSectionDataItemId
-        })
-    }
+    // if (info.theme.name == "colorful" || info.theme.name == "faang"){
+    ////////////////////////////////////////////////
+    // Skills Section Header
+    ///////////////////////////////////////////////
+    const skillsTitleSectionId = await ResumeSectionConfigTable.insert({
+        "title": "Skills Title Section",
+        "resume_id": ResumeId,
+        "template_id": groupedTemplates["section"][0].id,
+        "section_order": finalPositions.get("SkillsSection")![0],
+        "section_type": "section"
+    })
+
+    const skills_title = [
+        ["TITLE", "Skills"],
+        ["SPACE", "0cm"],
+    ]
+
+    const skillsSectionDataItemId = await ResumeDataItemTable.insert({
+        title: "Skills Section Title",
+        description: "education",
+        data: JSON.stringify(skills_title),
+        type_id: skillsTitleSectionId,
+        "created_at" : Date.now().toString(),
+        "updated_at" : Date.now().toString(),
+    })
+
+    ResumeSectionDataTable.insert({
+        section_id: skillsTitleSectionId,
+        data_item_id: skillsSectionDataItemId
+    })
+    // }
 
     ////////////////////////////////////////////////
     // Jobs
