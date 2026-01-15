@@ -11,6 +11,7 @@ import colorExperienceTemplate from "./themes/colorful/templates/experience.tex?
 import colorProjectTemplate from "./themes/colorful/templates/project.tex?raw";
 import colorEducationTemplate from "./themes/colorful/templates/education.tex?raw";
 import colorSectionTemplate from "./themes/colorful/templates/section.tex?raw";
+import { faang } from "./themes/faang/register";
 
 export const latexThemes = {
     engineering: {
@@ -33,4 +34,5 @@ export const latexThemes = {
             section: colorSectionTemplate,
         },
     },
+    faang: faang,
 };

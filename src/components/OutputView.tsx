@@ -84,7 +84,7 @@ export const OutputView = (props : OutputViewProps) => {
         props.resume?.sections.map((section) => {
             latex_string += ReplaceVariables(section)
         })
-        latex_string += `\\end{document}`
+        latex_string += `\n\\end{document}`
 
 
         setLatex(latex_string)
