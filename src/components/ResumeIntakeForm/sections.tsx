@@ -229,7 +229,6 @@ export const ProjectsSection = (props: ProjectsProps) => {
   )
 }
 
-
 export type EducationProps = {
   education: Education[]
   setEducation: (value: SetStateAction<Education[]>) => void
@@ -264,6 +263,17 @@ export const EducationSection = (props: EducationProps) => {
             }
           />
 
+          <Input
+            input_id={`edu-location-input-${i}`}
+            label="Location"
+            value={ed.location}
+            onChange={(v: string) =>
+              props.setEducation(e =>
+                e.map((x, idx) => idx === i ? { ...x, location: v } : x)
+              )
+            }
+          />
+
           <div className="grid grid-cols-2 gap-4">
             <Input
               input_id={`edu-start-date-input-${i}`}
@@ -287,6 +297,17 @@ export const EducationSection = (props: EducationProps) => {
               }
             />
           </div>
+
+          <Input
+            input_id={`edu-gpa-input-${i}`}
+            label="GPA"
+            value={ed.gpa}
+            onChange={(v: string) =>
+              props.setEducation(e =>
+                e.map((x, idx) => idx === i ? { ...x, gpa: v } : x)
+              )
+            }
+          />
         </Card>
       ))}
 

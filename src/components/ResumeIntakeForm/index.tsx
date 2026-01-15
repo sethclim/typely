@@ -36,7 +36,7 @@ export function ResumeIntakeForm(props: ResumeIntakeFormProps) {
 
     const addProject = () => setProjects([...projects, { title: "", pointOne: "", pointTwo : "", pointThree: "", pointFour : ""}]);
 
-    const addEducation = () => setEducation([...education, { school: "", program: "", startDate: "", endDate: "" }]);
+    const addEducation = () => setEducation([...education, { school: "", program: "", location: "", startDate: "", endDate: "", gpa: "" }]);
 
     const Create = () => {
 

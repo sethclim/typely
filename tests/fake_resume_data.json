@@ -45,10 +45,12 @@
     ],
     "education" : [
         {
-            "school": "Northbridge University",
+            "school": "California State University",
             "program": "Bachelor of Software Engineering",
+            "location": "Los Angeles, CA",
             "start-date": "2018-09",
-            "end-date": "2022-05"
+            "end-date": "2022-05",
+            "gpa": "4.0"
         }
     ]
 }

@@ -323,7 +323,8 @@ export const CreateDemoResume = async(info : IntakeInfo, themes : Theme[]) =>{
             ["PROGRAM", edu.program],
             ["START_DATE", edu.startDate],
             ["END_DATE", edu.endDate],
-            ["GPA", "4.0"]
+            ["LOCATION", edu.location],
+            ["GPA", edu.gpa]
         ]
     
         const eduDataItemId = await ResumeDataItemTable.insert({

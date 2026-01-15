@@ -20,8 +20,10 @@ export type SkillPoint = {
 export type Education = {
   school: string;
   program: string;
+  location: string;
   startDate: string;
   endDate: string;
+  gpa: string;
 };
 
 export type Personal = {

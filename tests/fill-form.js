@@ -83,8 +83,10 @@ import fs from "fs/promises";
 
         await page.fill(`#edu-school-input-${i}`, edu.school);
         await page.fill(`#edu-program-input-${i}`, edu.program);
+        await page.fill(`#edu-location-input-${i}`, edu.location);
         await page.fill(`#edu-start-date-input-${i}`, edu["start-date"]);
         await page.fill(`#edu-end-date-input-${i}`, edu["end-date"]);
+        await page.fill(`#edu-gpa-input-${i}`, edu.gpa);
     }
 
     console.log("Form filled. Script stopping.");
