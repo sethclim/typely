@@ -58,6 +58,7 @@ import fs from "fs/promises";
         await page.fill(`#exp-title-input-${i}`,  exp["title"]);
         await page.fill(`#exp-start-date-input-${i}`, exp["start-date"]);
         await page.fill(`#exp-end-date-input-${i}`, exp["end-date"]);
+        await page.fill(`#exp-location-input-${i}`,  exp["location"]);
         await page.fill(`#exp-point-one-input-${i}`, exp["point1"]);
         await page.fill(`#exp-point-two-input-${i}`,  exp["point2"]);
         await page.fill(`#exp-point-three-input-${i}`, exp["point3"]);
@@ -82,8 +83,10 @@ import fs from "fs/promises";
 
         await page.fill(`#edu-school-input-${i}`, edu.school);
         await page.fill(`#edu-program-input-${i}`, edu.program);
+        await page.fill(`#edu-location-input-${i}`, edu.location);
         await page.fill(`#edu-start-date-input-${i}`, edu["start-date"]);
         await page.fill(`#edu-end-date-input-${i}`, edu["end-date"]);
+        await page.fill(`#edu-gpa-input-${i}`, edu.gpa);
     }
 
     console.log("Form filled. Script stopping.");

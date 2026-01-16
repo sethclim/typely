@@ -136,6 +136,8 @@ export const ExperienceSection = (props : ExperienceProps) => {
                         <Input input_id={`exp-end-date-input-${i}`} label="End Date" value={job.endDate}
                         onChange={(v : string) => props.setJobs(j => j.map((x, idx) => idx === i ? { ...x, endDate: v } : x))} />
                     </div>
+                  <Input input_id={`exp-location-input-${i}`} label="Location" value={job.location}
+                        onChange={(v : string) => props.setJobs(j => j.map((x, idx) => idx === i ? { ...x, location: v } : x))} />
                   <Input input_id={`exp-point-one-input-${i}`} label="Point One" value={job.pointOne}
                         onChange={(v : string) => props.setJobs(j => j.map((x, idx) => idx === i ? { ...x, pointOne: v } : x))} />
                   <Input input_id={`exp-point-two-input-${i}`} label="Point Two" value={job.pointTwo}
@@ -227,7 +229,6 @@ export const ProjectsSection = (props: ProjectsProps) => {
   )
 }
 
-
 export type EducationProps = {
   education: Education[]
   setEducation: (value: SetStateAction<Education[]>) => void
@@ -262,6 +263,17 @@ export const EducationSection = (props: EducationProps) => {
             }
           />
 
+          <Input
+            input_id={`edu-location-input-${i}`}
+            label="Location"
+            value={ed.location}
+            onChange={(v: string) =>
+              props.setEducation(e =>
+                e.map((x, idx) => idx === i ? { ...x, location: v } : x)
+              )
+            }
+          />
+
           <div className="grid grid-cols-2 gap-4">
             <Input
               input_id={`edu-start-date-input-${i}`}
@@ -285,6 +297,17 @@ export const EducationSection = (props: EducationProps) => {
               }
             />
           </div>
+
+          <Input
+            input_id={`edu-gpa-input-${i}`}
+            label="GPA"
+            value={ed.gpa}
+            onChange={(v: string) =>
+              props.setEducation(e =>
+                e.map((x, idx) => idx === i ? { ...x, gpa: v } : x)
+              )
+            }
+          />
         </Card>
       ))}
 
