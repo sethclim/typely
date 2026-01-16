@@ -86,7 +86,6 @@ export const OutputView = (props : OutputViewProps) => {
         })
         latex_string += `\n\\end{document}`
 
-
         setLatex(latex_string)
         return latex_string
     
