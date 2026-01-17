@@ -9,45 +9,19 @@ import { DB } from '../db';
 import { ResumeConfigTable } from '../db/tables';
 import { ResumeConfigRow } from '../db/types';
 import { ResumeSidebarContent } from '../components/ResumeSidebarContent';
-// import { CreateDemoResume } from '../helpers/CreateDemoResume';
-
 
 export const Route = createFileRoute('/app')({
   component: HomeComponent,
 })
 
 function HomeComponent() {
-
-    
-    // const [user, setUser] = useState<User>();
     const [activeId, setActiveId] = useState(1);
     const [resumes, setResumes] = useState<ResumeConfigRow[]>([]);
 
-    const [expanded, setExpanded] = useState(true);
-
-    // useEffect(() => {
-    //     const init = async () => {
-    //     await DB.ready;
-    //     const rows = ResumeConfigTable.getResumeConfig(1);
-    //     if(rows.length == 0)
-    //         CreateDemoResume();
-
-
-    //     // // Whenever the auth state changes, we receive an event and a session object.
-    //     // // Save the user from the session object to the state.
-    //     // supabase.auth.onAuthStateChange((event, session) => {
-    //     //     if (event === "SIGNED_IN") {
-    //     //     setUser(session?.user);
-    //     //     }
-    //     // });
-    //     }
-    //     init();
-    // }, []
-    // )
+    const [expanded, setExpanded] = useState(false);
 
     const fetchResumes = () => {
         const rows = ResumeConfigTable.getAllResumeConfig();
-        // console.log("fetchResumes " + rows.length)
         setResumes(rows)
     }
 
