@@ -24,15 +24,17 @@ export const AddDetailsModal = (props : AddDetailsModalProps) => {
     const { themes } = useThemes()
     
     const [inUseTemplates, setInUseTemplates] = useState<Template[]>([])
-    const [selectedTemplate, setSelectedTemplate] = useState<Template>()
+    const [selectedTemplate, setSelectedTemplate] = useState<Template | null>()
+
+    const [sTemplateKeys, setSTemplateKeys] = useState<string[]>([])
+    const [selectedKeys, setSelectedKeys] = useState<string []>([])
+    const [selectAllChecked, setSelectedAllChecked] = useState(false)
 
     useEffect(() => {
-        console.log("myResume?.theme.templates " + myResume?.theme.id)
         const themeId = myResume?.theme.id
         if(themeId)
         {
             const theme = themes.filter(t => t.id === themeId)[0]
-            console.log("@theme templates" + JSON.stringify(theme.templates))
             setInUseTemplates(theme.templates)
         }
     },[myResume])
@@ -80,25 +82,20 @@ export const AddDetailsModal = (props : AddDetailsModalProps) => {
         props.setIsOpen(false);
     }
 
-    const [sTemplateKeys, setSTemplateKeys] = useState<string[]>([])
 
     const selectedTemplateToAddFor = (name : string) => {
         const templateS = inUseTemplates.filter(t => t.name === name)[0]
         setSelectedTemplate(templateS)
 
         const regex = /\[\[([^\]]+)\]\]/g;
-
         const matches = [...templateS.content.matchAll(regex)].map(m => m[1]);
-
-        console.log(matches);
-
         const uniqueMatches = [...new Set(matches)];
 
         setSTemplateKeys(uniqueMatches)
         setSelectedKeys([])
+        setSelectedAllChecked(false)
     }
 
-    const [selectedKeys, setSelectedKeys] = useState<string []>([])
 
     const addKeyToSelectedKeys = (k : string) => {
         if(selectedKeys.includes(k))
@@ -123,6 +120,7 @@ export const AddDetailsModal = (props : AddDetailsModalProps) => {
         setStage(0)
         setSTemplateKeys([])
         setSelectedKeys([])
+        setSelectedTemplate(null)
     }
 
     const onCancel = () => {
@@ -130,29 +128,58 @@ export const AddDetailsModal = (props : AddDetailsModalProps) => {
         props.setIsOpen(false)
     }
 
+
+    const onSelectAll = () => {
+        if(!selectAllChecked)
+        {
+            setSelectedKeys(sTemplateKeys)
+            setSelectedAllChecked(true)
+        }else{
+            setSelectedKeys([])
+            setSelectedAllChecked(false)
+        }
+    }
+
     return (
         <Modal isOpen={props.isOpen} onClose={() => onCancel()} width="w-300">
-            <h2 className="text-xl font-bold mb-4 text-mywhite">Add DataItem</h2>
+            <h2 className="text-xl font-bold mb-4 text-mywhite text-xl">Add DataItem</h2>
             {
                 stage == 0 && inUseTemplates.length > 0 ? (
                     <div className="text-mywhite min-h-80">
-                        <h3 className="text-mywhite">Select Template to Create Dataitem For</h3>
+                        <h2 className="text-mywhite text-lg">Select Template to Create Dataitem For</h2>
                         <Dropdown 
                             options={inUseTemplates.map(t => t.name) ?? []} 
                             selected={selectedTemplate?.name ?? "SELECT"} 
                             onSelected={(t) => selectedTemplateToAddFor(t)} />
                         <div className="flex flex-col mt-4">
-                            <h4>Select Keys For DataItem</h4>
-                            <div className="grid grid-cols-3 gap-4 mt-4">
+                            <h3 className=" text-lg">Select Keys For DataItem</h3>
+                            {
+                                selectedTemplate ? (
+                                    <div className="flex flex-row items-center gap-2 p-1 m-1">
+                                        <Checkbox
+                                            checked={selectAllChecked}
+                                            onChange={onSelectAll}
+                                            className="group block size-4 rounded border bg-white data-checked:bg-dark"
+                                            >
+                                            <svg className="stroke-white opacity-0 group-data-checked:opacity-100" viewBox="0 0 14 14" fill="none">
+                                                <path d="M3 8L6 11L11 3.5" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+                                            </svg>
+                                        </Checkbox>
+
+                                        <p>Select ALL</p>
+                                    </div>
+
+                                ) : null
+                            }
+                            <div className="grid grid-cols-3 gap-2 border-t border-grey">
                                 {
                                     sTemplateKeys.map(m =>  (
                                             <div className="flex flex-row items-center gap-2 p-1 m-1">
                                                 <Checkbox
                                                     checked={selectedKeys.includes(m)}
                                                     onChange={() => addKeyToSelectedKeys(m)}
-                                                    className="group block size-4 rounded border bg-white data-checked:bg-blue-500"
+                                                    className="group block size-4 rounded border bg-white data-checked:bg-dark"
                                                     >
-                                                    {/* Checkmark icon */}
                                                     <svg className="stroke-white opacity-0 group-data-checked:opacity-100" viewBox="0 0 14 14" fill="none">
                                                         <path d="M3 8L6 11L11 3.5" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
                                                     </svg>
@@ -165,18 +192,25 @@ export const AddDetailsModal = (props : AddDetailsModalProps) => {
                                 }
                             </div>
                         </div>
-                        <div className="flex justify-end">
-                            <button className="text-mywhite bg-primary px-2 py-1 rounded-sm" onClick={onNextStage}>NEXT</button>
-                        </div>
+                        {
+                            selectedKeys.length > 0 ? (
+                                <div className="flex justify-end">
+                                    <button className="text-mywhite bg-primary px-2 py-1 rounded-sm" onClick={onNextStage}>NEXT</button>
+                                </div>
+                            ) : null
+                        }
                     </div>
                 ) : null
             }
             {
                 stage == 1 ? (
                     <>
+                    <div className="flex flex-rwo justify-end">
+                        <button className="text-darkest bg-grey px-2 py-1 rounded" onClick={() => setStage(0)}>Back</button>
+                    </div>
                         <form>
-                            <p className="text-mywhite">Title</p>
-                            <input className="text-black bg-gray-200 p-1" value={title} onChange={(e) => setTitle(e.target.value)} />
+                            <p className="text-mywhite">Data Item Title</p>
+                            <input className="text-mywhite bg-dark p-1" value={title} onChange={(e) => setTitle(e.target.value)} />
                             <p className="text-black">Items</p>
                             <div className="flex flex-col border-solid border-black">
                                 <table className="min-w-full divide-y divide-white border border-grey bg-black">
@@ -205,7 +239,7 @@ export const AddDetailsModal = (props : AddDetailsModalProps) => {
                                     </tbody>
                                 </table>
                                 <div className="flex justify-end p-2 pt-4">
-                                    <button className="bg-primary px-4 text-white rounded-sm" onClick={(e) => addItem(e)}>Add</button>
+                                    <button className="bg-primary px-4 text-white rounded-sm" onClick={(e) => addItem(e)}>Add New Item</button>
                                 </div>
                             </div>
                 
