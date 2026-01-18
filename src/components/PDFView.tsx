@@ -56,14 +56,12 @@ export const ReplaceVariables = (section: ResumeSection) => {
 };
 
 export const PDFView = (props : PDFViewProps) => {
-
+  if (!props.pdfUrl) return null;
   return (
     <div>
-    {props.pdfUrl && (
-      <Document className="bg-black overflow-hidden" file={props.pdfUrl}>
+      <Document key={props.pdfUrl} className="bg-black overflow-hidden" file={props.pdfUrl}>
         <Page pageNumber={1}  className="overflow-hidden" />
       </Document>
-    )}
     </div>
   );
 }
