@@ -1,9 +1,20 @@
 # TYPELY
 
-<img width="1919" height="992" alt="Image" src="https://github.com/user-attachments/assets/f894a537-48f9-49e5-a284-1bf3060bf821" />
+<video src="https://github.com/user-attachments/assets/0d44c691-90bb-49ce-b8a9-5e962a6dcd15"
+       controls
+       autoplay
+       loop
+       muted
+       playsinline
+       width="600">
+</video>
+<!-- <img width="1919" height="992" alt="Image" src="https://github.com/user-attachments/assets/f894a537-48f9-49e5-a284-1bf3060bf821" /> -->
 
 resume builder engine -> manage your data and rendering seperately in composable blocks <br />
-try it out: [https://typely.seth-typely.workers.dev/](https://typely.seth-typely.workers.dev/)
+<hr />
+
+### Try it out: [https://typely.seth-typely.workers.dev/](https://typely.seth-typely.workers.dev/)
+<hr />
 
 ## Tech Stack
 
