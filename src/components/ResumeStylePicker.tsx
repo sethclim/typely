@@ -23,88 +23,41 @@ export default function ResumeStylePicker(props: ResumeStylePickerProps) {
     "ring-2 ring-purple-500 bg-white/20 scale-[1.02]";
 
   return (
-    <div className="w-full max-w-5xl mx-auto py-10">
-      <h2 className="text-2xl font-semibold text-white mb-6">
-        Choose your resume style
-      </h2>
+   <div className="w-full max-w-[1700px] mx-auto py-10">
+    <h2 className="text-2xl font-semibold text-white mb-6">
+      Choose your resume style
+    </h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {
-          /* Engineering */
-          props.themes.map(theme => (
-            <div
-              id={`${theme.name}-card`}
-              onClick={() => pick(theme)}
-              className={`${baseCard} ${
-                (selected === theme.name) ? selectedRing : ""
-              }`}
-            >
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-purple-600/20 to-indigo-500/10 pointer-events-none" />
-
-              <h3 className="text-xl font-semibold text-white mb-2">
-                {theme.name}
-              </h3>
-              <p className="text-sm text-white/70">
-                Clean, structured, technical-forward layout. Perfect for software,
-                data, and systems roles.
-              </p>
-
-              <ul className="mt-4 space-y-2 text-sm text-white/80">
-                <li>• Dense skill sections</li>
-                <li>• Minimal color</li>
-                <li>• Emphasis on projects & tooling</li>
-              </ul>
-            </div>
-          ))
-        }
-
-
-        {/* Sales */}
-        {/* <div
-          onClick={() => pick("sales")}
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {props.themes.map(theme => (
+        <div
+          key={theme.name}
+          id={`${theme.name}-card`}
+          onClick={() => pick(theme)}
           className={`${baseCard} ${
-            selected === "sales" ? selectedRing : ""
-          }`}
+            selected === theme.name ? selectedRing : ""
+          } relative overflow-hidden`}
         >
-          <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-rose-500/20 to-orange-400/10 pointer-events-none" />
+          {/* glow / background */}
+          <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-purple-600/20 to-indigo-500/10 pointer-events-none z-0" />
 
-          <h3 className="text-xl font-semibold text-white mb-2">
-            Sales
-          </h3>
-          <p className="text-sm text-white/70">
-            Bold, outcome-driven layout highlighting revenue, metrics, and wins.
-          </p>
+          {/* content */}
+          <div className="relative z-10">
+            <h3 className="text-xl font-semibold text-white mb-2">
+              {theme.name}
+            </h3>
 
-          <ul className="mt-4 space-y-2 text-sm text-white/80">
-            <li>• KPI-first sections</li>
-            <li>• Strong callouts</li>
-            <li>• Achievement-heavy bullets</li>
-          </ul>
-        </div> */}
-
-        {/* Design */}
-        {/* <div
-          onClick={() => pick("design")}
-          className={`${baseCard} ${
-            selected === "design" ? selectedRing : ""
-          }`}
-        >
-          <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-fuchsia-500/20 to-cyan-400/10 pointer-events-none" />
-
-          <h3 className="text-xl font-semibold text-white mb-2">
-            Design
-          </h3>
-          <p className="text-sm text-white/70">
-            Visual-first layout with creative spacing and typography emphasis.
-          </p>
-
-          <ul className="mt-4 space-y-2 text-sm text-white/80">
-            <li>• Strong typography</li>
-            <li>• Portfolio-ready spacing</li>
-            <li>• Brand-focused layout</li>
-          </ul>
-        </div> */}
-      </div>
+            <img
+              className="w-full h-auto block"
+              src={`/${theme.name}.webp`}
+                srcSet={`/${theme.name}@2x.webp 2x`}
+              alt={`/${theme.name}`}
+            />
+          </div>
+        </div>
+      ))}
     </div>
+  </div>
+
   );
 }
