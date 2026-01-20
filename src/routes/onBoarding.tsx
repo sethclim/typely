@@ -76,9 +76,9 @@ function RouteComponent() {
                     stage == 0 ? (
                         <>
                             <ResumeStylePicker onSelect={onSelect} themes={themes} /> 
-                            <div className='w-full h-full flex flex-row justify-end'>
+                            <div className='w-full h-full flex flex-row justify-center'>
                             {
-                                selected ? <button id="onboarding-next" className='bg-green-500 p-2 text-white rounded-sm' onClick={() => setStage(1)}>Next</button> : null
+                                selected ? <button id="onboarding-next" className='bg-primary/80 px-4 py-2 text-white text-lg rounded-sm hover:bg-primary' onClick={() => setStage(1)}>NEXT</button> : null
                             }
                             </div>
                         </>

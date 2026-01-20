@@ -47,6 +47,7 @@ export const OutputView = (props : OutputViewProps) => {
     const downloadPDF = () => {
         if(pdfUrl === null || props.resume === undefined || props.resume === null)
             return
+
         const a = document.createElement('a');
         a.href = pdfUrl;
         a.download = `${props.resume.name}.pdf`;
