@@ -14,6 +14,7 @@ import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as OnBoardingRouteImport } from './routes/onBoarding'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as FaqRouteImport } from './routes/faq'
+import { Route as DemoRouteImport } from './routes/demo'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ThemeEditorThemeIdRouteImport } from './routes/theme-editor.$themeId'
@@ -43,6 +44,11 @@ const FaqRoute = FaqRouteImport.update({
   path: '/faq',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DemoRoute = DemoRouteImport.update({
+  id: '/demo',
+  path: '/demo',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppRoute = AppRouteImport.update({
   id: '/app',
   path: '/app',
@@ -62,6 +68,7 @@ const ThemeEditorThemeIdRoute = ThemeEditorThemeIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRoute
+  '/demo': typeof DemoRoute
   '/faq': typeof FaqRoute
   '/login': typeof LoginRoute
   '/onBoarding': typeof OnBoardingRoute
@@ -72,6 +79,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/app': typeof AppRoute
+  '/demo': typeof DemoRoute
   '/faq': typeof FaqRoute
   '/login': typeof LoginRoute
   '/onBoarding': typeof OnBoardingRoute
@@ -83,6 +91,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/app': typeof AppRoute
+  '/demo': typeof DemoRoute
   '/faq': typeof FaqRoute
   '/login': typeof LoginRoute
   '/onBoarding': typeof OnBoardingRoute
@@ -95,6 +104,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/app'
+    | '/demo'
     | '/faq'
     | '/login'
     | '/onBoarding'
@@ -105,6 +115,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/app'
+    | '/demo'
     | '/faq'
     | '/login'
     | '/onBoarding'
@@ -115,6 +126,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/app'
+    | '/demo'
     | '/faq'
     | '/login'
     | '/onBoarding'
@@ -126,6 +138,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRoute
+  DemoRoute: typeof DemoRoute
   FaqRoute: typeof FaqRoute
   LoginRoute: typeof LoginRoute
   OnBoardingRoute: typeof OnBoardingRoute
@@ -171,6 +184,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FaqRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/demo': {
+      id: '/demo'
+      path: '/demo'
+      fullPath: '/demo'
+      preLoaderRoute: typeof DemoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/app': {
       id: '/app'
       path: '/app'
@@ -198,6 +218,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRoute,
+  DemoRoute: DemoRoute,
   FaqRoute: FaqRoute,
   LoginRoute: LoginRoute,
   OnBoardingRoute: OnBoardingRoute,

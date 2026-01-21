@@ -84,6 +84,8 @@ export function ResumeIntakeForm(props: ResumeIntakeFormProps) {
 
     return (
         <div className="min-h-screen w-full bg-gradient-to-br from-black via-zinc-900 to-purple-950 text-white p-10">
+            <h3 className="text-3xl py-2 text-mywhite">Welcome!</h3>
+            <p className="text-grey">Get started by adding your data</p>
             <div className="max-w-4xl mx-auto space-y-10">
                 <PersonalSection 
                     fname={fname} 
