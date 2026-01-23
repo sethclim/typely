@@ -9,8 +9,8 @@ import {
     SortableContext
 } from '@dnd-kit/sortable';
 import { RESUME_CONFIG_TABLE } from "../db/tables";
-import { Link } from "@tanstack/react-router";
-// import { useThemes } from "../context/themes/ThemesContext";
+import { Link, useRouterState } from "@tanstack/react-router";
+
 import { Dropdown } from "./Dropdown";
 import { useDataContext } from "../context/data/DataContext";
 
@@ -117,6 +117,11 @@ export const CurrentResumeBlockViewer = (props : CurrentResumeBlockViewerProps) 
     }
 
 
+    const { location } = useRouterState();
+
+    const isDemo = location.pathname.startsWith('/demo');
+    const base = isDemo ? '/demo' : '';
+
 
     return (
         <div className='flex flex-col gap-4 p-4'>
@@ -131,7 +136,7 @@ export const CurrentResumeBlockViewer = (props : CurrentResumeBlockViewerProps) 
                             onSelected={(v) => changeThemeForResume(v)} />
                         {
                             props?.resume?.theme ? 
-                            <Link   to="/theme-editor/$themeId"
+                            <Link   to={`${base}/theme-editor/$themeId`}
                                     params={{ themeId: props.resume.theme.id.toString() }} >
                                 <PencilIcon className="h-4 w-4 text-grey hover:text-mywhite cursor-pointer" />
                             </Link> : null

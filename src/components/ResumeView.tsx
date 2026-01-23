@@ -1,7 +1,6 @@
 
 
 import { useEffect, useState } from 'react'
-
 import { useResume } from '../context/resume/ResumeContext'
 
 import Modal from "./Modal";

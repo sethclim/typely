@@ -1,5 +1,5 @@
 import { Editor, Monaco } from '@monaco-editor/react'
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute, Link, Route } from '@tanstack/react-router'
 import { Header } from '../components/Header';
 import { Sidebar } from '../components/Sidebar';
 import { Footer } from '../components/Footer';
@@ -9,7 +9,6 @@ import { Template, Theme } from '../types';
 import { myLang } from '../components/editor/monaco/latex';
 import type * as monacoEditor from "monaco-editor";
 import { useDataContext } from '../context/data/DataContext';
-
 
 const mapThemeRowToTheme = (themeRow : {
     id: number;
@@ -33,10 +32,6 @@ const mapThemeRowToTheme = (themeRow : {
   }
   return t
 }
-
-export const Route = createFileRoute('/theme-editor/$themeId')({
-  component: RouteComponent,
-})
 
 function useSaveShortcut(onSave: () => void) {
   useEffect(() => {
@@ -66,8 +61,12 @@ type ActiveCode = {
   content: string
 }
 
-function RouteComponent() {
-    const { themeId } = Route.useParams()
+export type ThemeEditorProps = {
+    themeId : string
+}
+
+export const ThemeEditor = (props : ThemeEditorProps) => {
+    // const { themeId } = props.Route.useParams()
     const [expanded, setExpanded] = useState(true);
     const [templates, setTemplates] = useState<Array<Template>>();
     const [theme, setTheme] = useState<Theme>();
@@ -138,7 +137,7 @@ function RouteComponent() {
 
     const fetchDataForLib = async () => {
         // await DB.ready;
-        const data = inData.repositories.theme.get(parseInt(themeId))
+        const data = inData.repositories.theme.get(parseInt(props.themeId))
         const theme = mapThemeRowToTheme(data)
         setTheme(theme)
         

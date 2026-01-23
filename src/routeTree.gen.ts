@@ -16,11 +16,12 @@ import { Route as DemoRouteRouteImport } from './routes/demo/route'
 import { Route as AppRouteRouteImport } from './routes/_app/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DemoIndexRouteImport } from './routes/demo/index'
-import { Route as ThemeEditorThemeIdRouteImport } from './routes/theme-editor.$themeId'
 import { Route as DemoSettingsRouteImport } from './routes/demo/settings'
 import { Route as AppSettingsRouteImport } from './routes/_app/settings'
 import { Route as AppOnBoardingRouteImport } from './routes/_app/onBoarding'
 import { Route as AppAppRouteImport } from './routes/_app/app'
+import { Route as DemoThemeEditorThemeIdRouteImport } from './routes/demo/theme-editor.$themeId'
+import { Route as AppThemeEditorThemeIdRouteImport } from './routes/_app/theme-editor.$themeId'
 
 const PricingRoute = PricingRouteImport.update({
   id: '/pricing',
@@ -56,11 +57,6 @@ const DemoIndexRoute = DemoIndexRouteImport.update({
   path: '/',
   getParentRoute: () => DemoRouteRoute,
 } as any)
-const ThemeEditorThemeIdRoute = ThemeEditorThemeIdRouteImport.update({
-  id: '/theme-editor/$themeId',
-  path: '/theme-editor/$themeId',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const DemoSettingsRoute = DemoSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -81,6 +77,16 @@ const AppAppRoute = AppAppRouteImport.update({
   path: '/app',
   getParentRoute: () => AppRouteRoute,
 } as any)
+const DemoThemeEditorThemeIdRoute = DemoThemeEditorThemeIdRouteImport.update({
+  id: '/theme-editor/$themeId',
+  path: '/theme-editor/$themeId',
+  getParentRoute: () => DemoRouteRoute,
+} as any)
+const AppThemeEditorThemeIdRoute = AppThemeEditorThemeIdRouteImport.update({
+  id: '/theme-editor/$themeId',
+  path: '/theme-editor/$themeId',
+  getParentRoute: () => AppRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -92,8 +98,9 @@ export interface FileRoutesByFullPath {
   '/onBoarding': typeof AppOnBoardingRoute
   '/settings': typeof AppSettingsRoute
   '/demo/settings': typeof DemoSettingsRoute
-  '/theme-editor/$themeId': typeof ThemeEditorThemeIdRoute
   '/demo/': typeof DemoIndexRoute
+  '/theme-editor/$themeId': typeof AppThemeEditorThemeIdRoute
+  '/demo/theme-editor/$themeId': typeof DemoThemeEditorThemeIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -104,8 +111,9 @@ export interface FileRoutesByTo {
   '/onBoarding': typeof AppOnBoardingRoute
   '/settings': typeof AppSettingsRoute
   '/demo/settings': typeof DemoSettingsRoute
-  '/theme-editor/$themeId': typeof ThemeEditorThemeIdRoute
   '/demo': typeof DemoIndexRoute
+  '/theme-editor/$themeId': typeof AppThemeEditorThemeIdRoute
+  '/demo/theme-editor/$themeId': typeof DemoThemeEditorThemeIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -119,8 +127,9 @@ export interface FileRoutesById {
   '/_app/onBoarding': typeof AppOnBoardingRoute
   '/_app/settings': typeof AppSettingsRoute
   '/demo/settings': typeof DemoSettingsRoute
-  '/theme-editor/$themeId': typeof ThemeEditorThemeIdRoute
   '/demo/': typeof DemoIndexRoute
+  '/_app/theme-editor/$themeId': typeof AppThemeEditorThemeIdRoute
+  '/demo/theme-editor/$themeId': typeof DemoThemeEditorThemeIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -134,8 +143,9 @@ export interface FileRouteTypes {
     | '/onBoarding'
     | '/settings'
     | '/demo/settings'
-    | '/theme-editor/$themeId'
     | '/demo/'
+    | '/theme-editor/$themeId'
+    | '/demo/theme-editor/$themeId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -146,8 +156,9 @@ export interface FileRouteTypes {
     | '/onBoarding'
     | '/settings'
     | '/demo/settings'
-    | '/theme-editor/$themeId'
     | '/demo'
+    | '/theme-editor/$themeId'
+    | '/demo/theme-editor/$themeId'
   id:
     | '__root__'
     | '/'
@@ -160,8 +171,9 @@ export interface FileRouteTypes {
     | '/_app/onBoarding'
     | '/_app/settings'
     | '/demo/settings'
-    | '/theme-editor/$themeId'
     | '/demo/'
+    | '/_app/theme-editor/$themeId'
+    | '/demo/theme-editor/$themeId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -171,7 +183,6 @@ export interface RootRouteChildren {
   FaqRoute: typeof FaqRoute
   LoginRoute: typeof LoginRoute
   PricingRoute: typeof PricingRoute
-  ThemeEditorThemeIdRoute: typeof ThemeEditorThemeIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -225,13 +236,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DemoIndexRouteImport
       parentRoute: typeof DemoRouteRoute
     }
-    '/theme-editor/$themeId': {
-      id: '/theme-editor/$themeId'
-      path: '/theme-editor/$themeId'
-      fullPath: '/theme-editor/$themeId'
-      preLoaderRoute: typeof ThemeEditorThemeIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/demo/settings': {
       id: '/demo/settings'
       path: '/settings'
@@ -260,6 +264,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAppRouteImport
       parentRoute: typeof AppRouteRoute
     }
+    '/demo/theme-editor/$themeId': {
+      id: '/demo/theme-editor/$themeId'
+      path: '/theme-editor/$themeId'
+      fullPath: '/demo/theme-editor/$themeId'
+      preLoaderRoute: typeof DemoThemeEditorThemeIdRouteImport
+      parentRoute: typeof DemoRouteRoute
+    }
+    '/_app/theme-editor/$themeId': {
+      id: '/_app/theme-editor/$themeId'
+      path: '/theme-editor/$themeId'
+      fullPath: '/theme-editor/$themeId'
+      preLoaderRoute: typeof AppThemeEditorThemeIdRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
   }
 }
 
@@ -267,12 +285,14 @@ interface AppRouteRouteChildren {
   AppAppRoute: typeof AppAppRoute
   AppOnBoardingRoute: typeof AppOnBoardingRoute
   AppSettingsRoute: typeof AppSettingsRoute
+  AppThemeEditorThemeIdRoute: typeof AppThemeEditorThemeIdRoute
 }
 
 const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppAppRoute: AppAppRoute,
   AppOnBoardingRoute: AppOnBoardingRoute,
   AppSettingsRoute: AppSettingsRoute,
+  AppThemeEditorThemeIdRoute: AppThemeEditorThemeIdRoute,
 }
 
 const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
@@ -282,11 +302,13 @@ const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
 interface DemoRouteRouteChildren {
   DemoSettingsRoute: typeof DemoSettingsRoute
   DemoIndexRoute: typeof DemoIndexRoute
+  DemoThemeEditorThemeIdRoute: typeof DemoThemeEditorThemeIdRoute
 }
 
 const DemoRouteRouteChildren: DemoRouteRouteChildren = {
   DemoSettingsRoute: DemoSettingsRoute,
   DemoIndexRoute: DemoIndexRoute,
+  DemoThemeEditorThemeIdRoute: DemoThemeEditorThemeIdRoute,
 }
 
 const DemoRouteRouteWithChildren = DemoRouteRoute._addFileChildren(
@@ -300,7 +322,6 @@ const rootRouteChildren: RootRouteChildren = {
   FaqRoute: FaqRoute,
   LoginRoute: LoginRoute,
   PricingRoute: PricingRoute,
-  ThemeEditorThemeIdRoute: ThemeEditorThemeIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
