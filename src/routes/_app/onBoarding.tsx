@@ -1,15 +1,15 @@
 import { createFileRoute } from '@tanstack/react-router'
-import ResumeStylePicker from '../components/ResumeStylePicker'
+import ResumeStylePicker from '../../components/ResumeStylePicker'
 import { useEffect, useState } from 'react'
-import { ResumeIntakeForm } from '../components/ResumeIntakeForm'
+import { ResumeIntakeForm } from '../../components/ResumeIntakeForm'
 // import { DB } from '../db'
 
-import { Template, Theme } from '../types'
-import { TemplateRow } from '../db/types'
-import { useDataContext } from '../context/data/DataContext'
+import { Template, Theme } from '../../types'
+import { TemplateRow } from '../../db/types'
+import { useDataContext } from '../../context/data/DataContext'
 // import { DataProvider } from '../context/data/DataProvider'
 
-export const Route = createFileRoute('/onBoarding')({
+export const Route = createFileRoute('/_app/onBoarding')({
   component: RouteComponent,
 })
 

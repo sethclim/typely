@@ -9,7 +9,6 @@ import { Template, Theme } from '../types';
 import { myLang } from '../components/editor/monaco/latex';
 import type * as monacoEditor from "monaco-editor";
 import { useDataContext } from '../context/data/DataContext';
-// import { ThemeDataRow } from '../db/types';
 
 
 const mapThemeRowToTheme = (themeRow : {

@@ -1,11 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Header } from '../components/Header'
-import { Footer } from '../components/Footer'
+import { Header } from '../../components/Header'
+import { Footer } from '../../components/Footer'
 import { useEffect, useState } from 'react'
-import { databaseExists, loadFile } from '../services/OPFS'
-import { useDataContext } from '../context/data/DataContext'
+import { databaseExists, loadFile } from '../../services/OPFS'
+import { useDataContext } from '../../context/data/DataContext'
 
-export const Route = createFileRoute('/settings')({
+export const Route = createFileRoute('/_app/settings')({
   component: RouteComponent,
 })
 
