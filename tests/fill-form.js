@@ -56,13 +56,13 @@ import fs from "fs/promises";
         await page.click('#job-add-btn');
         await page.fill(`#exp-company-input-${i}`, exp["company"]);
         await page.fill(`#exp-title-input-${i}`,  exp["title"]);
-        await page.fill(`#exp-start-date-input-${i}`, exp["start-date"]);
-        await page.fill(`#exp-end-date-input-${i}`, exp["end-date"]);
+        await page.fill(`#exp-start-date-input-${i}`, exp["startDate"]);
+        await page.fill(`#exp-end-date-input-${i}`, exp["endDate"]);
         await page.fill(`#exp-location-input-${i}`,  exp["location"]);
-        await page.fill(`#exp-point-one-input-${i}`, exp["point1"]);
-        await page.fill(`#exp-point-two-input-${i}`,  exp["point2"]);
-        await page.fill(`#exp-point-three-input-${i}`, exp["point3"]);
-        await page.fill(`#exp-point-four-input-${i}`,  exp["point4"]);
+        await page.fill(`#exp-point-one-input-${i}`, exp["pointOne"]);
+        await page.fill(`#exp-point-two-input-${i}`,  exp["pointTwo"]);
+        await page.fill(`#exp-point-three-input-${i}`, exp["pointThree"]);
+        await page.fill(`#exp-point-four-input-${i}`,  exp["pointFour"]);
 
     }
 
@@ -71,10 +71,10 @@ import fs from "fs/promises";
         await page.click('#project-add-btn');
 
         await page.fill(`#proj-title-input-${i}`, project.title);
-        await page.fill(`#proj-point-one-input-${i}`, project.point1);
-        await page.fill(`#proj-point-two-input-${i}`, project.point2);
-        await page.fill(`#proj-point-three-input-${i}`, project.point3);
-        await page.fill(`#proj-point-four-input-${i}`, project.point4);
+        await page.fill(`#proj-point-one-input-${i}`, project.pointOne);
+        await page.fill(`#proj-point-two-input-${i}`, project.pointTwo);
+        await page.fill(`#proj-point-three-input-${i}`, project.pointThree);
+        await page.fill(`#proj-point-four-input-${i}`, project.pointFour);
     }
 
     for (let i = 0; i < data.education.length; i++) {
@@ -84,8 +84,8 @@ import fs from "fs/promises";
         await page.fill(`#edu-school-input-${i}`, edu.school);
         await page.fill(`#edu-program-input-${i}`, edu.program);
         await page.fill(`#edu-location-input-${i}`, edu.location);
-        await page.fill(`#edu-start-date-input-${i}`, edu["start-date"]);
-        await page.fill(`#edu-end-date-input-${i}`, edu["end-date"]);
+        await page.fill(`#edu-start-date-input-${i}`, edu["startDate"]);
+        await page.fill(`#edu-end-date-input-${i}`, edu["endDate"]);
         await page.fill(`#edu-gpa-input-${i}`, edu.gpa);
     }
 

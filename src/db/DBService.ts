@@ -1,41 +1,43 @@
 import initSqlJs from "sql.js";
-import { InsertAllTemplates } from "../helpers/InsertAllTemplates";
+// import { InsertAllTemplates } from "../helpers/InsertAllTemplates";
 import { SQLiteAutoBackupService } from "./backupService";
 import { drizzle, SQLJsDatabase } from "drizzle-orm/sql-js";
 import { migrate } from "./migrator";
-import { ThemeTable } from "./tables";
+// import { ThemeTable } from "./tables";
+// import { ThemeTable } from "./tables";
 
 type Listener = () => void;
 
 export class DBService {
     storageKey: string | null = null;
     _rawDB: any;
-    db: SQLJsDatabase<Record<string, never>> | null;
+    db!: SQLJsDatabase<Record<string, never>>;
     SQL: any;
     ready!: Promise<boolean>;
     tablesReady!: Promise<boolean>;
 
     private tableListeners: Record<string, Listener[]> = {};
 
-    constructor() {
+    constructor(storageKey: string = "myDb") {
+        this.storageKey = storageKey;
         this._rawDB = null;
-        this.db = null;
+        // this.db = null;
         this.SQL = null;
         // this.ready = this.init();
         this.tableListeners = {};
         // this.tablesReady = this.ready.then(() => this.initTables());
     }
 
-    async init(storageKey: string = "myDb") {
-        console.log("INIT DB " + storageKey);
-        this.storageKey = storageKey;
+    async init() {
+        // console.log("INIT DB " + storageKey);
+        // this.storageKey = storageKey;
         this.SQL = await initSqlJs({
             locateFile: (file) => `https://sql.js.org/dist/${file}`,
         });
 
         console.log("INIT DATA SERVICE ");
 
-        const savedData = localStorage.getItem(this.storageKey);
+        const savedData = localStorage.getItem(this.storageKey!);
         this._rawDB = savedData
             ? new this.SQL.Database(new Uint8Array(JSON.parse(savedData)))
             : new this.SQL.Database();
@@ -45,8 +47,8 @@ export class DBService {
 
         this.db = drizzle(this._rawDB);
         this.ready = Promise.resolve(true);
-        await this.initTables();
-        this.tablesReady = Promise.resolve(true);
+        await this.doMigration();
+        // this.tablesReady = Promise.resolve(true);
 
         return this.db;
     }
@@ -59,7 +61,7 @@ export class DBService {
         this.db = new this.SQL.Database(data);
     };
 
-    private async initTables() {
+    private async doMigration() {
         console.log("INIT TABLES");
 
         if (!this.db) throw Error("MISSING DB");
@@ -67,9 +69,6 @@ export class DBService {
         await migrate(this.db);
 
         this.save();
-
-        const res = ThemeTable.getAll();
-        if (res.length <= 0) await InsertAllTemplates();
     }
 
     save() {

@@ -5,7 +5,8 @@ import { useRouter } from "@tanstack/react-router";
 import { Education, IntakeInfo, Job, Personal, Project, SkillPoint } from "./types"
 import { EducationSection, ExperienceSection, PersonalSection, ProjectsSection, SkillsSection } from "./sections";
 import { Theme } from "../../types";
-import { useThemes } from "../../context/themes/ThemesContext";
+// import { useThemes } from "../../context/themes/ThemesContext";
+import { useDataContext } from "../../context/data/DataContext";
 
 export type ResumeIntakeFormProps = {
     theme : Theme
@@ -28,7 +29,9 @@ export function ResumeIntakeForm(props: ResumeIntakeFormProps) {
     const [projects, setProjects] = useState<Project[]>([]);
     const [education, setEducation] = useState<Education[]>([]);
 
-    const { themes } = useThemes() 
+    // const { themes } = useThemes() 
+
+    const {repositories, themes} = useDataContext();
 
     const addJob = () => setJobs([...jobs, { company: "", title: "", startDate: "", endDate: "", location : "", pointOne: "", pointTwo : "", pointThree: "", pointFour: "" }]);
 
@@ -63,7 +66,7 @@ export function ResumeIntakeForm(props: ResumeIntakeFormProps) {
             theme: props.theme
         }
 
-        CreateDemoResume(info, themes)
+        CreateDemoResume(repositories, info, themes)
 
         router.navigate({
             to: '/app',

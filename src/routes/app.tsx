@@ -6,5 +6,8 @@ export const Route = createFileRoute('/app')({
 })
 
 function HomeComponent() {
-  return Application();
+  return (
+      <Application />
+  )
+  
 }

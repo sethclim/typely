@@ -1,9 +1,9 @@
-  import { createFileRoute, Link } from '@tanstack/react-router'
-  import { useEffect, useState } from 'react';
-  import { ResumeDataItemTable } from '../db/tables';
-  import ResumeSyncDemo from '../components/demos/ResumeSyncDemo';
+import { useEffect, useState } from 'react';
+import { createFileRoute, Link } from '@tanstack/react-router'
+import ResumeSyncDemo from '../components/demos/ResumeSyncDemo';
 import ThemeSwitcherDemo from '../components/demos/ThemeSwitcherDemo';
 import AutoReorderDemo from '../components/demos/DragReorderDemo';
+import { useDataContext } from '../context/data/DataContext';
 
   export const Route = createFileRoute('/')({
     component: RouteComponent,
@@ -12,8 +12,10 @@ import AutoReorderDemo from '../components/demos/DragReorderDemo';
   export const Hero = () => {
     const [onboarded, setOnboarded] = useState(false)
 
+    const {repositories} = useDataContext()
+
     useEffect(()=>{
-      const res = ResumeDataItemTable.getAll();
+      const res = repositories.resumeDataItem.getAll();
       const onBoarded = res.length > 0
       setOnboarded(onBoarded)
     },[])

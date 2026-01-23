@@ -1,9 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { Header } from '../components/Header'
 import { Footer } from '../components/Footer'
-import { DB } from '../db'
 import { useEffect, useState } from 'react'
 import { databaseExists, loadFile } from '../services/OPFS'
+import { useDataContext } from '../context/data/DataContext'
 
 export const Route = createFileRoute('/settings')({
   component: RouteComponent,
@@ -14,6 +14,9 @@ function RouteComponent() {
     const [file, setFile] = useState<Uint8Array | null>(null)
     const [oPFSSaveExists, setOPFSSaveExists] = useState(false)
 
+
+    const { dbService } = useDataContext()
+
     useEffect(()=>{
         const init = async() => {
            const res = await databaseExists()
@@ -23,7 +26,7 @@ function RouteComponent() {
     },[])
 
     const backUpSQLite = () => {
-        const data = DB._rawDB?.export();
+        const data = dbService._rawDB?.export();
         const blob = new Blob([data], { type: "application/octet-stream" });
 
         const a = document.createElement("a");
@@ -34,7 +37,7 @@ function RouteComponent() {
 
     const onRestore = async() => {
         if(!file) return
-        DB.restoreDB(file)
+        dbService.restoreDB(file)
     }
 
     const handleFileChange = async (e : any) => {
@@ -52,7 +55,7 @@ function RouteComponent() {
         if (!file) return;
         const arrayBuffer = await file.arrayBuffer()
         const uint8 = new Uint8Array(arrayBuffer);
-        DB.restoreDB(uint8)
+        dbService.restoreDB(uint8)
     }
 
     return (

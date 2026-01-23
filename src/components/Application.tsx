@@ -1,13 +1,12 @@
 import { useState, useEffect } from "react";
 import { ResumeProvider } from "../context/resume/ResumeProvider";
-import { DB } from "../db";
-import { ResumeConfigTable } from "../db/tables";
 import { ResumeConfigRow } from "../db/types";
 import { Footer } from "./Footer";
 import { Header } from "./Header";
 import { ResumeSidebarContent } from "./ResumeSidebarContent";
 import { ResumeView } from "./ResumeView";
 import { Sidebar } from "./Sidebar";
+import { useDataContext } from "../context/data/DataContext";
 
   
   export const Application = () => {
@@ -16,19 +15,20 @@ import { Sidebar } from "./Sidebar";
 
     const [expanded, setExpanded] = useState(false);
 
+    const {repositories} = useDataContext();
+
     const fetchResumes = () => {
-        const rows = ResumeConfigTable.getAllResumeConfig();
+        const rows = repositories.resumeConfig.getAllResumeConfig();
         setResumes(rows)
     }
 
     useEffect(() => {
         const init = async () => {
-            await DB.ready;
             fetchResumes();
         }
-        const unsubscribe = ResumeConfigTable.subscribe(fetchResumes);
+        const unsubscribe = repositories.resumeConfig.subscribe(fetchResumes);
         init();
-        return () => unsubscribe();
+        return unsubscribe;
     }, []);
 
   return (

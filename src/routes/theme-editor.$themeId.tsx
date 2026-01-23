@@ -6,10 +6,9 @@ import { Footer } from '../components/Footer';
 import { useEffect, useState } from 'react';
 import { mapRowToTemplate } from '../components/ComponentLibrary';
 import { Template, Theme } from '../types';
-import { TemplateTable, ThemeTable } from '../db/tables';
-import { DB } from '../db';
 import { myLang } from '../components/editor/monaco/latex';
 import type * as monacoEditor from "monaco-editor";
+import { useDataContext } from '../context/data/DataContext';
 // import { ThemeDataRow } from '../db/types';
 
 
@@ -78,6 +77,8 @@ function RouteComponent() {
     const [activeCode, setActiveCode]  = useState<ActiveCode | undefined>(undefined)
     const [activeChanges, setActiveChanges] = useState<string | undefined>(undefined)
 
+    const inData = useDataContext();
+
     const saveChange = () => {
         if(!activeChanges)
           return
@@ -88,13 +89,13 @@ function RouteComponent() {
             return
           
           console.log('Saving Template...');
-          TemplateTable.update(template.id, activeChanges)
+          inData.repositories.template.update(template.id, activeChanges)
         }
         else if(activeCode?.type === CodeType.Theme){
           if(!theme?.id)
             return
           console.log('Saving Theme...');
-          ThemeTable.update(theme.id, activeChanges)
+          inData.repositories.template.update(theme.id, activeChanges)
         }
     }
 
@@ -137,12 +138,12 @@ function RouteComponent() {
 
 
     const fetchDataForLib = async () => {
-        await DB.ready;
-        const data = ThemeTable.get(parseInt(themeId))
+        // await DB.ready;
+        const data = inData.repositories.theme.get(parseInt(themeId))
         const theme = mapThemeRowToTheme(data)
         setTheme(theme)
         
-        const templateData = TemplateTable.getByThemeId(theme.id);
+        const templateData = inData.repositories.template.getByThemeId(theme.id);
         const hydratedTemplates = templateData.map((item) => mapRowToTemplate(item))
 
         setTemplates(hydratedTemplates)
@@ -158,11 +159,11 @@ function RouteComponent() {
 
     useEffect(() => {
             fetchDataForLib();
-            const unsubscribeTemplateTable = TemplateTable.subscribe(fetchDataForLib);
-            const unsubscribeThemeTable = ThemeTable.subscribe(fetchDataForLib);
+            const unsubscribeTemplateTable = inData.repositories.template.subscribe(fetchDataForLib);
+            const unsubscribeThemeTable = inData.repositories.theme.subscribe(fetchDataForLib);
             return () => {
-                unsubscribeTemplateTable();
-                unsubscribeThemeTable();
+                unsubscribeTemplateTable;
+                unsubscribeThemeTable;
             };
         }, []
     )

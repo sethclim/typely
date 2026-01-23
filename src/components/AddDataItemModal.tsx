@@ -1,12 +1,12 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react"
-import { ResumeDataItemTable,  } from '../db/tables';
 
 import Modal from "./Modal";
 import { DataItem, Template } from "../types";
 import { Dropdown } from "./Dropdown";
 import { useResume } from "../context/resume/ResumeContext";
-import { useThemes } from "../context/themes/ThemesContext";
+// import { useThemes } from "../context/themes/ThemesContext";
 import { Checkbox } from '@headlessui/react'
+import { useDataContext } from "../context/data/DataContext";
 
 interface AddDetailsModalProps {
   isOpen: boolean;
@@ -21,7 +21,9 @@ export const AddDetailsModal = (props : AddDetailsModalProps) => {
     const [stage, setStage] = useState(0)
     
     const { resume: myResume } = useResume();
-    const { themes } = useThemes()
+    // const { themes } = useThemes()
+
+    // const {themes} = useDataContext()
     
     const [inUseTemplates, setInUseTemplates] = useState<Template[]>([])
     const [selectedTemplate, setSelectedTemplate] = useState<Template | null>()
@@ -29,6 +31,8 @@ export const AddDetailsModal = (props : AddDetailsModalProps) => {
     const [sTemplateKeys, setSTemplateKeys] = useState<string[]>([])
     const [selectedKeys, setSelectedKeys] = useState<string []>([])
     const [selectAllChecked, setSelectedAllChecked] = useState(false)
+
+    const { repositories, themes } = useDataContext()
 
     useEffect(() => {
         const themeId = myResume?.theme.id
@@ -60,7 +64,7 @@ export const AddDetailsModal = (props : AddDetailsModalProps) => {
             return;
 
         if(!props.dataItem){
-            ResumeDataItemTable.insert({
+            repositories.resumeDataItem.insert({
                 title: title,
                 description: "some disc",
                 data: JSON.stringify(items),
@@ -69,7 +73,7 @@ export const AddDetailsModal = (props : AddDetailsModalProps) => {
                 "updated_at" : Date.now().toString(),
             })
         }else{
-            ResumeDataItemTable.update({
+            repositories.resumeDataItem.update({
                 id : props.dataItem.id,
                 title: title,
                 description: "some disc",

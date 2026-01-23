@@ -1,8 +1,8 @@
 import { useState, useRef } from "react";
 import { EllipsisVerticalIcon } from "@heroicons/react/24/solid";
-import { ResumeSectionConfigTable } from "../db/tables";
 import { DeleteModal } from "./DeleteModal";
 import { ResumeSection } from "../types";
+import { useDataContext } from "../context/data/DataContext";
 
 type SectionContextMenuProps = {
     section: ResumeSection;
@@ -15,6 +15,8 @@ export const SectionContextMenu = (props: SectionContextMenuProps) => {
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const [deleteSection, setDeleteSection] = useState<ResumeSection>()
 
+    const { repositories } = useDataContext();
+
     const deleteSectionFromResume = (section: ResumeSection) => {
         // ResumeSectionConfigTable.delete(section_id);
         setDeleteSection(section)
@@ -24,7 +26,7 @@ export const SectionContextMenu = (props: SectionContextMenuProps) => {
 
     const performDeleteAction = () => {
         if(deleteSection)
-            ResumeSectionConfigTable.delete(deleteSection.id)
+            repositories.resumeSectionConfig.delete(deleteSection.id)
     }
 
     return (
