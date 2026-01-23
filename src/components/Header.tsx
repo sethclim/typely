@@ -63,7 +63,7 @@ export const Header = ({expanded, setExpanded, children, bg="bg-darker"} : Heade
                         rounded border bg-darkest shadow-lg
                       "
                     >
-                        <Link to="/app">
+                        <Link to={base == "" ? "/app" : `${base}`}>
                             <ListboxOption
                             value="Profile"
                             className="cursor-pointer px-3 py-2 hover:bg-dark text-mywhite"

@@ -1,5 +1,5 @@
 import { Editor, Monaco } from '@monaco-editor/react'
-import { createFileRoute, Link, Route } from '@tanstack/react-router'
+import { createFileRoute, Link, Route, useRouterState } from '@tanstack/react-router'
 import { Header } from '../components/Header';
 import { Sidebar } from '../components/Sidebar';
 import { Footer } from '../components/Footer';
@@ -74,6 +74,11 @@ export const ThemeEditor = (props : ThemeEditorProps) => {
 
     const [activeCode, setActiveCode]  = useState<ActiveCode | undefined>(undefined)
     const [activeChanges, setActiveChanges] = useState<string | undefined>(undefined)
+
+    const { location } = useRouterState();
+
+    const isDemo = location.pathname.startsWith('/demo');
+    const base = isDemo ? '/demo' : '/app';
 
     const inData = useDataContext();
 
@@ -187,7 +192,7 @@ export const ThemeEditor = (props : ThemeEditorProps) => {
       <>
         <Header expanded={expanded} setExpanded={setExpanded} >
           <div className='w-full flex justify-end items-center pr-30'>
-            <Link to="/app">
+            <Link to={base}>
               <a className='text-grey hover:text-mywhite'>BACK</a>
             </Link>
           </div>
