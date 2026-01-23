@@ -16,7 +16,7 @@ export const InsertAllTemplates = async() =>{
 
         for (const [name, template] of Object.entries(theme.templates)) {
             // console.log(`    ${name}`)
-            TemplateTable.insert({
+           await TemplateTable.insert({
                 "name": `${name} template`,
                 "description": `this is a ${name} template`,
                 "section_type": name,

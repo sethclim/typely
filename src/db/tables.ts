@@ -179,7 +179,7 @@ export const ResumeConfigTable = {
         console.log(`[ResumeConfigTable] resumeId ${resumeId}`);
         const query = getFullResumeQuery(resumeId);
         console.log(`[ResumeConfigTable] query ${query}`);
-        const res = DB.db!.all(query);
+        const res = DB.db?.all(query);
         // const resumeWithTheme = DB.db
         //     ?.select()
         //     .from(resumeConfig)
@@ -271,7 +271,7 @@ export const ResumeSectionConfigTable = {
     updateTemplate: async (
         id: number,
         template_id: number,
-        notify: boolean = true
+        notify: boolean = true,
     ) => {
         if (!id) return;
 
@@ -319,8 +319,8 @@ export const ResumeSectionDataTable = {
             .where(
                 and(
                     eq(resumeSectionData.sectionId, section_id),
-                    eq(resumeSectionData.dataItemId, data_item_id)
-                )
+                    eq(resumeSectionData.dataItemId, data_item_id),
+                ),
             );
         DB.save();
         DB.notifyTable(RESUME_CONFIG_TABLE);

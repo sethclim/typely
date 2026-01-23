@@ -68,7 +68,7 @@ export const ThemesProvider: React.FC<ThemesProviderProps> = ({ children }) => {
             unsubscribe1; 
             unsubscribe2;
         };
-    }, []);
+    }, [DB.tablesReady]);
 
     return (
         <ThemesContext.Provider value={{ themes, refresh: fetchThemes }}>
