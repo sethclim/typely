@@ -1,7 +1,7 @@
 import { ReactNode } from "react"
 import { ChevronDoubleRightIcon } from "@heroicons/react/20/solid"
 import { ChevronDoubleLeftIcon } from "@heroicons/react/20/solid"
-import { Link } from "@tanstack/react-router"
+import { Link, useRouterState } from "@tanstack/react-router"
 import clsx from "clsx"
 import { Listbox, ListboxButton, Portal, ListboxOptions, ListboxOption } from "@headlessui/react"
 import { useUser } from "../context/user/UserContext"
@@ -15,6 +15,11 @@ export type HeaderProps = {
 
 export const Header = ({expanded, setExpanded, children, bg="bg-darker"} : HeaderProps) => {
     const { user } = useUser()
+
+    const { location } = useRouterState();
+
+    const isDemo = location.pathname.startsWith('/demo');
+    const base = isDemo ? '/demo' : '';
 
     return(
         <div className={clsx(["flex w-full min-h-15 p-2 border-b-1 border-grey/20",  bg])}>
@@ -66,7 +71,7 @@ export const Header = ({expanded, setExpanded, children, bg="bg-darker"} : Heade
                                 Home
                             </ListboxOption>
                         </Link>
-                        <Link to="/settings">
+                        <Link   to={`${base}/settings`}>
                             <ListboxOption
                             value="Profile"
                             className="cursor-pointer px-3 py-2 hover:bg-dark text-mywhite"

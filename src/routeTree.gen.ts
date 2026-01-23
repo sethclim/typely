@@ -17,6 +17,7 @@ import { Route as AppRouteRouteImport } from './routes/_app/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DemoIndexRouteImport } from './routes/demo/index'
 import { Route as ThemeEditorThemeIdRouteImport } from './routes/theme-editor.$themeId'
+import { Route as DemoSettingsRouteImport } from './routes/demo/settings'
 import { Route as AppSettingsRouteImport } from './routes/_app/settings'
 import { Route as AppOnBoardingRouteImport } from './routes/_app/onBoarding'
 import { Route as AppAppRouteImport } from './routes/_app/app'
@@ -60,6 +61,11 @@ const ThemeEditorThemeIdRoute = ThemeEditorThemeIdRouteImport.update({
   path: '/theme-editor/$themeId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DemoSettingsRoute = DemoSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => DemoRouteRoute,
+} as any)
 const AppSettingsRoute = AppSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -85,6 +91,7 @@ export interface FileRoutesByFullPath {
   '/app': typeof AppAppRoute
   '/onBoarding': typeof AppOnBoardingRoute
   '/settings': typeof AppSettingsRoute
+  '/demo/settings': typeof DemoSettingsRoute
   '/theme-editor/$themeId': typeof ThemeEditorThemeIdRoute
   '/demo/': typeof DemoIndexRoute
 }
@@ -96,6 +103,7 @@ export interface FileRoutesByTo {
   '/app': typeof AppAppRoute
   '/onBoarding': typeof AppOnBoardingRoute
   '/settings': typeof AppSettingsRoute
+  '/demo/settings': typeof DemoSettingsRoute
   '/theme-editor/$themeId': typeof ThemeEditorThemeIdRoute
   '/demo': typeof DemoIndexRoute
 }
@@ -110,6 +118,7 @@ export interface FileRoutesById {
   '/_app/app': typeof AppAppRoute
   '/_app/onBoarding': typeof AppOnBoardingRoute
   '/_app/settings': typeof AppSettingsRoute
+  '/demo/settings': typeof DemoSettingsRoute
   '/theme-editor/$themeId': typeof ThemeEditorThemeIdRoute
   '/demo/': typeof DemoIndexRoute
 }
@@ -124,6 +133,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/onBoarding'
     | '/settings'
+    | '/demo/settings'
     | '/theme-editor/$themeId'
     | '/demo/'
   fileRoutesByTo: FileRoutesByTo
@@ -135,6 +145,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/onBoarding'
     | '/settings'
+    | '/demo/settings'
     | '/theme-editor/$themeId'
     | '/demo'
   id:
@@ -148,6 +159,7 @@ export interface FileRouteTypes {
     | '/_app/app'
     | '/_app/onBoarding'
     | '/_app/settings'
+    | '/demo/settings'
     | '/theme-editor/$themeId'
     | '/demo/'
   fileRoutesById: FileRoutesById
@@ -220,6 +232,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ThemeEditorThemeIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/demo/settings': {
+      id: '/demo/settings'
+      path: '/settings'
+      fullPath: '/demo/settings'
+      preLoaderRoute: typeof DemoSettingsRouteImport
+      parentRoute: typeof DemoRouteRoute
+    }
     '/_app/settings': {
       id: '/_app/settings'
       path: '/settings'
@@ -261,10 +280,12 @@ const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
 )
 
 interface DemoRouteRouteChildren {
+  DemoSettingsRoute: typeof DemoSettingsRoute
   DemoIndexRoute: typeof DemoIndexRoute
 }
 
 const DemoRouteRouteChildren: DemoRouteRouteChildren = {
+  DemoSettingsRoute: DemoSettingsRoute,
   DemoIndexRoute: DemoIndexRoute,
 }
 
