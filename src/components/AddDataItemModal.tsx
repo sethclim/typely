@@ -11,7 +11,8 @@ import { useDataContext } from "../context/data/DataContext";
 interface AddDetailsModalProps {
   isOpen: boolean;
   setIsOpen : Dispatch<SetStateAction<boolean>>
-  dataItem? : DataItem 
+  dataItem? : DataItem,
+  edit?: boolean
 }
 
 export const AddDetailsModal = (props : AddDetailsModalProps) => {
@@ -21,9 +22,6 @@ export const AddDetailsModal = (props : AddDetailsModalProps) => {
     const [stage, setStage] = useState(0)
     
     const { resume: myResume } = useResume();
-    // const { themes } = useThemes()
-
-    // const {themes} = useDataContext()
     
     const [inUseTemplates, setInUseTemplates] = useState<Template[]>([])
     const [selectedTemplate, setSelectedTemplate] = useState<Template | null>()
@@ -33,6 +31,19 @@ export const AddDetailsModal = (props : AddDetailsModalProps) => {
     const [selectAllChecked, setSelectedAllChecked] = useState(false)
 
     const { repositories, themes } = useDataContext()
+
+    
+    useEffect(() => {
+        if(props.isOpen){
+            setStage(props.edit ? 1 : 0);
+            setTitle(props.dataItem?.title ?? "");
+            setItems(props.dataItem?.data ?? [["", ""]]);
+            setSTemplateKeys([]);
+            setSelectedKeys([]);
+            setSelectedTemplate(null);
+            setSelectedAllChecked(false);
+        }
+    }, [props.isOpen, props.edit, props.dataItem]);
 
     useEffect(() => {
         const themeId = myResume?.theme.id
@@ -210,7 +221,10 @@ export const AddDetailsModal = (props : AddDetailsModalProps) => {
                 stage == 1 ? (
                     <>
                     <div className="flex flex-rwo justify-end">
-                        <button className="text-darkest bg-grey px-2 py-1 rounded" onClick={() => setStage(0)}>Back</button>
+                        {
+                            !props.edit ? 
+                                <button className="text-darkest bg-grey px-2 py-1 rounded" onClick={() => setStage(0)}>Back</button> : null
+                        }
                     </div>
                         <form>
                             <p className="text-mywhite">Data Item Title</p>

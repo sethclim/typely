@@ -30,6 +30,7 @@ export const DataItemComponent = (props : DataItemsProps) => {
     const [showDeleteModal, setShowDeleteModal] = useState(false)
 
     const { repositories } = useDataContext()
+
     
     const onEdit = (e : React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.stopPropagation()
@@ -87,7 +88,7 @@ export const DataItemComponent = (props : DataItemsProps) => {
                 ):null
             }
             </Toggle>
-            <AddDetailsModal isOpen={isEditDataItemModalOpen} setIsOpen={setIsOpenEditDataItemModal} dataItem={props.dataItem} />
+            <AddDetailsModal isOpen={isEditDataItemModalOpen} setIsOpen={setIsOpenEditDataItemModal} dataItem={props.dataItem} edit={true} />
             <DeleteModal 
                 msg={`Are you sure you want to delete ${props?.dataItem.title}?`} 
                 setIsOpen={setShowDeleteModal} 
