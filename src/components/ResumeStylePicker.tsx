@@ -1,7 +1,12 @@
 import { useState } from "react";
 import { Theme } from "../types";
 
-// type ResumeStyle = "engineering" | "sales" | "design";
+import { Document, Page, pdfjs } from "react-pdf";
+
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
+
+import 'react-pdf/dist/Page/TextLayer.css';
+import 'react-pdf/dist/Page/AnnotationLayer.css';
 
 export type ResumeStylePickerProps = {
   onSelect?: (style: Theme) => void;
@@ -17,10 +22,10 @@ export default function ResumeStylePicker(props: ResumeStylePickerProps) {
   };
 
   const baseCard =
-    "relative cursor-pointer rounded-2xl p-6 backdrop-blur-xl bg-white/10 border border-white/20 shadow-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl";
+    "relative cursor-pointer rounded-2xl p-6 backdrop-blur-xl bg-white/10 border border-white/20 shadow-xl transition-all duration-300  hover:shadow-2xl";
 
   const selectedRing =
-    "ring-2 ring-purple-500 bg-white/20 scale-[1.02]";
+    "ring-2 ring-purple-500 bg-white/20";
 
   return (
    <div className="w-full max-w-[1700px] mx-auto py-10">
@@ -47,12 +52,9 @@ export default function ResumeStylePicker(props: ResumeStylePickerProps) {
               {theme.name}
             </h3>
 
-            <img
-              className="w-full h-auto block"
-              src={`/${theme.name}.webp`}
-                srcSet={`/${theme.name}@2x.webp 2x`}
-              alt={`/${theme.name}`}
-            />
+            <Document key={`/${theme.name}.pdf`} className="bg-black w-full" file={`/${theme.name}.pdf`} >
+              <Page pageNumber={1}  className="overflow-hidden" width={250} scale={2} />
+            </Document>
           </div>
         </div>
       ))}
