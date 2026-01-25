@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { createFileRoute, Link } from '@tanstack/react-router'
-import ResumeSyncDemo from '../components/demos/ResumeSyncDemo';
-import ThemeSwitcherDemo from '../components/demos/ThemeSwitcherDemo';
-import AutoReorderDemo from '../components/demos/DragReorderDemo';
-import { useDataContext } from '../context/data/DataContext';
+import ResumeSyncDemo from '../../components/demos/ResumeSyncDemo';
+import ThemeSwitcherDemo from '../../components/demos/ThemeSwitcherDemo';
+import AutoReorderDemo from '../../components/demos/DragReorderDemo';
+import { useDataContext } from '../../context/data/DataContext';
 
-  export const Route = createFileRoute('/')({
+  export const Route = createFileRoute('/_app/')({
     component: RouteComponent,
   })
 
