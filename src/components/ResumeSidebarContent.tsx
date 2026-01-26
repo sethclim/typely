@@ -3,10 +3,10 @@ import { DocumentDuplicateIcon, EllipsisVerticalIcon, TrashIcon } from "@heroico
 import { PencilIcon } from "@heroicons/react/20/solid";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { ResumeConfigRow } from "../db/types";
-import { DuplicateResume } from "../db";
-import { ResumeConfigTable } from "../db/tables";
+// import { DuplicateResume } from "../db";
 import { useState } from "react";
 import { DeleteModal } from "./DeleteModal";
+import { useDataContext } from "../context/data/DataContext";
 
 type ResumeSidebarContentProps = {
     resumes : Array<ResumeConfigRow>
@@ -22,10 +22,12 @@ export const ResumeSidebarContent = ({ resumes, activeId, onSelect, expanded } :
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const [deleteResume, setDeleteResume] = useState<ResumeConfigRow | null>()
 
+    const { repositories } = useDataContext();
+
     const createResume = () => {
       console.log("CREATE")
         const uuid = crypto.randomUUID();
-        ResumeConfigTable.insert({
+        repositories.resumeConfig.insert({
             uuid: uuid,
             "name" : "New Resume",
             "createdAt" : Date.now().toString(),
@@ -35,8 +37,10 @@ export const ResumeSidebarContent = ({ resumes, activeId, onSelect, expanded } :
       }
     
       const duplicateResume = (id? : number) => {
-        if(id)
-          DuplicateResume(id)
+        if(id){
+          
+        }
+        //   DuplicateResume(repositories, id)
       }
     
       const onRename = (currentName : string, id? : number) => {
@@ -52,7 +56,7 @@ export const ResumeSidebarContent = ({ resumes, activeId, onSelect, expanded } :
     
         console.log("ON SUBMIT")
     
-        ResumeConfigTable.updateName({
+        repositories.resumeConfig.updateName({
             "id": rename,
             "name" : newName,
             "updatedAt" : Date.now().toString(),
@@ -76,7 +80,7 @@ export const ResumeSidebarContent = ({ resumes, activeId, onSelect, expanded } :
       return
     }
 
-    ResumeConfigTable.delete(deleteResume.id!)
+   repositories.resumeConfig.delete(deleteResume.id!)
     setShowDeleteModal(false)
     setDeleteResume(null)
   }

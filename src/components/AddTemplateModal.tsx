@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, useState } from "react"
-import { TemplateTable } from '../db/tables';
 
 import Modal from "./Modal";
+import { useDataContext } from "../context/data/DataContext";
 
 interface AddTemplateModalProps {
   isOpen: boolean;
@@ -11,11 +11,13 @@ interface AddTemplateModalProps {
 export const AddTemplateModal = (props : AddTemplateModalProps) => {
     const [title, setTitle] = useState<string>()
 
+    const { repositories } = useDataContext();
+
     const AddTemplate = () => {
         if (title == "" || title == null)
             return;
 
-        TemplateTable.insert({
+        repositories.template.insert({
             "name": title,
             "description": "this is a header template",
             "section_type": "header",

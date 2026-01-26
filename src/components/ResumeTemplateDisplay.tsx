@@ -8,12 +8,12 @@ import { useDroppable } from "@dnd-kit/core";
 import clsx from "clsx";
 import { Toggle } from "./Toggle";
 import GroupedTable from "./GroupedDataTable";
-import { ResumeSectionDataTable } from "../db/tables";
 import { GrabHandle } from "./GrabHandle";
 
 import { useSortable } from "@dnd-kit/sortable";
 import {CSS} from '@dnd-kit/utilities';
 import { SectionContextMenu } from "./SectionContextMenu";
+import { useDataContext } from "../context/data/DataContext";
 
 type DataItemDisplayProps = {
     data : DataItem[]
@@ -21,6 +21,7 @@ type DataItemDisplayProps = {
 }
 
 const DataItemDisplay = (props : DataItemDisplayProps) => {
+    const { repositories } = useDataContext();
     const {isOver, setNodeRef, active} = useDroppable({
         id: `dataitem-${props.section_id}`,
         data: props.data
@@ -33,7 +34,7 @@ const DataItemDisplay = (props : DataItemDisplayProps) => {
     },[isOver])
 
     const RemoveDataItemFromResume = (data_item_id : number) =>{
-        ResumeSectionDataTable.delete({section_id : props.section_id,  data_item_id : data_item_id})
+       repositories.resumeSectionData.delete({section_id : props.section_id,  data_item_id : data_item_id})
     }
 
     return(

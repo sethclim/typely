@@ -1,17 +1,14 @@
 import { Editor, Monaco } from '@monaco-editor/react'
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { Link, useRouterState } from '@tanstack/react-router'
 import { Header } from '../components/Header';
 import { Sidebar } from '../components/Sidebar';
 import { Footer } from '../components/Footer';
 import { useEffect, useState } from 'react';
 import { mapRowToTemplate } from '../components/ComponentLibrary';
 import { Template, Theme } from '../types';
-import { TemplateTable, ThemeTable } from '../db/tables';
-import { DB } from '../db';
 import { myLang } from '../components/editor/monaco/latex';
 import type * as monacoEditor from "monaco-editor";
-// import { ThemeDataRow } from '../db/types';
-
+import { useDataContext } from '../context/data/DataContext';
 
 const mapThemeRowToTheme = (themeRow : {
     id: number;
@@ -35,10 +32,6 @@ const mapThemeRowToTheme = (themeRow : {
   }
   return t
 }
-
-export const Route = createFileRoute('/theme-editor/$themeId')({
-  component: RouteComponent,
-})
 
 function useSaveShortcut(onSave: () => void) {
   useEffect(() => {
@@ -68,8 +61,12 @@ type ActiveCode = {
   content: string
 }
 
-function RouteComponent() {
-    const { themeId } = Route.useParams()
+export type ThemeEditorProps = {
+    themeId : string
+}
+
+export const ThemeEditor = (props : ThemeEditorProps) => {
+    // const { themeId } = props.Route.useParams()
     const [expanded, setExpanded] = useState(true);
     const [templates, setTemplates] = useState<Array<Template>>();
     const [theme, setTheme] = useState<Theme>();
@@ -77,6 +74,13 @@ function RouteComponent() {
 
     const [activeCode, setActiveCode]  = useState<ActiveCode | undefined>(undefined)
     const [activeChanges, setActiveChanges] = useState<string | undefined>(undefined)
+
+    const { location } = useRouterState();
+
+    const isDemo = location.pathname.startsWith('/demo');
+    const base = isDemo ? '/demo' : '/app';
+
+    const inData = useDataContext();
 
     const saveChange = () => {
         if(!activeChanges)
@@ -88,13 +92,13 @@ function RouteComponent() {
             return
           
           console.log('Saving Template...');
-          TemplateTable.update(template.id, activeChanges)
+          inData.repositories.template.update(template.id, activeChanges)
         }
         else if(activeCode?.type === CodeType.Theme){
           if(!theme?.id)
             return
           console.log('Saving Theme...');
-          ThemeTable.update(theme.id, activeChanges)
+          inData.repositories.template.update(theme.id, activeChanges)
         }
     }
 
@@ -137,12 +141,12 @@ function RouteComponent() {
 
 
     const fetchDataForLib = async () => {
-        await DB.ready;
-        const data = ThemeTable.get(parseInt(themeId))
+        // await DB.ready;
+        const data = inData.repositories.theme.get(parseInt(props.themeId))
         const theme = mapThemeRowToTheme(data)
         setTheme(theme)
         
-        const templateData = TemplateTable.getByThemeId(theme.id);
+        const templateData = inData.repositories.template.getByThemeId(theme.id);
         const hydratedTemplates = templateData.map((item) => mapRowToTemplate(item))
 
         setTemplates(hydratedTemplates)
@@ -158,11 +162,11 @@ function RouteComponent() {
 
     useEffect(() => {
             fetchDataForLib();
-            const unsubscribeTemplateTable = TemplateTable.subscribe(fetchDataForLib);
-            const unsubscribeThemeTable = ThemeTable.subscribe(fetchDataForLib);
+            const unsubscribeTemplateTable = inData.repositories.template.subscribe(fetchDataForLib);
+            const unsubscribeThemeTable = inData.repositories.theme.subscribe(fetchDataForLib);
             return () => {
-                unsubscribeTemplateTable();
-                unsubscribeThemeTable();
+                unsubscribeTemplateTable;
+                unsubscribeThemeTable;
             };
         }, []
     )
@@ -188,7 +192,7 @@ function RouteComponent() {
       <>
         <Header expanded={expanded} setExpanded={setExpanded} >
           <div className='w-full flex justify-end items-center pr-30'>
-            <Link to="/app">
+            <Link to={base}>
               <a className='text-grey hover:text-mywhite'>BACK</a>
             </Link>
           </div>

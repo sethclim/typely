@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react"
-import { ResumeDataItemTable, TemplateTable,  } from '../db/tables';
-import { DB } from "../db";
 import { DataItem, DataItemType, Template } from "../types";
 import ThreeWaySlider from "./ThreeWaySlider";
 
@@ -17,6 +15,7 @@ import { Toggle } from "./Toggle";
 import { GrabHandle } from "./GrabHandle";
 import { PlusIcon } from "@heroicons/react/20/solid";
 import { DeleteModal } from "./DeleteModal";
+import { useDataContext } from "../context/data/DataContext";
 
 // type componentLibraryProps = {
 //     // latex_comps : Array<Block>
@@ -29,6 +28,9 @@ export type DataItemsProps = {
 export const DataItemComponent = (props : DataItemsProps) => {
     const [isEditDataItemModalOpen, setIsOpenEditDataItemModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false)
+
+    const { repositories } = useDataContext()
+
     
     const onEdit = (e : React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.stopPropagation()
@@ -41,7 +43,7 @@ export const DataItemComponent = (props : DataItemsProps) => {
     }
 
     const performDeleteAction = () => {
-        ResumeDataItemTable.delete(props.dataItem.id)
+        repositories.resumeDataItem.delete(props.dataItem.id)
         setShowDeleteModal(false)
     }
 
@@ -86,7 +88,7 @@ export const DataItemComponent = (props : DataItemsProps) => {
                 ):null
             }
             </Toggle>
-            <AddDetailsModal isOpen={isEditDataItemModalOpen} setIsOpen={setIsOpenEditDataItemModal} dataItem={props.dataItem} />
+            <AddDetailsModal isOpen={isEditDataItemModalOpen} setIsOpen={setIsOpenEditDataItemModal} dataItem={props.dataItem} edit={true} />
             <DeleteModal 
                 msg={`Are you sure you want to delete ${props?.dataItem.title}?`} 
                 setIsOpen={setShowDeleteModal} 
@@ -105,6 +107,8 @@ export const TemplateItemComponent = (props : TemplateItemComponentProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false)
 
+    const { repositories } = useDataContext()
+
     const edit = (e : React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.stopPropagation();
         setIsOpen(true)
@@ -117,12 +121,12 @@ export const TemplateItemComponent = (props : TemplateItemComponentProps) => {
     }
 
     const performDeleteAction = () => {
-        TemplateTable.delete(props.template.id)
+        repositories.template.delete(props.template.id)
         setShowDeleteModal(false)
     }
 
     const saveChange = (text : string) => {
-        TemplateTable.update(props.template.id, text)
+        repositories.template.update(props.template.id, text)
     }
 
     return (
@@ -227,9 +231,11 @@ export const ComponentLibrary = () => {
     const [isDataItemModalOpen, setIsOpenDataItemModal] = useState(false);
     const [isTemplateModalOpen, setIsOpenTemplateModal] = useState(false);
 
+    const {repositories} = useDataContext();
+
     const fetchDataForLib = async () => {
-        await DB.ready;
-        const data = ResumeDataItemTable.getAll();
+        // await DB.ready;
+        const data = repositories.resumeDataItem.getAll();
         const hydrated = data.map((item) => mapRowToDataItem(item))
         setDataItems(hydrated)
 
@@ -240,11 +246,11 @@ export const ComponentLibrary = () => {
 
     useEffect(() => {
             fetchDataForLib();
-            const unsubscribeResumeDataItemTable = ResumeDataItemTable.subscribe(fetchDataForLib);
-            const unsubscribeTemplateTable = TemplateTable.subscribe(fetchDataForLib);
+            const unsubscribeResumeDataItemTable = repositories.resumeDataItem.subscribe(fetchDataForLib);
+            const unsubscribeTemplateTable = repositories.template.subscribe(fetchDataForLib);
             return () => {
-                unsubscribeResumeDataItemTable();
-                unsubscribeTemplateTable();
+                unsubscribeResumeDataItemTable;
+                unsubscribeTemplateTable;
             };
         }, []
     )

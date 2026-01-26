@@ -2,18 +2,17 @@ import { DragEndEvent, useDndMonitor } from "@dnd-kit/core";
 import { ResumeConfig, ResumeSection } from "../types"
 import { ResumeSectionCard } from "./ResumeTemplateDisplay";
 import { useEffect, useState } from "react";
-
 import { PencilIcon } from '@heroicons/react/20/solid';
 
 import {
     arrayMove,
     SortableContext
 } from '@dnd-kit/sortable';
-import { RESUME_CONFIG_TABLE, ResumeConfigTable, ResumeSectionConfigTable } from "../db/tables";
-import { Link } from "@tanstack/react-router";
-import { DB } from "../db";
-import { useThemes } from "../context/themes/ThemesContext";
+import { RESUME_CONFIG_TABLE } from "../db/tables";
+import { Link, useRouterState } from "@tanstack/react-router";
+
 import { Dropdown } from "./Dropdown";
+import { useDataContext } from "../context/data/DataContext";
 
 export type CurrentResumeBlockViewerProps = {
     resume? : ResumeConfig | null,
@@ -24,6 +23,8 @@ export const CurrentResumeBlockViewer = (props : CurrentResumeBlockViewerProps) 
 
     const [sections, setSections] =  useState<ResumeSection[]>([])
     const [reordered, setReordered] = useState(false);
+
+    const { repositories, dbService, themes } = useDataContext();
 
     useEffect(() => {
         if(props.resume?.sections != null) 
@@ -62,7 +63,7 @@ export const CurrentResumeBlockViewer = (props : CurrentResumeBlockViewerProps) 
     useEffect(() => {
         if (reordered) {
             sections.forEach((section, index) => {
-                ResumeSectionConfigTable.updateOrder(section.id, index);
+                repositories.resumeSectionConfig.updateOrder(section.id, index);
             });
 
             // Reset the flag
@@ -70,7 +71,7 @@ export const CurrentResumeBlockViewer = (props : CurrentResumeBlockViewerProps) 
         }
     }, [sections, reordered]);
 
-    const { themes } = useThemes()
+    // const { themes } = useThemes()
 
     const [activeTheme, setActiveTheme] = useState("")
 
@@ -96,7 +97,7 @@ export const CurrentResumeBlockViewer = (props : CurrentResumeBlockViewerProps) 
         // Change resume config theme
         // change sections to point to right template from new theme
 
-        ResumeConfigTable.updateTheme({
+        repositories.resumeConfig.updateTheme({
             id: props.resume.id, 
             themeId: newTheme.id, 
             updatedAt: Date.now().toString(),
@@ -110,11 +111,16 @@ export const CurrentResumeBlockViewer = (props : CurrentResumeBlockViewerProps) 
             const newTemplateForSection = newTheme.templates.filter(t => t.sectionType === section.sectionType)[0]
             console.log("@newTemplateForSection " + JSON.stringify(newTemplateForSection))
             
-            ResumeSectionConfigTable.updateTemplate(section.id, newTemplateForSection.id, false)
+            repositories.resumeSectionConfig.updateTemplate(section.id, newTemplateForSection.id, false)
         })
-        DB.notifyTable(RESUME_CONFIG_TABLE)
+        dbService.notifyTable(RESUME_CONFIG_TABLE)
     }
 
+
+    const { location } = useRouterState();
+
+    const isDemo = location.pathname.startsWith('/demo');
+    const base = isDemo ? '/demo' : '';
 
 
     return (
@@ -130,7 +136,7 @@ export const CurrentResumeBlockViewer = (props : CurrentResumeBlockViewerProps) 
                             onSelected={(v) => changeThemeForResume(v)} />
                         {
                             props?.resume?.theme ? 
-                            <Link   to="/theme-editor/$themeId"
+                            <Link   to={`${base}/theme-editor/$themeId`}
                                     params={{ themeId: props.resume.theme.id.toString() }} >
                                 <PencilIcon className="h-4 w-4 text-grey hover:text-mywhite cursor-pointer" />
                             </Link> : null

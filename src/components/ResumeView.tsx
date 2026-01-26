@@ -1,9 +1,7 @@
 
 
 import { useEffect, useState } from 'react'
-
 import { useResume } from '../context/resume/ResumeContext'
-import { ResumeSectionConfigTable, ResumeSectionDataTable, TemplateTable } from '../db/tables';
 
 import Modal from "./Modal";
 import ComboBox from './ComboBox';
@@ -23,7 +21,8 @@ import { Panel, PanelResizeHandle, PanelGroup } from 'react-resizable-panels';
 
 import { OutputView } from './OutputView';
 import { CurrentResumeBlockViewer } from './CurrentResumeBlockViewer';
-import { DB } from '../db';
+// import { DB } from '../db';
+import { useDataContext } from '../context/data/DataContext';
 
 type ReplaceDataItemInfo = {
   section_id : string
@@ -48,10 +47,12 @@ export const ResumeView = () => {
   const [draggingDataTemplate, setDraggingDataTemplate]= useState<Template | null>(null);
   const [draggingDataSection, setDraggingDataSection]= useState<ResumeSection | null>(null);
 
+  const { repositories } = useDataContext();
+
   useEffect(()=>{
     const init = async() =>{
-      await DB.ready
-      const templateData = TemplateTable.getAll();
+      // await DB.ready
+      const templateData = repositories.template.getAll();
       const hydratedTemplate = templateData.map((item) => mapRowToTemplate(item))
       hydratedTemplate.forEach(t => console.log(t.sectionType))
       setTemplates(hydratedTemplate)
@@ -63,7 +64,7 @@ export const ResumeView = () => {
     if (myResume === null || selectedType == null || title == undefined)
       return;
 
-    ResumeSectionConfigTable.insert({
+    repositories.resumeSectionConfig.insert({
       "resume_id": myResume!.id,
       "title": title,
       "template_id": selectedTemplate ? templates.find(t => t.name == selectedTemplate)?.id ?? -1 : -1,
@@ -113,14 +114,14 @@ export const ResumeView = () => {
         setReplaceDataItemData({section_id: section_id, active : active.data.current as unknown as DataItem, match : match})
         setReplaceDataItemOpen(true)
       }else{
-        ResumeSectionDataTable.insert({
+        repositories.resumeSectionData.insert({
           section_id: parseInt(section_id),
           data_item_id: parseInt(active_id)
         })
       }
     }
     else if (overPrefix === "template" && activePrefix === "template"){
-      ResumeSectionConfigTable.updateTemplate(parseInt(section_id), parseInt(active_id))
+      repositories.resumeSectionConfig.updateTemplate(parseInt(section_id), parseInt(active_id))
     }
     // else if(overPrefix === "section" && activePrefix === "section"){
     //   // console.log("THIS IS OVER!!!")
@@ -158,9 +159,9 @@ export const ResumeView = () => {
 
   const ReplaceDataItem = (section_id : string, old_data_item_id : number, new_data_item_id : number) => {
     // delete match
-    ResumeSectionDataTable.delete({section_id : parseInt(section_id),  data_item_id : old_data_item_id})
+    repositories.resumeSectionData.delete({section_id : parseInt(section_id),  data_item_id : old_data_item_id})
     // add new
-    ResumeSectionDataTable.insert({
+    repositories.resumeSectionData.insert({
       section_id: parseInt(section_id),
       data_item_id: new_data_item_id
     })
@@ -169,7 +170,7 @@ export const ResumeView = () => {
   }
 
   const AddDataItem = (section_id : string, active_id : number) => {
-    ResumeSectionDataTable.insert({
+    repositories.resumeSectionData.insert({
       section_id: parseInt(section_id),
       data_item_id: active_id
     })

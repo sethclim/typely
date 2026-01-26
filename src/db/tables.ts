@@ -1,5 +1,4 @@
 import { and, eq, SQL, sql } from "drizzle-orm";
-import { DB } from "./index";
 import {
     resumeConfig,
     resumeDataItem,
@@ -19,6 +18,7 @@ import {
     TemplateRow,
     ThemeDataRow,
 } from "./types";
+import { DBService } from "./DBService";
 
 export const RESUME_CONFIG_TABLE = "resume_config";
 // const RESUME_SECTION_CONFIG_TABLE = "resume_section_config";
@@ -148,18 +148,23 @@ type UpdateResumeConfigThemeProps = Required<
 };
 
 //LEFT JOIN ${TEMPLATE_TABLE} t ON t.id = rs.template_id
-export const ResumeConfigTable = {
-    insert: async ({
+export class ResumeConfigTable {
+    _svc: DBService;
+    constructor(svc: DBService) {
+        this._svc = svc;
+    }
+
+    async insert({
         uuid,
         name,
         createdAt: created_at,
         updatedAt: updated_at,
         themeId: theme_id,
-    }: ResumeConfigRow) => {
+    }: ResumeConfigRow) {
         if (!uuid || !theme_id) return;
 
-        const res = await DB.db
-            ?.insert(resumeConfig)
+        const res = await this._svc.db
+            .insert(resumeConfig)
             .values({
                 uuid,
                 name,
@@ -169,17 +174,17 @@ export const ResumeConfigTable = {
             })
             .returning();
 
-        DB.save();
+        this._svc.save();
 
         console.log(`[ResumeConfigTable] insert ${res}`);
 
-        DB.notifyTable(RESUME_CONFIG_TABLE);
-    },
-    getResumeConfig: async (resumeId: number) => {
+        this._svc.notifyTable(RESUME_CONFIG_TABLE);
+    }
+    async getResumeConfig(resumeId: number) {
         console.log(`[ResumeConfigTable] resumeId ${resumeId}`);
         const query = getFullResumeQuery(resumeId);
         console.log(`[ResumeConfigTable] query ${query}`);
-        const res = DB.db!.all(query);
+        const res = this._svc.db.all(query);
         // const resumeWithTheme = DB.db
         //     ?.select()
         //     .from(resumeConfig)
@@ -191,64 +196,69 @@ export const ResumeConfigTable = {
 
         console.log(`[ResumeConfigTable] result ${JSON.stringify(res)}`);
         return res || [];
-    },
-    getAllResumeConfig: () => {
-        const rows = DB.db?.select().from(resumeConfig).all();
+    }
+    getAllResumeConfig() {
+        const rows = this._svc.db?.select().from(resumeConfig).all();
         return rows || [];
-    },
-    updateName: async ({
-        id,
-        name,
-        updatedAt: updated_at,
-    }: ResumeConfigRow) => {
+    }
+    async updateName({ id, name, updatedAt: updated_at }: ResumeConfigRow) {
         if (!id) return;
 
-        await DB.db
+        await this._svc.db
             ?.update(resumeConfig)
             .set({
                 name,
                 updatedAt: updated_at ?? new Date().toISOString(),
             })
             .where(eq(resumeConfig.id, id));
-        DB.notifyTable(RESUME_CONFIG_TABLE);
-    },
-    updateTheme: async ({
+        this._svc.notifyTable(RESUME_CONFIG_TABLE);
+    }
+
+    async updateTheme({
         id,
         themeId: theme_id,
         updatedAt: updated_at,
         notify = true,
-    }: UpdateResumeConfigThemeProps) => {
+    }: UpdateResumeConfigThemeProps) {
         if (!id || !theme_id) return;
 
-        await DB.db
+        await this._svc.db
             ?.update(resumeConfig)
             .set({
                 themeId: theme_id,
                 updatedAt: updated_at ?? new Date().toISOString(),
             })
             .where(eq(resumeConfig.id, id));
-        if (notify) DB.notifyTable(RESUME_CONFIG_TABLE);
-    },
-    delete: async (id: number) => {
+        if (notify) this._svc.notifyTable(RESUME_CONFIG_TABLE);
+    }
+
+    async delete(id: number) {
         if (!id) return;
 
-        await DB.db?.delete(resumeConfig).where(eq(resumeConfig.id, id));
-        DB.notifyTable(RESUME_CONFIG_TABLE);
-    },
-    subscribe: (cb: () => void) => DB.subscribe(RESUME_CONFIG_TABLE, cb),
-};
+        await this._svc.db?.delete(resumeConfig).where(eq(resumeConfig.id, id));
+        this._svc.notifyTable(RESUME_CONFIG_TABLE);
+    }
+    subscribe(cb: () => void) {
+        return this._svc.subscribe(RESUME_CONFIG_TABLE, cb);
+    }
+}
 
-export const ResumeSectionConfigTable = {
-    insert: async ({
+export class ResumeSectionConfigTable {
+    _svc: DBService;
+    constructor(svc: DBService) {
+        this._svc = svc;
+    }
+
+    async insert({
         resume_id,
         title,
         section_type,
         template_id,
         section_order,
-    }: ResumeSectionConfigRow): Promise<number> => {
+    }: ResumeSectionConfigRow): Promise<number> {
         if (!title) return -1;
 
-        const result = await DB.db
+        const result = await this._svc.db
             ?.insert(resumeSectionConfig)
             .values({
                 resumeId: resume_id,
@@ -259,82 +269,93 @@ export const ResumeSectionConfigTable = {
             })
             .returning({ id: resumeSectionConfig.id });
 
-        DB.save();
+        this._svc.save();
 
         if (!result) return -1;
 
         const newId = result[0].id;
 
-        DB.notifyTable(RESUME_CONFIG_TABLE);
+        this._svc.notifyTable(RESUME_CONFIG_TABLE);
         return newId;
-    },
-    updateTemplate: async (
+    }
+
+    async updateTemplate(
         id: number,
         template_id: number,
-        notify: boolean = true
-    ) => {
+        notify: boolean = true,
+    ) {
         if (!id) return;
-
-        await DB.db
+        await this._svc.db
             ?.update(resumeSectionConfig)
             .set({ templateId: template_id })
             .where(eq(resumeSectionConfig.id, id));
 
-        DB.save();
+        this._svc.save();
 
-        if (notify) DB.notifyTable(RESUME_CONFIG_TABLE);
-    },
-    updateOrder: async (id: number, newOrder: number) => {
+        if (notify) this._svc.notifyTable(RESUME_CONFIG_TABLE);
+    }
+
+    async updateOrder(id: number, newOrder: number) {
         if (!id) return;
 
-        await DB.db
+        await this._svc.db
             ?.update(resumeSectionConfig)
             .set({ sectionOrder: newOrder })
             .where(eq(resumeSectionConfig.id, id));
-        DB.notifyTable(RESUME_CONFIG_TABLE);
-    },
-    delete: async (id: number) => {
+        this._svc.notifyTable(RESUME_CONFIG_TABLE);
+    }
+    async delete(id: number) {
         if (!id) return;
 
-        await DB.db
+        await this._svc.db
             ?.delete(resumeSectionConfig)
             .where(eq(resumeSectionConfig.id, id));
-        DB.save();
-        DB.notifyTable(RESUME_CONFIG_TABLE);
-    },
-};
+        this._svc.save();
+        this._svc.notifyTable(RESUME_CONFIG_TABLE);
+    }
+}
 
-export const ResumeSectionDataTable = {
-    insert: async ({ section_id, data_item_id }: ResumeSectionDataRow) => {
-        await DB.db?.insert(resumeSectionData).values({
+export class ResumeSectionDataTable {
+    _svc: DBService;
+    constructor(svc: DBService) {
+        this._svc = svc;
+    }
+
+    async insert({ section_id, data_item_id }: ResumeSectionDataRow) {
+        await this._svc.db?.insert(resumeSectionData).values({
             sectionId: section_id,
             dataItemId: data_item_id,
         });
-        DB.save();
-        DB.notifyTable(RESUME_CONFIG_TABLE);
-    },
-    delete: async ({ section_id, data_item_id }: ResumeSectionDataRow) => {
-        await DB.db
+        this._svc.save();
+        this._svc.notifyTable(RESUME_CONFIG_TABLE);
+    }
+    async delete({ section_id, data_item_id }: ResumeSectionDataRow) {
+        await this._svc.db
             ?.delete(resumeSectionData)
             .where(
                 and(
                     eq(resumeSectionData.sectionId, section_id),
-                    eq(resumeSectionData.dataItemId, data_item_id)
-                )
+                    eq(resumeSectionData.dataItemId, data_item_id),
+                ),
             );
-        DB.save();
-        DB.notifyTable(RESUME_CONFIG_TABLE);
-    },
-};
+        this._svc.save();
+        this._svc.notifyTable(RESUME_CONFIG_TABLE);
+    }
+}
 
-export const ResumeDataItemTable = {
-    insert: async ({
+export class ResumeDataItemTable {
+    _svc: DBService;
+    constructor(svc: DBService) {
+        this._svc = svc;
+    }
+
+    async insert({
         title,
         description,
         data,
         type_id,
-    }: DataItemRow): Promise<number> => {
-        const result = await DB.db
+    }: DataItemRow): Promise<number> {
+        const result = await this._svc.db
             ?.insert(resumeDataItem)
             .values({
                 typeId: type_id,
@@ -348,28 +369,29 @@ export const ResumeDataItemTable = {
 
         const newId = result[0].id;
 
-        DB.save();
+        this._svc.save();
 
-        DB.notifyTable(RESUME_DATA_ITEM_TABLE);
-        DB.notifyTable(RESUME_CONFIG_TABLE);
+        this._svc.notifyTable(RESUME_DATA_ITEM_TABLE);
+        this._svc.notifyTable(RESUME_CONFIG_TABLE);
 
         return newId;
-    },
-    getAll: () => {
-        const rows = DB.db?.select().from(resumeDataItem).all();
+    }
+
+    getAll() {
+        const rows = this._svc.db?.select().from(resumeDataItem).all();
         return rows || [];
-    },
-    update: async ({
+    }
+    async update({
         id,
         title,
         description,
         data,
         type_id,
         updated_at,
-    }: DataItemRow) => {
+    }: DataItemRow) {
         if (!id) return;
 
-        await DB.db
+        await this._svc.db
             ?.update(resumeDataItem)
             .set({
                 typeId: type_id,
@@ -379,48 +401,62 @@ export const ResumeDataItemTable = {
                 updatedAt: updated_at ?? new Date().toISOString(),
             })
             .where(eq(resumeDataItem.id, id));
-        DB.save();
-        DB.notifyTable(RESUME_DATA_ITEM_TABLE);
-        DB.notifyTable(RESUME_CONFIG_TABLE);
-    },
-    delete: async (id: number) => {
+        this._svc.save();
+        this._svc.notifyTable(RESUME_DATA_ITEM_TABLE);
+        this._svc.notifyTable(RESUME_CONFIG_TABLE);
+    }
+    async delete(id: number) {
         if (!id) return;
 
-        await DB.db?.delete(resumeDataItem).where(eq(resumeDataItem.id, id));
-        DB.save();
-        DB.notifyTable(RESUME_DATA_ITEM_TABLE);
-        DB.notifyTable(RESUME_CONFIG_TABLE);
-    },
-    subscribe: (cb: () => void) => DB.subscribe(RESUME_DATA_ITEM_TABLE, cb),
-};
+        await this._svc.db
+            ?.delete(resumeDataItem)
+            .where(eq(resumeDataItem.id, id));
+        this._svc.save();
+        this._svc.notifyTable(RESUME_DATA_ITEM_TABLE);
+        this._svc.notifyTable(RESUME_CONFIG_TABLE);
+    }
+    subscribe(cb: () => void) {
+        this._svc.subscribe(RESUME_DATA_ITEM_TABLE, cb);
+    }
+}
 
-export const ResumeDataItemTypeTable = {
-    insert: async ({ name }: DataItemTypeRow): Promise<number> => {
-        const result = await DB.db
+export class ResumeDataItemTypeTable {
+    _svc: DBService;
+    constructor(svc: DBService) {
+        this._svc = svc;
+    }
+
+    async insert({ name }: DataItemTypeRow): Promise<number> {
+        const result = await this._svc.db
             ?.insert(resumeDataItemType)
             .values({ name })
             .returning({ id: resumeDataItemType.id });
 
-        DB.save();
+        this._svc.save();
         if (!result) return -1;
 
         const newId = result[0].id;
-        DB.notifyTable(RESUME_CONFIG_TABLE);
+        this._svc.notifyTable(RESUME_CONFIG_TABLE);
 
         return newId;
-    },
-};
+    }
+}
 
-export const TemplateTable = {
-    insert: async ({
+export class TemplateTable {
+    _svc: DBService;
+    constructor(svc: DBService) {
+        this._svc = svc;
+    }
+
+    async insert({
         name,
         theme_id,
         section_type,
         content,
         description,
-    }: TemplateRow) => {
+    }: TemplateRow) {
         if (!theme_id) return -1;
-        const result = await DB.db
+        const result = await this._svc.db
             ?.insert(template)
             .values({
                 name,
@@ -430,99 +466,102 @@ export const TemplateTable = {
                 description,
             })
             .returning({ id: template.id });
-        DB.save();
+        this._svc.save();
         if (!result) return -1;
 
         const newId = result[0].id;
-        DB.notifyTable(RESUME_CONFIG_TABLE);
-        DB.notifyTable(RESUME_TEMPLATE_TABLE);
+        this._svc.notifyTable(RESUME_CONFIG_TABLE);
+        this._svc.notifyTable(RESUME_TEMPLATE_TABLE);
 
         return newId;
-    },
-    getAll: () => {
-        const rows = DB.db?.select().from(template).all();
+    }
+    getAll() {
+        const rows = this._svc.db?.select().from(template).all();
         return rows || [];
-    },
-    update: async (id: number, content: string) => {
+    }
+    async update(id: number, content: string) {
         if (!id) return;
 
-        await DB.db
+        await this._svc.db
             ?.update(template)
             .set({ content })
             .where(eq(template.id, id));
-        DB.save();
-        DB.notifyTable(RESUME_TEMPLATE_TABLE);
-    },
-    delete: async (id: number) => {
+        this._svc.save();
+        this._svc.notifyTable(RESUME_TEMPLATE_TABLE);
+    }
+    async delete(id: number) {
         if (!id) return;
 
-        await DB.db?.delete(template).where(eq(template.id, id));
-        DB.save();
-        DB.notifyTable(RESUME_TEMPLATE_TABLE);
-        DB.notifyTable(RESUME_CONFIG_TABLE);
-    },
-    getByThemeId: (themeId: number) => {
-        const rows = DB.db
+        await this._svc.db?.delete(template).where(eq(template.id, id));
+        this._svc.save();
+        this._svc.notifyTable(RESUME_TEMPLATE_TABLE);
+        this._svc.notifyTable(RESUME_CONFIG_TABLE);
+    }
+    getByThemeId(themeId: number) {
+        const rows = this._svc.db
             ?.select()
             .from(template)
             .where(eq(template.themeId, themeId))
             .all();
 
         return rows || [];
-    },
-    subscribe: (cb: () => void) => DB.subscribe(RESUME_TEMPLATE_TABLE, cb),
-};
+    }
+    subscribe(cb: () => void) {
+        this._svc.subscribe(RESUME_TEMPLATE_TABLE, cb);
+    }
+}
 
 export interface ThemeThemeDataRowWithTemplates extends ThemeDataRow {
     templates: string;
 }
 
-export const ThemeTable = {
-    insert: async ({
-        name,
-        description,
-        sty_source,
-        is_system,
-        owner_user_id = "",
-        created_at,
-    }: ThemeDataRow): Promise<number> => {
-        const result = await DB.db
+export class ThemeTable {
+    _svc: DBService;
+    constructor(svc: DBService) {
+        this._svc = svc;
+    }
+    async insert(props: ThemeDataRow): Promise<number> {
+        const result = await this._svc.db
             ?.insert(themes)
             .values({
-                name,
-                description,
-                stySource: sty_source,
-                isSystem: is_system,
-                ownerUserId: owner_user_id,
-                createdAt: created_at,
+                name: props.name,
+                description: props.description,
+                stySource: props.sty_source,
+                isSystem: props.is_system,
+                ownerUserId: props.owner_user_id,
+                createdAt: props.created_at,
             })
             .returning({ id: themes.id });
-        DB.save();
+        this._svc.save();
         if (!result) return -1;
 
         const newId = result[0].id;
 
         console.log(`[ThemeTable] insert newId ${newId}`);
         return newId;
-    },
-    get: (id: number) => {
-        const row = DB.db?.select().from(themes).where(eq(themes.id, id)).get();
+    }
+    get(id: number) {
+        const row = this._svc.db
+            ?.select()
+            .from(themes)
+            .where(eq(themes.id, id))
+            .get();
 
         return row || null;
-    },
-    update: async (id: number, content: string) => {
+    }
+    async update(id: number, content: string) {
         if (!id) return;
 
-        await DB.db
+        await this._svc.db
             ?.update(themes)
             .set({ stySource: content })
             .where(eq(themes.id, id));
-        DB.save();
-        DB.notifyTable(THEME_TABLE);
-    },
-    getAll: () => {
+        this._svc.save();
+        this._svc.notifyTable(THEME_TABLE);
+    }
+    getAll() {
         const query = getFullThemesQuery();
-        const result = DB.db?.all(query);
+        const result = this._svc.db?.all(query);
         console.log("result!! " + JSON.stringify(result));
         return result || [];
 
@@ -534,6 +573,8 @@ export const ThemeTable = {
         // );
         // console.log("rows!! " + JSON.stringify(rows));
         // return rows;
-    },
-    subscribe: (cb: () => void) => DB.subscribe(THEME_TABLE, cb),
-};
+    }
+    subscribe(cb: () => void) {
+        this._svc.subscribe(THEME_TABLE, cb);
+    }
+}
