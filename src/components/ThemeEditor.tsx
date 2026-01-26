@@ -1,5 +1,5 @@
 import { Editor, Monaco } from '@monaco-editor/react'
-import { createFileRoute, Link, Route, useRouterState } from '@tanstack/react-router'
+import { Link, useRouterState } from '@tanstack/react-router'
 import { Header } from '../components/Header';
 import { Sidebar } from '../components/Sidebar';
 import { Footer } from '../components/Footer';
