@@ -16,6 +16,8 @@ resume builder engine -> manage your data and rendering seperately in composable
 ### Try it out: [https://typely.seth-typely.workers.dev/](https://typely.seth-typely.workers.dev/)
 <hr />
 
+demo at: [https://typely.seth-typely.workers.dev/demo](https://typely.seth-typely.workers.dev/demo)
+
 ## Tech Stack
 
 | Category     | Tools/Technologies                                                                                                                                                                                                                                                                                                                                                                                                                               |
