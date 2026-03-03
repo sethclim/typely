@@ -191,12 +191,19 @@ export const ThemeEditor = (props : ThemeEditorProps) => {
     return (
       <>
         <Header expanded={expanded} setExpanded={setExpanded} >
-          <div className='w-full flex justify-end items-center pr-30'>
-            <Link to={base}>
-              <a className='text-grey hover:text-mywhite'>BACK</a>
-            </Link>
-          </div>
-        </Header>
+  <div className='w-full flex justify-end items-center gap-4 pr-30'>
+    <button
+  onClick={saveChange}
+  disabled={!activeChanges}
+  className="text-grey hover:text-mywhite disabled:opacity-100 disabled:text-grey disabled:cursor-default"
+>
+  SAVE
+</button>
+    <Link to={base}>
+      <a className="text-grey hover:text-mywhite">BACK</a>
+    </Link>
+  </div>
+</Header>
         <div className='grow flex flex-row'>
             <Sidebar
                 expanded={expanded}
