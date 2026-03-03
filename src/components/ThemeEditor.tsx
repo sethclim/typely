@@ -19,8 +19,10 @@ const mapThemeRowToTheme = (themeRow : {
     ownerUserId: string | null;
     createdAt: string | null;
 } | null) : Theme => {
+
   if (themeRow === null) throw Error("null themeRow")
-  const t : Theme = {
+
+  return {
     id: themeRow.id!,
     name: themeRow.name!,
     description: themeRow.description!,
@@ -30,24 +32,24 @@ const mapThemeRowToTheme = (themeRow : {
     created_at: themeRow.createdAt!,
     templates: []
   }
-  return t
 }
 
 function useSaveShortcut(onSave: () => void) {
   useEffect(() => {
+
     const handleKeyDown = (event: KeyboardEvent) => {
-      // For Windows/Linux: ctrlKey + 's'
-      // For Mac: metaKey (Cmd) + 's'
       if ((event.ctrlKey || event.metaKey) && event.key === 's') {
-        event.preventDefault(); // Prevent the browser's save dialog
+        event.preventDefault();
         onSave();
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
+
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
+
   }, [onSave]);
 }
 
@@ -66,53 +68,73 @@ export type ThemeEditorProps = {
 }
 
 export const ThemeEditor = (props : ThemeEditorProps) => {
-    // const { themeId } = props.Route.useParams()
+ 
+
     const [expanded, setExpanded] = useState(true);
-    const [templates, setTemplates] = useState<Array<Template>>();
+    const [templates, setTemplates] = useState<Array<Template>>([]);
     const [theme, setTheme] = useState<Theme>();
-    const [template, setTemplate] = useState<Template | undefined>(undefined)
+    const [template, setTemplate] = useState<Template>();
 
-    const [activeCode, setActiveCode]  = useState<ActiveCode | undefined>(undefined)
-    const [activeChanges, setActiveChanges] = useState<string | undefined>(undefined)
-
+    const [activeCode, setActiveCode]  = useState<ActiveCode>();
+    const [activeChanges, setActiveChanges] = useState<string>();
+    const [showUnsavedDialog, setShowUnsavedDialog] = useState(false);
     const { location } = useRouterState();
 
+    const [pendingTemplate, setPendingTemplate] = useState<Template | null>(null);
     const isDemo = location.pathname.startsWith('/demo');
     const base = isDemo ? '/demo' : '/app';
 
     const inData = useDataContext();
 
     const saveChange = () => {
-        if(!activeChanges)
-          return
 
-        if(activeCode?.type === CodeType.Template)
-        {
+        if(!activeChanges)
+            return;
+
+        if(activeCode?.type === CodeType.Template) {
+
           if(!template)
-            return
+            return;
           
           console.log('Saving Template...');
           inData.repositories.template.update(template.id, activeChanges)
-        }
-        else if(activeCode?.type === CodeType.Theme){
+
+        } else if(activeCode?.type === CodeType.Theme){
+
           if(!theme?.id)
-            return
+            return;
+
           console.log('Saving Theme...');
-          inData.repositories.template.update(theme.id, activeChanges)
+          inData.repositories.theme.update(theme.id, activeChanges)
         }
     }
 
     useSaveShortcut(saveChange);
+    
+    useEffect(() => {
+  const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+    if (activeChanges) {
+      e.preventDefault();
+      e.returnValue = '';
+    }
+  };
 
+  window.addEventListener("beforeunload", handleBeforeUnload);
+
+  return () => {
+    window.removeEventListener("beforeunload", handleBeforeUnload);
+  };
+}, [activeChanges]);
     const handleEditorChange = (text : string | undefined) => {
         setActiveChanges(text)
     }
 
-
     function handleEditorDidMount(editor: monacoEditor.editor.IStandaloneCodeEditor , monaco: Monaco) {
-  
+
       monaco.languages.register({ id: "latex" });
+
       monaco.languages.setMonarchTokensProvider("latex", myLang);
+
       monaco.editor.defineTheme("latex-dark", {
         base: "vs-dark",
         inherit: true,
@@ -129,30 +151,32 @@ export const ThemeEditor = (props : ThemeEditorProps) => {
         },
       });
 
-
       monaco.editor.setTheme("latex-dark");
 
       const model = editor.getModel();
+
       if (model) {
-        monaco.editor.setModelLanguage(model, "latex"); // rebind
+        monaco.editor.setModelLanguage(model, "latex");
       }
     }
 
-
-
     const fetchDataForLib = async () => {
-        // await DB.ready;
+
         const data = inData.repositories.theme.get(parseInt(props.themeId))
         const theme = mapThemeRowToTheme(data)
+
         setTheme(theme)
         
         const templateData = inData.repositories.template.getByThemeId(theme.id);
-        const hydratedTemplates = templateData.map((item) => mapRowToTemplate(item))
+
+        const hydratedTemplates = templateData.map(item => mapRowToTemplate(item))
 
         setTemplates(hydratedTemplates)
-        if(hydratedTemplates.length > 0)
-        {
+
+        if(hydratedTemplates.length > 0) {
+
           setTemplate(hydratedTemplates[0])
+
           setActiveCode({
             type: CodeType.Template,
             content: hydratedTemplates[0].content
@@ -161,18 +185,26 @@ export const ThemeEditor = (props : ThemeEditorProps) => {
     }
 
     useEffect(() => {
-            fetchDataForLib();
-            const unsubscribeTemplateTable = inData.repositories.template.subscribe(fetchDataForLib);
-            const unsubscribeThemeTable = inData.repositories.theme.subscribe(fetchDataForLib);
-            return () => {
-                unsubscribeTemplateTable;
-                unsubscribeThemeTable;
-            };
-        }, []
-    )
+
+        fetchDataForLib();
+
+        const unsubscribeTemplateTable =
+            inData.repositories.template.subscribe(fetchDataForLib);
+
+        const unsubscribeThemeTable =
+            inData.repositories.theme.subscribe(fetchDataForLib);
+
+        return () => {
+            unsubscribeTemplateTable;
+            unsubscribeThemeTable;
+        };
+
+    }, []);
 
     const onPickTemplate = (template : Template) => {
+
       setTemplate(template)
+
       setActiveCode({
         type: CodeType.Template,
         content: template.content
@@ -180,8 +212,10 @@ export const ThemeEditor = (props : ThemeEditorProps) => {
     }
 
     const onPickConfig = (theme : Theme | undefined) => {
+
       if(!theme)
         return
+
       setActiveCode({
         type: CodeType.Theme,
         content: theme.sty_source
@@ -191,48 +225,122 @@ export const ThemeEditor = (props : ThemeEditorProps) => {
     return (
       <>
         <Header expanded={expanded} setExpanded={setExpanded} >
-  <div className='w-full flex justify-end items-center gap-4 pr-30'>
-    <button
-  onClick={saveChange}
-  disabled={!activeChanges}
-  className="text-grey hover:text-mywhite disabled:opacity-100 disabled:text-grey disabled:cursor-default"
->
-  SAVE
-</button>
-    <Link to={base}>
-      <a className="text-grey hover:text-mywhite">BACK</a>
-    </Link>
-  </div>
-</Header>
-        <div className='grow flex flex-row'>
-            <Sidebar
-                expanded={expanded}
+          <div className='w-full flex justify-end items-center gap-4 pr-30'>
+
+            <button
+              onClick={saveChange}
+              disabled={!activeChanges}
+              className="text-grey hover:text-mywhite disabled:opacity-100 disabled:text-grey disabled:cursor-default"
             >
+              SAVE
+            </button>
+
+            <button
+  className="text-grey hover:text-mywhite"
+  onClick={() => {
+    if (activeChanges) {
+      setShowUnsavedDialog(true);
+    } else {
+      window.location.href = base;
+    }
+  }}
+>
+  BACK
+</button>
+
+          </div>
+        </Header>
+
+        <div className='grow flex flex-row'>
+
+            <Sidebar expanded={expanded}>
+
               <div>
+
                 <h2 className='text-mywhite m-2'>CONFIG</h2>
-                  <div className='min-w-50 flex flex-col gap-2'>
-                    <button className='text-mywhite text-left p-2 bg-darker hover:bg-darkest hover:text-primary mx-2' onClick={()=>onPickConfig(theme)} >config</button>
-                  </div>
+
+                <div className='min-w-50 flex flex-col gap-2'>
+                  <button
+                    className='text-mywhite text-left p-2 bg-darker hover:bg-darkest hover:text-primary mx-2'
+                    onClick={()=>onPickConfig(theme)}
+                  >
+                    config
+                  </button>
+                </div>
+
                 <h2 className='text-mywhite m-2'>TEMPLATES</h2>
+
                 <div className='min-w-50 flex flex-col gap-2'>                
                   {
-                      templates?.map(t => (
-                          <button className='text-mywhite text-left p-2 bg-darker hover:bg-darkest hover:text-primary mx-2' onClick={() => onPickTemplate(t)}>{t.name}</button>
+                      templates.map(t => (
+                          <button
+                          key={t.id}
+                          className='text-mywhite text-left p-2 bg-darker hover:bg-darkest hover:text-primary mx-2'
+                           onClick={() => {
+                           if (activeChanges) {
+                               setPendingTemplate(t);
+                              setShowUnsavedDialog(true);
+                      } else {
+                                onPickTemplate(t);
+                       }
+  }}
+>
+  {t.name}
+</button>
                       ))
                   }
                 </div>
+
               </div>
+
             </Sidebar>
-            <Editor 
-              height="h-full" 
-              defaultLanguage="latex" 
-              value={activeCode?.content} 
-              // defaultValue="% some comment\n\\section{Hello $x^2$}"
-              theme="latex-dark"
-              onMount={handleEditorDidMount}
-              onChange={handleEditorChange}
-            />
+
+            <Editor
+               height="h-full"
+                   defaultLanguage="latex"
+                   value={activeCode?.content}
+                   theme="latex-dark"
+                  onMount={handleEditorDidMount}
+                   onChange={handleEditorChange}
+/>
+
         </div>
+{showUnsavedDialog && (
+  <div className="fixed inset-0 flex items-center justify-center bg-black/60 z-50">
+    <div className="bg-darkest p-6 rounded flex flex-col gap-4">
+      <h2 className="text-mywhite text-lg">Unsaved Changes</h2>
+
+      <p className="text-grey">
+        You have unsaved changes. Leave without saving?
+      </p>
+
+      <div className="flex gap-4 justify-end">
+        <button
+          className="text-grey hover:text-mywhite"
+          onClick={() => setShowUnsavedDialog(false)}
+        >
+          Cancel
+        </button>
+
+        <button
+           className="text-red-400 hover:text-red-300"
+            onClick={() => {
+            if (pendingTemplate) {
+               onPickTemplate(pendingTemplate);
+              setPendingTemplate(null);
+                setShowUnsavedDialog(false);
+             setActiveChanges(undefined);
+           } else {
+            window.location.href = base;
+          }
+  }}
+>
+  Leave
+</button>
+      </div>
+    </div>
+  </div>
+)}
         <Footer />
       </>
     )
