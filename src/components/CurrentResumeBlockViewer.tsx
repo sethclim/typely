@@ -88,7 +88,7 @@ export const CurrentResumeBlockViewer = (props : CurrentResumeBlockViewerProps) 
 
         const newTheme = themes.filter(t => t.name === newThemeName.toLowerCase())[0]
 
-        console.log("@newTheme " + JSON.stringify(newTheme))
+        console.log("@newTheme " + newTheme.name)
 
         // Change resume config theme
         // change sections to point to right template from new theme
@@ -101,10 +101,10 @@ export const CurrentResumeBlockViewer = (props : CurrentResumeBlockViewerProps) 
         
         props.resume?.sections.forEach(section => {
 
-            console.log("section.sectionType " + section.sectionType)
+            // console.log("section.sectionType " + section.sectionType)
             
             const newTemplateForSection = newTheme.templates.filter(t => t.sectionType === section.sectionType)[0]
-            console.log("@newTemplateForSection " + JSON.stringify(newTemplateForSection))
+            // console.log("@newTemplateForSection " + JSON.stringify(newTemplateForSection))
             
             repositories.resumeSectionConfig.updateTemplate(section.id, newTemplateForSection.id, false)
         })

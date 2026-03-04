@@ -17,7 +17,7 @@ export const DuplicateResume = async (
 
     if (!resume) return;
 
-    console.log("resume " + JSON.stringify(resume));
+    // console.log("resume " + JSON.stringify(resume));
 
     try {
         // --- Step 1: Duplicate resume_config ---
