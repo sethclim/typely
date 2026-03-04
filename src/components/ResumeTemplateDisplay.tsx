@@ -1,54 +1,68 @@
-import { useEffect, useState } from "react";
-import { DataItem, ResumeSection } from "../types"
+import { useEffect, useState } from 'react'
+import { DataItem, ResumeSection } from '../types'
 // @ts-ignore
-import SyntaxHighlighter from 'react-syntax-highlighter';
+import SyntaxHighlighter from 'react-syntax-highlighter'
 // @ts-ignore
-import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
-import { useDroppable } from "@dnd-kit/core";
-import clsx from "clsx";
-import { Toggle } from "./Toggle";
-import GroupedTable from "./GroupedDataTable";
-import { GrabHandle } from "./GrabHandle";
+import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs'
+import { useDroppable } from '@dnd-kit/core'
+import clsx from 'clsx'
+import { Toggle } from './Toggle'
+import GroupedTable from './GroupedDataTable'
+import { GrabHandle } from './GrabHandle'
 
-import { useSortable } from "@dnd-kit/sortable";
-import {CSS} from '@dnd-kit/utilities';
-import { SectionContextMenu } from "./SectionContextMenu";
-import { useDataContext } from "../context/data/DataContext";
+import { useSortable } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
+import { SectionContextMenu } from './SectionContextMenu'
+import { useDataContext } from '../context/data/DataContext'
 
 type DataItemDisplayProps = {
-    data : DataItem[]
-    section_id : number
+	data: DataItem[]
+	section_id: number
 }
 
-const DataItemDisplay = (props : DataItemDisplayProps) => {
-    const { repositories } = useDataContext();
-    const {isOver, setNodeRef, active} = useDroppable({
-        id: `dataitem-${props.section_id}`,
-        data: props.data
-    });
+const DataItemDisplay = (props: DataItemDisplayProps) => {
+	const { repositories } = useDataContext()
+	const { isOver, setNodeRef, active } = useDroppable({
+		id: `dataitem-${props.section_id}`,
+		data: props.data,
+	})
 
-    const [bgColor, setBGColor] = useState('');
+	const [bgColor, setBGColor] = useState('')
 
-    useEffect(()=>{
-        (isOver && active?.id.toString().startsWith("dataitem-"))  ? setBGColor('bg-green-900') : setBGColor('')
-    },[isOver])
+	useEffect(() => {
+		isOver && active?.id.toString().startsWith('dataitem-')
+			? setBGColor('bg-green-900')
+			: setBGColor('')
+	}, [isOver])
 
-    const RemoveDataItemFromResume = (data_item_id : number) =>{
-       repositories.resumeSectionData.delete({section_id : props.section_id,  data_item_id : data_item_id})
-    }
+	const RemoveDataItemFromResume = (data_item_id: number) => {
+		repositories.resumeSectionData.delete({
+			section_id: props.section_id,
+			data_item_id: data_item_id,
+		})
+	}
 
-    return(
-        <div ref={setNodeRef} className="flex flex-col w-full items-start justify-start  min-h-5 pt-2">
-            <Toggle 
-                buttonStyle={clsx(["flex justify-between items-center px-2 py-1 text-sm font-medium text-left text-mywhite bg-darkest rounded-sm ", bgColor])}
-                panelStyle={clsx(["pt-4 bg-darkest p-2 ", bgColor])}
-                barContents={
-                    <p className="text-grey text-md font-bold">Data Items: ({props.data? props.data.length : 0})</p>
-                }>
-                <GroupedTable dataItems={props.data} onRemove={RemoveDataItemFromResume} />
-            </Toggle>
-        </div>
-    )
+	return (
+		<div
+			ref={setNodeRef}
+			className="flex flex-col w-full items-start justify-start  min-h-5 pt-2"
+		>
+			<Toggle
+				buttonStyle={clsx([
+					'flex justify-between items-center px-2 py-1 text-sm font-medium text-left text-mywhite bg-darkest rounded-sm ',
+					bgColor,
+				])}
+				panelStyle={clsx(['pt-4 bg-darkest p-2 ', bgColor])}
+				barContents={
+					<p className="text-grey text-md font-bold">
+						Data Items: ({props.data ? props.data.length : 0})
+					</p>
+				}
+			>
+				<GroupedTable dataItems={props.data} onRemove={RemoveDataItemFromResume} />
+			</Toggle>
+		</div>
+	)
 }
 
 // type TemplateItemDisplayProps = {
@@ -70,7 +84,7 @@ const DataItemDisplay = (props : DataItemDisplayProps) => {
 
 //     return (
 //         <div ref={setNodeRef} className="min-w-0 flex flex-col w-full items-start justify-start min-h-5 pt-2">
-//             <Toggle 
+//             <Toggle
 //                 buttonStyle={clsx(["min-w-0 flex justify-between items-center px-2  py-1 text-sm font-medium text-left text-grey bg-darkest rounded-sm", bgColor])}
 //                 panelStyle={clsx(["min-w-0 pt-4 bg-darkest  w-full overflow-hidden", bgColor])}
 //                 barContents={
@@ -94,44 +108,49 @@ const DataItemDisplay = (props : DataItemDisplayProps) => {
 // }
 
 type ResumeTemplateDisplayProps = {
-    resumeSection : ResumeSection
+	resumeSection: ResumeSection
 }
 
-export const ResumeSectionCard = (props : ResumeTemplateDisplayProps) => {
+export const ResumeSectionCard = (props: ResumeTemplateDisplayProps) => {
+	const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
+		id: `section-${props.resumeSection.id}`,
+		data: props.resumeSection,
+	})
 
-    const {
-        attributes,
-        listeners,
-        setNodeRef,
-        transform,
-        transition,
-    } = useSortable({id: `section-${props.resumeSection.id}`, data: props.resumeSection});
-
-    return(
-        <div className="min-w-0 flex flex-row w-full items-center bg-gradient-to-tr from-darker via-dark/70 to-primary/50 p-2 rounded-lg" ref={setNodeRef} {...listeners} {...attributes}  style={{
-            transform: CSS.Transform.toString(transform),
-            transition: transition
-        }}>
-            <div className="w-full min-w-0">
-                <div className="flex flex-row w-full group">
-                    <div className="grow w-full flex">
-                        <div className="flex flex-row relative">
-                            <h3 className="text-mywhite text-lg">{props.resumeSection.title}</h3>
-                            <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-150">
-                                <SectionContextMenu section={props.resumeSection} />
-                            </div>
-                        </div>
-                    </div>
-                    <div className="inline-flex items-center px-2 rounded-sm bg-black/30 text-other/80 text-xs">
-                        {props.resumeSection.sectionType}
-                    </div>
-                </div>
-                {/* <TemplateItemDisplay template={props.resumeSection.template}  section_id={props.resumeSection.id} /> */}
-                <DataItemDisplay data={props.resumeSection.items} section_id={props.resumeSection.id} />
-            </div>
-            <div className="pl-2">
-                <GrabHandle dotColor="bg-darkest" />
-            </div>
-        </div>
-    )
+	return (
+		<div
+			className="min-w-0 flex flex-row w-full items-center bg-gradient-to-tr from-darker via-dark/70 to-primary/50 p-2 rounded-lg"
+			ref={setNodeRef}
+			{...listeners}
+			{...attributes}
+			style={{
+				transform: CSS.Transform.toString(transform),
+				transition: transition,
+			}}
+		>
+			<div className="w-full min-w-0">
+				<div className="flex flex-row w-full group">
+					<div className="grow w-full flex">
+						<div className="flex flex-row relative">
+							<h3 className="text-mywhite text-lg">{props.resumeSection.title}</h3>
+							<div className="opacity-0 group-hover:opacity-100 transition-opacity duration-150">
+								<SectionContextMenu section={props.resumeSection} />
+							</div>
+						</div>
+					</div>
+					<div className="inline-flex items-center px-2 rounded-sm bg-black/30 text-other/80 text-xs">
+						{props.resumeSection.sectionType}
+					</div>
+				</div>
+				{/* <TemplateItemDisplay template={props.resumeSection.template}  section_id={props.resumeSection.id} /> */}
+				<DataItemDisplay
+					data={props.resumeSection.items}
+					section_id={props.resumeSection.id}
+				/>
+			</div>
+			<div className="pl-2">
+				<GrabHandle dotColor="bg-darkest" />
+			</div>
+		</div>
+	)
 }

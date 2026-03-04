@@ -1,239 +1,234 @@
 import { Editor, Monaco } from '@monaco-editor/react'
 import { Link, useRouterState } from '@tanstack/react-router'
-import { Header } from '../components/Header';
-import { Sidebar } from '../components/Sidebar';
-import { Footer } from '../components/Footer';
-import { useEffect, useState } from 'react';
-import { mapRowToTemplate } from '../components/ComponentLibrary';
-import { Template, Theme } from '../types';
-import { myLang } from '../components/editor/monaco/latex';
-import type * as monacoEditor from "monaco-editor";
-import { useDataContext } from '../context/data/DataContext';
+import { Header } from '../components/Header'
+import { Sidebar } from '../components/Sidebar'
+import { Footer } from '../components/Footer'
+import { useEffect, useState } from 'react'
+import { mapRowToTemplate } from '../components/ComponentLibrary'
+import { Template, Theme } from '../types'
+import { myLang } from '../components/editor/monaco/latex'
+import type * as monacoEditor from 'monaco-editor'
+import { useDataContext } from '../context/data/DataContext'
 
-const mapThemeRowToTheme = (themeRow : {
-    id: number;
-    name: string | null;
-    description: string | null;
-    stySource: string | null;
-    isSystem: boolean | null;
-    ownerUserId: string | null;
-    createdAt: string | null;
-} | null) : Theme => {
-  if (themeRow === null) throw Error("null themeRow")
-  const t : Theme = {
-    id: themeRow.id!,
-    name: themeRow.name!,
-    description: themeRow.description!,
-    sty_source: themeRow.stySource!,
-    is_system: themeRow.isSystem!,
-    owner_user_id: themeRow.ownerUserId!,
-    created_at: themeRow.createdAt!,
-    templates: []
-  }
-  return t
+const mapThemeRowToTheme = (
+	themeRow: {
+		id: number
+		name: string | null
+		description: string | null
+		stySource: string | null
+		isSystem: boolean | null
+		ownerUserId: string | null
+		createdAt: string | null
+	} | null
+): Theme => {
+	if (themeRow === null) throw Error('null themeRow')
+	const t: Theme = {
+		id: themeRow.id!,
+		name: themeRow.name!,
+		description: themeRow.description!,
+		sty_source: themeRow.stySource!,
+		is_system: themeRow.isSystem!,
+		owner_user_id: themeRow.ownerUserId!,
+		created_at: themeRow.createdAt!,
+		templates: []
+	}
+	return t
 }
 
 function useSaveShortcut(onSave: () => void) {
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      // For Windows/Linux: ctrlKey + 's'
-      // For Mac: metaKey (Cmd) + 's'
-      if ((event.ctrlKey || event.metaKey) && event.key === 's') {
-        event.preventDefault(); // Prevent the browser's save dialog
-        onSave();
-      }
-    };
+	useEffect(() => {
+		const handleKeyDown = (event: KeyboardEvent) => {
+			// For Windows/Linux: ctrlKey + 's'
+			// For Mac: metaKey (Cmd) + 's'
+			if ((event.ctrlKey || event.metaKey) && event.key === 's') {
+				event.preventDefault() // Prevent the browser's save dialog
+				onSave()
+			}
+		}
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [onSave]);
+		window.addEventListener('keydown', handleKeyDown)
+		return () => {
+			window.removeEventListener('keydown', handleKeyDown)
+		}
+	}, [onSave])
 }
 
 enum CodeType {
-  Theme,
-  Template
+	Theme,
+	Template
 }
 
 type ActiveCode = {
-  type: CodeType,
-  content: string
+	type: CodeType
+	content: string
 }
 
 export type ThemeEditorProps = {
-    themeId : string
+	themeId: string
 }
 
-export const ThemeEditor = (props : ThemeEditorProps) => {
-    // const { themeId } = props.Route.useParams()
-    const [expanded, setExpanded] = useState(true);
-    const [templates, setTemplates] = useState<Array<Template>>();
-    const [theme, setTheme] = useState<Theme>();
-    const [template, setTemplate] = useState<Template | undefined>(undefined)
+export const ThemeEditor = (props: ThemeEditorProps) => {
+	// const { themeId } = props.Route.useParams()
+	const [expanded, setExpanded] = useState(true)
+	const [templates, setTemplates] = useState<Array<Template>>()
+	const [theme, setTheme] = useState<Theme>()
+	const [template, setTemplate] = useState<Template | undefined>(undefined)
 
-    const [activeCode, setActiveCode]  = useState<ActiveCode | undefined>(undefined)
-    const [activeChanges, setActiveChanges] = useState<string | undefined>(undefined)
+	const [activeCode, setActiveCode] = useState<ActiveCode | undefined>(undefined)
+	const [activeChanges, setActiveChanges] = useState<string | undefined>(undefined)
 
-    const { location } = useRouterState();
+	const { location } = useRouterState()
 
-    const isDemo = location.pathname.startsWith('/demo');
-    const base = isDemo ? '/demo' : '/app';
+	const isDemo = location.pathname.startsWith('/demo')
+	const base = isDemo ? '/demo' : '/app'
 
-    const inData = useDataContext();
+	const inData = useDataContext()
 
-    const saveChange = () => {
-        if(!activeChanges)
-          return
+	const saveChange = () => {
+		if (!activeChanges) return
 
-        if(activeCode?.type === CodeType.Template)
-        {
-          if(!template)
-            return
-          
-          console.log('Saving Template...');
-          inData.repositories.template.update(template.id, activeChanges)
-        }
-        else if(activeCode?.type === CodeType.Theme){
-          if(!theme?.id)
-            return
-          console.log('Saving Theme...');
-          inData.repositories.template.update(theme.id, activeChanges)
-        }
-    }
+		if (activeCode?.type === CodeType.Template) {
+			if (!template) return
 
-    useSaveShortcut(saveChange);
+			console.log('Saving Template...')
+			inData.repositories.template.update(template.id, activeChanges)
+		} else if (activeCode?.type === CodeType.Theme) {
+			if (!theme?.id) return
+			console.log('Saving Theme...')
+			inData.repositories.template.update(theme.id, activeChanges)
+		}
+	}
 
-    const handleEditorChange = (text : string | undefined) => {
-        setActiveChanges(text)
-    }
+	useSaveShortcut(saveChange)
 
+	const handleEditorChange = (text: string | undefined) => {
+		setActiveChanges(text)
+	}
 
-    function handleEditorDidMount(editor: monacoEditor.editor.IStandaloneCodeEditor , monaco: Monaco) {
-  
-      monaco.languages.register({ id: "latex" });
-      monaco.languages.setMonarchTokensProvider("latex", myLang);
-      monaco.editor.defineTheme("latex-dark", {
-        base: "vs-dark",
-        inherit: true,
-        rules: [
-          { token: "keyword.command", foreground: "C586C0" },
-          { token: "string.math", foreground: "4EC9B0" },
-          { token: "comment", foreground: "6A9955" },
-          { token: "delimiter.brace", foreground: "D4D4D4" },
-          { token: "placeholder", foreground: "FF9E64", fontStyle: "bold underline" },
-        ],
-        colors: {
-          "editor.background": "#0F1117",
-          "editor.foreground": "#D4D4D4",
-        },
-      });
+	function handleEditorDidMount(editor: monacoEditor.editor.IStandaloneCodeEditor, monaco: Monaco) {
+		monaco.languages.register({ id: 'latex' })
+		monaco.languages.setMonarchTokensProvider('latex', myLang)
+		monaco.editor.defineTheme('latex-dark', {
+			base: 'vs-dark',
+			inherit: true,
+			rules: [
+				{ token: 'keyword.command', foreground: 'C586C0' },
+				{ token: 'string.math', foreground: '4EC9B0' },
+				{ token: 'comment', foreground: '6A9955' },
+				{ token: 'delimiter.brace', foreground: 'D4D4D4' },
+				{ token: 'placeholder', foreground: 'FF9E64', fontStyle: 'bold underline' }
+			],
+			colors: {
+				'editor.background': '#0F1117',
+				'editor.foreground': '#D4D4D4'
+			}
+		})
 
+		monaco.editor.setTheme('latex-dark')
 
-      monaco.editor.setTheme("latex-dark");
+		const model = editor.getModel()
+		if (model) {
+			monaco.editor.setModelLanguage(model, 'latex') // rebind
+		}
+	}
 
-      const model = editor.getModel();
-      if (model) {
-        monaco.editor.setModelLanguage(model, "latex"); // rebind
-      }
-    }
+	const fetchDataForLib = async () => {
+		// await DB.ready;
+		const data = inData.repositories.theme.get(parseInt(props.themeId))
+		const theme = mapThemeRowToTheme(data)
+		setTheme(theme)
 
+		const templateData = inData.repositories.template.getByThemeId(theme.id)
+		const hydratedTemplates = templateData.map((item) => mapRowToTemplate(item))
 
+		setTemplates(hydratedTemplates)
+		if (hydratedTemplates.length > 0) {
+			setTemplate(hydratedTemplates[0])
+			setActiveCode({
+				type: CodeType.Template,
+				content: hydratedTemplates[0].content
+			})
+		}
+	}
 
-    const fetchDataForLib = async () => {
-        // await DB.ready;
-        const data = inData.repositories.theme.get(parseInt(props.themeId))
-        const theme = mapThemeRowToTheme(data)
-        setTheme(theme)
-        
-        const templateData = inData.repositories.template.getByThemeId(theme.id);
-        const hydratedTemplates = templateData.map((item) => mapRowToTemplate(item))
+	useEffect(() => {
+		fetchDataForLib()
+		const unsubscribeTemplateTable = inData.repositories.template.subscribe(fetchDataForLib)
+		const unsubscribeThemeTable = inData.repositories.theme.subscribe(fetchDataForLib)
+		return () => {
+			unsubscribeTemplateTable
+			unsubscribeThemeTable
+		}
+	}, [])
 
-        setTemplates(hydratedTemplates)
-        if(hydratedTemplates.length > 0)
-        {
-          setTemplate(hydratedTemplates[0])
-          setActiveCode({
-            type: CodeType.Template,
-            content: hydratedTemplates[0].content
-          })
-        }
-    }
+	const onPickTemplate = (template: Template) => {
+		setTemplate(template)
+		setActiveCode({
+			type: CodeType.Template,
+			content: template.content
+		})
+	}
 
-    useEffect(() => {
-            fetchDataForLib();
-            const unsubscribeTemplateTable = inData.repositories.template.subscribe(fetchDataForLib);
-            const unsubscribeThemeTable = inData.repositories.theme.subscribe(fetchDataForLib);
-            return () => {
-                unsubscribeTemplateTable;
-                unsubscribeThemeTable;
-            };
-        }, []
-    )
+	const onPickConfig = (theme: Theme | undefined) => {
+		if (!theme) return
+		setActiveCode({
+			type: CodeType.Theme,
+			content: theme.sty_source
+		})
+	}
 
-    const onPickTemplate = (template : Template) => {
-      setTemplate(template)
-      setActiveCode({
-        type: CodeType.Template,
-        content: template.content
-      })
-    }
-
-    const onPickConfig = (theme : Theme | undefined) => {
-      if(!theme)
-        return
-      setActiveCode({
-        type: CodeType.Theme,
-        content: theme.sty_source
-      })
-    }
-
-    return (
-      <>
-        <Header expanded={expanded} setExpanded={setExpanded} >
-  <div className='w-full flex justify-end items-center gap-4 pr-30'>
-    <button
-  onClick={saveChange}
-  disabled={!activeChanges}
-  className="text-grey hover:text-mywhite disabled:opacity-100 disabled:text-grey disabled:cursor-default"
->
-  SAVE
-</button>
-    <Link to={base}>
-      <a className="text-grey hover:text-mywhite">BACK</a>
-    </Link>
-  </div>
-</Header>
-        <div className='grow flex flex-row'>
-            <Sidebar
-                expanded={expanded}
-            >
-              <div>
-                <h2 className='text-mywhite m-2'>CONFIG</h2>
-                  <div className='min-w-50 flex flex-col gap-2'>
-                    <button className='text-mywhite text-left p-2 bg-darker hover:bg-darkest hover:text-primary mx-2' onClick={()=>onPickConfig(theme)} >config</button>
-                  </div>
-                <h2 className='text-mywhite m-2'>TEMPLATES</h2>
-                <div className='min-w-50 flex flex-col gap-2'>                
-                  {
-                      templates?.map(t => (
-                          <button className='text-mywhite text-left p-2 bg-darker hover:bg-darkest hover:text-primary mx-2' onClick={() => onPickTemplate(t)}>{t.name}</button>
-                      ))
-                  }
-                </div>
-              </div>
-            </Sidebar>
-            <Editor 
-              height="h-full" 
-              defaultLanguage="latex" 
-              value={activeCode?.content} 
-              // defaultValue="% some comment\n\\section{Hello $x^2$}"
-              theme="latex-dark"
-              onMount={handleEditorDidMount}
-              onChange={handleEditorChange}
-            />
-        </div>
-        <Footer />
-      </>
-    )
+	return (
+		<>
+			<Header expanded={expanded} setExpanded={setExpanded}>
+				<div className="w-full flex justify-end items-center gap-4 pr-30">
+					<button
+						onClick={saveChange}
+						disabled={!activeChanges}
+						className="text-grey hover:text-mywhite disabled:opacity-100 disabled:text-grey disabled:cursor-default"
+					>
+						SAVE
+					</button>
+					<Link to={base}>
+						<a className="text-grey hover:text-mywhite">BACK</a>
+					</Link>
+				</div>
+			</Header>
+			<div className="grow flex flex-row">
+				<Sidebar expanded={expanded}>
+					<div>
+						<h2 className="text-mywhite m-2">CONFIG</h2>
+						<div className="min-w-50 flex flex-col gap-2">
+							<button
+								className="text-mywhite text-left p-2 bg-darker hover:bg-darkest hover:text-primary mx-2"
+								onClick={() => onPickConfig(theme)}
+							>
+								config
+							</button>
+						</div>
+						<h2 className="text-mywhite m-2">TEMPLATES</h2>
+						<div className="min-w-50 flex flex-col gap-2">
+							{templates?.map((t) => (
+								<button
+									className="text-mywhite text-left p-2 bg-darker hover:bg-darkest hover:text-primary mx-2"
+									onClick={() => onPickTemplate(t)}
+								>
+									{t.name}
+								</button>
+							))}
+						</div>
+					</div>
+				</Sidebar>
+				<Editor
+					height="h-full"
+					defaultLanguage="latex"
+					value={activeCode?.content}
+					// defaultValue="% some comment\n\\section{Hello $x^2$}"
+					theme="latex-dark"
+					onMount={handleEditorDidMount}
+					onChange={handleEditorChange}
+				/>
+			</div>
+			<Footer />
+		</>
+	)
 }
