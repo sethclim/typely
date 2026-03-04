@@ -62,20 +62,14 @@ export const Settings = () => {
 						{oPFSSaveExists ? (
 							<>
 								<p className="text-grey">Autosave Backup</p>
-								<button
-									className="bg-mywhite text-black p-2 rounded"
-									onClick={onRestoreFromOPFS}
-								>
+								<button className="bg-mywhite text-black p-2 rounded" onClick={onRestoreFromOPFS}>
 									RESTORE
 								</button>
 							</>
 						) : null}
 						<p>{}</p>
 						<p className="text-grey">Download data from browser</p>
-						<button
-							className="bg-mywhite text-black p-2 rounded"
-							onClick={backUpSQLite}
-						>
+						<button className="bg-mywhite text-black p-2 rounded" onClick={backUpSQLite}>
 							BACKUP DATA
 						</button>
 						<p className="text-grey">Restore From Save</p>

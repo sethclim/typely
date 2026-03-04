@@ -1,6 +1,5 @@
 import { chromium } from '@playwright/test'
 import fs from 'fs/promises'
-
 ;(async () => {
 	const browser = await chromium.connectOverCDP('http://127.0.0.1:9222')
 

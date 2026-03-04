@@ -1,292 +1,290 @@
-import { useEffect, useState } from "react"
-import { DataItem, DataItemType, Template } from "../types";
-import ThreeWaySlider from "./ThreeWaySlider";
+import { useEffect, useState } from 'react'
+import { DataItem, DataItemType, Template } from '../types'
+import ThreeWaySlider from './ThreeWaySlider'
 
 // @ts-ignore
-import SyntaxHighlighter from 'react-syntax-highlighter';
+import SyntaxHighlighter from 'react-syntax-highlighter'
 // @ts-ignore
-import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs'
 
-import { AddDetailsModal } from "./AddDataItemModal";
-import { LatexEditor } from "./LatexEditor";
-import { AddTemplateModal } from "./AddTemplateModal";
-import { Draggable } from "./Draggable";
-import { Toggle } from "./Toggle";
-import { GrabHandle } from "./GrabHandle";
-import { PlusIcon } from "@heroicons/react/20/solid";
-import { DeleteModal } from "./DeleteModal";
-import { useDataContext } from "../context/data/DataContext";
+import { AddDetailsModal } from './AddDataItemModal'
+import { LatexEditor } from './LatexEditor'
+import { AddTemplateModal } from './AddTemplateModal'
+import { Draggable } from './Draggable'
+import { Toggle } from './Toggle'
+import { GrabHandle } from './GrabHandle'
+import { PlusIcon } from '@heroicons/react/20/solid'
+import { DeleteModal } from './DeleteModal'
+import { useDataContext } from '../context/data/DataContext'
 
 // type componentLibraryProps = {
 //     // latex_comps : Array<Block>
 // }
 
 export type DataItemsProps = {
-    dataItem : DataItem
+	dataItem: DataItem
 }
 
-export const DataItemComponent = (props : DataItemsProps) => {
-    const [isEditDataItemModalOpen, setIsOpenEditDataItemModal] = useState(false);
-    const [showDeleteModal, setShowDeleteModal] = useState(false)
+export const DataItemComponent = (props: DataItemsProps) => {
+	const [isEditDataItemModalOpen, setIsOpenEditDataItemModal] = useState(false)
+	const [showDeleteModal, setShowDeleteModal] = useState(false)
 
-    const { repositories } = useDataContext()
+	const { repositories } = useDataContext()
 
-    
-    const onEdit = (e : React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        e.stopPropagation()
-        setIsOpenEditDataItemModal(true)
-    }
+	const onEdit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+		e.stopPropagation()
+		setIsOpenEditDataItemModal(true)
+	}
 
-    const onDelete = (e : React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        e.stopPropagation()
-        setShowDeleteModal(true)
-    }
+	const onDelete = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+		e.stopPropagation()
+		setShowDeleteModal(true)
+	}
 
-    const performDeleteAction = () => {
-        repositories.resumeDataItem.delete(props.dataItem.id)
-        setShowDeleteModal(false)
-    }
+	const performDeleteAction = () => {
+		repositories.resumeDataItem.delete(props.dataItem.id)
+		setShowDeleteModal(false)
+	}
 
-    return(
-        <>
-            <Toggle
-                buttonStyle = "flex justify-between items-center px-2 py-1 text-sm font-medium text-left text-white bg-darkest rounded-sm group" 
-                barContents={
-                    <div className="flex flex-1 justify-between pr-4">
-                        <h3 className="text-grey text-md text-bold">{props.dataItem.title}</h3>
-                        <div className="flex flex-row gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-100">
-                            <button className="text-grey hover:text-mywhite" onClick={(e) => onEdit(e)}>Edit</button>
-                            <button className="text-grey hover:text-mywhite" onClick={(e) => onDelete(e)}>Delete</button>
-                        </div>
-                    </div>
-                }
-                postBarContent={
-                    <div className="pl-2">
-                        <GrabHandle />
-                    </div>
-                }
-                >
-            {
-                (props.dataItem.data !== null) ? (
-                    <table className="min-w-full divide-y divide-white border border-white bg-black">
-                        <thead className="">
-                            <tr>
-                            <th className="px-2 py-2 text-left font-medium text-white">Key</th>
-                            <th className="px-2 py-2 text-left font-medium text-white">Value</th>
-                            </tr>
-                        </thead>
-                        <tbody className="bg-darker divide-y divide-white border border-white">
-                          {props.dataItem.data.map(([key, value]) => (
-                            <tr key={key} className="hover:bg-dark">
-                                <th className="px-2 py-2 text-left font-medium text-grey">{key}</th>
-                                <td className="px-2 py-2 text-left text-grey">{value}</td>
-                            </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                    // <p className="text-white max-h-40 text-ellipsis">{props.dataItem.data}</p>
-                ):null
-            }
-            </Toggle>
-            <AddDetailsModal isOpen={isEditDataItemModalOpen} setIsOpen={setIsOpenEditDataItemModal} dataItem={props.dataItem} edit={true} />
-            <DeleteModal 
-                msg={`Are you sure you want to delete ${props?.dataItem.title}?`} 
-                setIsOpen={setShowDeleteModal} 
-                isOpen={showDeleteModal}   
-                dangerAction={performDeleteAction}/>
-        </>
-    )
+	return (
+		<>
+			<Toggle
+				buttonStyle="flex justify-between items-center px-2 py-1 text-sm font-medium text-left text-white bg-darkest rounded-sm group"
+				barContents={
+					<div className="flex flex-1 justify-between pr-4">
+						<h3 className="text-grey text-md text-bold">{props.dataItem.title}</h3>
+						<div className="flex flex-row gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-100">
+							<button className="text-grey hover:text-mywhite" onClick={(e) => onEdit(e)}>
+								Edit
+							</button>
+							<button className="text-grey hover:text-mywhite" onClick={(e) => onDelete(e)}>
+								Delete
+							</button>
+						</div>
+					</div>
+				}
+				postBarContent={
+					<div className="pl-2">
+						<GrabHandle />
+					</div>
+				}
+			>
+				{props.dataItem.data !== null ? (
+					<table className="min-w-full divide-y divide-white border border-white bg-black">
+						<thead className="">
+							<tr>
+								<th className="px-2 py-2 text-left font-medium text-white">Key</th>
+								<th className="px-2 py-2 text-left font-medium text-white">Value</th>
+							</tr>
+						</thead>
+						<tbody className="bg-darker divide-y divide-white border border-white">
+							{props.dataItem.data.map(([key, value]) => (
+								<tr key={key} className="hover:bg-dark">
+									<th className="px-2 py-2 text-left font-medium text-grey">{key}</th>
+									<td className="px-2 py-2 text-left text-grey">{value}</td>
+								</tr>
+							))}
+						</tbody>
+					</table>
+				) : // <p className="text-white max-h-40 text-ellipsis">{props.dataItem.data}</p>
+				null}
+			</Toggle>
+			<AddDetailsModal
+				isOpen={isEditDataItemModalOpen}
+				setIsOpen={setIsOpenEditDataItemModal}
+				dataItem={props.dataItem}
+				edit={true}
+			/>
+			<DeleteModal
+				msg={`Are you sure you want to delete ${props?.dataItem.title}?`}
+				setIsOpen={setShowDeleteModal}
+				isOpen={showDeleteModal}
+				dangerAction={performDeleteAction}
+			/>
+		</>
+	)
 }
-
 
 export type TemplateItemComponentProps = {
-    template: Template
+	template: Template
 }
 
-export const TemplateItemComponent = (props : TemplateItemComponentProps) => {
-    const [isOpen, setIsOpen] = useState(false);
-    const [showDeleteModal, setShowDeleteModal] = useState(false)
+export const TemplateItemComponent = (props: TemplateItemComponentProps) => {
+	const [isOpen, setIsOpen] = useState(false)
+	const [showDeleteModal, setShowDeleteModal] = useState(false)
 
-    const { repositories } = useDataContext()
+	const { repositories } = useDataContext()
 
-    const edit = (e : React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        e.stopPropagation();
-        setIsOpen(true)
-    }
+	const edit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+		e.stopPropagation()
+		setIsOpen(true)
+	}
 
-    
-    const onDelete = (e : React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        e.stopPropagation()
-        setShowDeleteModal(true)
-    }
+	const onDelete = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+		e.stopPropagation()
+		setShowDeleteModal(true)
+	}
 
-    const performDeleteAction = () => {
-        repositories.template.delete(props.template.id)
-        setShowDeleteModal(false)
-    }
+	const performDeleteAction = () => {
+		repositories.template.delete(props.template.id)
+		setShowDeleteModal(false)
+	}
 
-    const saveChange = (text : string) => {
-        repositories.template.update(props.template.id, text)
-    }
+	const saveChange = (text: string) => {
+		repositories.template.update(props.template.id, text)
+	}
 
-    return (
-        <>
-            <Toggle 
-                buttonStyle = "flex justify-between items-center px-2 py-1 text-sm font-medium text-left text-white bg-darkest rounded-sm group" 
-                barContents={
-                    <div className="flex flex-1 justify-between pr-4">
-                        <h3 className="text-md text-bold text-grey">{props.template.name}</h3>
-                        <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-100">
-                            <button className="text-grey hover:text-mywhite px-2" onClick={(e) => edit(e)}>Edit</button>
-                            <button className="text-grey hover:text-mywhite" onClick={(e) => onDelete(e)}>Delete</button>
-                        </div>
-                    </div>
-                }
-                postBarContent={
-                    <div className="pl-2">
-                        <GrabHandle />
-                    </div>
-                }
-            >
-                <SyntaxHighlighter className="z-50 text-left" language="latex" style={atomOneDark} >
-                    {props.template.content}
-                </SyntaxHighlighter>
-            </Toggle>
-            <LatexEditor isOpen={isOpen} setIsOpen={setIsOpen} latex={props.template.content} saveChange={saveChange} />
-            <DeleteModal 
-            msg={`Are you sure you want to delete ${props?.template.name}?`} 
-            setIsOpen={setShowDeleteModal} 
-            isOpen={showDeleteModal}   
-            dangerAction={performDeleteAction}/>
-        </>
-    )
+	return (
+		<>
+			<Toggle
+				buttonStyle="flex justify-between items-center px-2 py-1 text-sm font-medium text-left text-white bg-darkest rounded-sm group"
+				barContents={
+					<div className="flex flex-1 justify-between pr-4">
+						<h3 className="text-md text-bold text-grey">{props.template.name}</h3>
+						<div className="opacity-0 group-hover:opacity-100 transition-opacity duration-100">
+							<button className="text-grey hover:text-mywhite px-2" onClick={(e) => edit(e)}>
+								Edit
+							</button>
+							<button className="text-grey hover:text-mywhite" onClick={(e) => onDelete(e)}>
+								Delete
+							</button>
+						</div>
+					</div>
+				}
+				postBarContent={
+					<div className="pl-2">
+						<GrabHandle />
+					</div>
+				}
+			>
+				<SyntaxHighlighter className="z-50 text-left" language="latex" style={atomOneDark}>
+					{props.template.content}
+				</SyntaxHighlighter>
+			</Toggle>
+			<LatexEditor isOpen={isOpen} setIsOpen={setIsOpen} latex={props.template.content} saveChange={saveChange} />
+			<DeleteModal
+				msg={`Are you sure you want to delete ${props?.template.name}?`}
+				setIsOpen={setShowDeleteModal}
+				isOpen={showDeleteModal}
+				dangerAction={performDeleteAction}
+			/>
+		</>
+	)
 }
 
 export function mapRowToDataItem(
-    row: {
-        id: number;
-        typeId: number;
-        title: string | null;
-        description: string | null;
-        data: string | null;
-        createdAt: string | null;
-        updatedAt: string | null;
-    },
-    // type: DataItemType
+	row: {
+		id: number
+		typeId: number
+		title: string | null
+		description: string | null
+		data: string | null
+		createdAt: string | null
+		updatedAt: string | null
+	}
+	// type: DataItemType
 ): DataItem {
-   const d : DataItemType = {id: 14, name: "TODO"}
-    return {
-        id: row.id!,
-        type:  d,
-        title: row.title ?? undefined,
-        description: row.description ?? undefined,
-        data: row.data ? JSON.parse(row.data) : [],
-        created_at: row.createdAt!,
-        updated_at: row.updatedAt!
-    };
+	const d: DataItemType = { id: 14, name: 'TODO' }
+	return {
+		id: row.id!,
+		type: d,
+		title: row.title ?? undefined,
+		description: row.description ?? undefined,
+		data: row.data ? JSON.parse(row.data) : [],
+		created_at: row.createdAt!,
+		updated_at: row.updatedAt!
+	}
 }
 
-export function mapRowToTemplate(
-    row: {
-    id: number;
-    themeId: number;
-    name: string;
-    sectionType: string;
-    content: string;
-    description: string | null;
-    createdAt: string | null;
-},
-): Template {
-//    const d : DataItemType = {id: 14, name: "TODO"}
-    return {
-        id: row.id!,
-        name: row.name,
-        sectionType: row.sectionType,
-        content: row.content,
-        description: row.description ?? undefined,
-    };
+export function mapRowToTemplate(row: {
+	id: number
+	themeId: number
+	name: string
+	sectionType: string
+	content: string
+	description: string | null
+	createdAt: string | null
+}): Template {
+	//    const d : DataItemType = {id: 14, name: "TODO"}
+	return {
+		id: row.id!,
+		name: row.name,
+		sectionType: row.sectionType,
+		content: row.content,
+		description: row.description ?? undefined
+	}
 }
 
 type AddBarProps = {
-    title : string
-    action : (state : boolean) => void
+	title: string
+	action: (state: boolean) => void
 }
 const AddBar = (props: AddBarProps) => {
-    return(
-        <div className="bg-darkest flex flex-row justify-between items-center p-2 h-10">
-            <p className="text-grey">{props.title}</p>
-            <button className="bg-grey/20 opacity-100 hover:bg-primary/80 my-8 p-1 rounded-sm font-bold text-lg transition-bg duration-150" onClick={() => props.action(true)}>
-                <PlusIcon className="text-mywhite h-5 w-5" />
-            </button>
-        </div>
-    )
+	return (
+		<div className="bg-darkest flex flex-row justify-between items-center p-2 h-10">
+			<p className="text-grey">{props.title}</p>
+			<button
+				className="bg-grey/20 opacity-100 hover:bg-primary/80 my-8 p-1 rounded-sm font-bold text-lg transition-bg duration-150"
+				onClick={() => props.action(true)}
+			>
+				<PlusIcon className="text-mywhite h-5 w-5" />
+			</button>
+		</div>
+	)
 }
 
 export const ComponentLibrary = () => {
+	const [dataItems, setDataItems] = useState<Array<DataItem>>()
+	// const [templates, setTemplates] = useState<Array<Template>>();
 
-    const [dataItems, setDataItems] = useState<Array<DataItem>>();
-    // const [templates, setTemplates] = useState<Array<Template>>();
+	const [level, setLevel] = useState('DataItems')
+	const [isDataItemModalOpen, setIsOpenDataItemModal] = useState(false)
+	const [isTemplateModalOpen, setIsOpenTemplateModal] = useState(false)
 
-    const [level, setLevel] = useState("DataItems");
-    const [isDataItemModalOpen, setIsOpenDataItemModal] = useState(false);
-    const [isTemplateModalOpen, setIsOpenTemplateModal] = useState(false);
+	const { repositories } = useDataContext()
 
-    const {repositories} = useDataContext();
+	const fetchDataForLib = async () => {
+		// await DB.ready;
+		const data = repositories.resumeDataItem.getAll()
+		const hydrated = data.map((item) => mapRowToDataItem(item))
+		setDataItems(hydrated)
 
-    const fetchDataForLib = async () => {
-        // await DB.ready;
-        const data = repositories.resumeDataItem.getAll();
-        const hydrated = data.map((item) => mapRowToDataItem(item))
-        setDataItems(hydrated)
+		// const templateData = TemplateTable.getAll();
+		// const hydratedTemplate = templateData.map((item) => mapRowToTemplate(item))
+		// setTemplates(hydratedTemplate)
+	}
 
-        // const templateData = TemplateTable.getAll();
-        // const hydratedTemplate = templateData.map((item) => mapRowToTemplate(item))
-        // setTemplates(hydratedTemplate)
-    }
+	useEffect(() => {
+		fetchDataForLib()
+		const unsubscribeResumeDataItemTable = repositories.resumeDataItem.subscribe(fetchDataForLib)
+		const unsubscribeTemplateTable = repositories.template.subscribe(fetchDataForLib)
+		return () => {
+			unsubscribeResumeDataItemTable
+			unsubscribeTemplateTable
+		}
+	}, [])
 
-    useEffect(() => {
-            fetchDataForLib();
-            const unsubscribeResumeDataItemTable = repositories.resumeDataItem.subscribe(fetchDataForLib);
-            const unsubscribeTemplateTable = repositories.template.subscribe(fetchDataForLib);
-            return () => {
-                unsubscribeResumeDataItemTable;
-                unsubscribeTemplateTable;
-            };
-        }, []
-    )
+	return (
+		<div className="flex flex-col p-2">
+			<h3 className="text-xl text-bold text-grey">Component Library</h3>
 
-    return (
-        <div className="flex flex-col p-2">
-            <h3 className="text-xl text-bold text-grey">Component Library</h3>
+			<ThreeWaySlider options={['DataItems', 'Instances']} value={level} onChange={setLevel} className="w-full" />
 
-            <ThreeWaySlider
-                options={["DataItems", "Instances"]}
-                value={level}
-                onChange={setLevel}
-                className="w-full"
-            />
-
-                {
-                    (level == "DataItems") ?  
-                        (
-                            <>
-                                <AddBar title="Add Item" action={setIsOpenDataItemModal} />
-                                <div className="flex flex-col gap-1 bg-dark p-2">
-                                {
-                                    dataItems?.map((data_item) => {
-                                        return (
-                                            <Draggable key={data_item.id} dragId={`dataitem-${data_item.id}`} data={data_item}  >
-                                                <DataItemComponent dataItem={data_item} />
-                                            </Draggable>
-                                        )
-                                    })
-                                }
-                                </div> 
-                            </>
-                        )
-                    : null
-                }
-                {/* {
+			{level == 'DataItems' ? (
+				<>
+					<AddBar title="Add Item" action={setIsOpenDataItemModal} />
+					<div className="flex flex-col gap-1 bg-dark p-2">
+						{dataItems?.map((data_item) => {
+							return (
+								<Draggable key={data_item.id} dragId={`dataitem-${data_item.id}`} data={data_item}>
+									<DataItemComponent dataItem={data_item} />
+								</Draggable>
+							)
+						})}
+					</div>
+				</>
+			) : null}
+			{/* {
                     (level == "Templates") ?  
                     <>
                         <AddBar title="Add Template" action={setIsOpenTemplateModal} />
@@ -305,8 +303,8 @@ export const ComponentLibrary = () => {
                     : null
                 } */}
 
-            <AddDetailsModal isOpen={isDataItemModalOpen} setIsOpen={setIsOpenDataItemModal}  />
-            <AddTemplateModal isOpen={isTemplateModalOpen} setIsOpen={setIsOpenTemplateModal}  />
-        </div>
-    )
+			<AddDetailsModal isOpen={isDataItemModalOpen} setIsOpen={setIsOpenDataItemModal} />
+			<AddTemplateModal isOpen={isTemplateModalOpen} setIsOpen={setIsOpenTemplateModal} />
+		</div>
+	)
 }

@@ -1,118 +1,143 @@
-import { useState } from "react";
-import { CreateDemoResume } from "../../helpers/CreateDemoResume";
-import { useRouter } from "@tanstack/react-router";
+import { useState } from 'react'
+import { CreateDemoResume } from '../../helpers/CreateDemoResume'
+import { useRouter } from '@tanstack/react-router'
 
-import { Education, IntakeInfo, Job, Personal, Project, SkillPoint } from "./types"
-import { EducationSection, ExperienceSection, PersonalSection, ProjectsSection, SkillsSection } from "./sections";
-import { Theme } from "../../types";
+import { Education, IntakeInfo, Job, Personal, Project, SkillPoint } from './types'
+import { EducationSection, ExperienceSection, PersonalSection, ProjectsSection, SkillsSection } from './sections'
+import { Theme } from '../../types'
 // import { useThemes } from "../../context/themes/ThemesContext";
-import { useDataContext } from "../../context/data/DataContext";
+import { useDataContext } from '../../context/data/DataContext'
 
 export type ResumeIntakeFormProps = {
-    theme : Theme
-} 
+	theme: Theme
+}
 
 export function ResumeIntakeForm(props: ResumeIntakeFormProps) {
-    const router = useRouter()
-    
-    const [fname, setFName] = useState<string>();
-    const [lname, setLName] = useState<string>();
-    const [email, setEmail] = useState<string>();
-    const [phone, setPhone] = useState<string>();
-    const [location, setLocation] = useState<string>();
-    const [summary, setSummary] = useState<string>();
-    const [website, setWebsite] = useState<string>();
-    const [github, setGithub] = useState<string>();
+	const router = useRouter()
 
-    const [jobs, setJobs] = useState<Job[]>([]);
-    const [skillPoints, setSkillPoints] = useState<SkillPoint[]>([]);
-    const [projects, setProjects] = useState<Project[]>([]);
-    const [education, setEducation] = useState<Education[]>([]);
+	const [fname, setFName] = useState<string>()
+	const [lname, setLName] = useState<string>()
+	const [email, setEmail] = useState<string>()
+	const [phone, setPhone] = useState<string>()
+	const [location, setLocation] = useState<string>()
+	const [summary, setSummary] = useState<string>()
+	const [website, setWebsite] = useState<string>()
+	const [github, setGithub] = useState<string>()
 
-    // const { themes } = useThemes() 
+	const [jobs, setJobs] = useState<Job[]>([])
+	const [skillPoints, setSkillPoints] = useState<SkillPoint[]>([])
+	const [projects, setProjects] = useState<Project[]>([])
+	const [education, setEducation] = useState<Education[]>([])
 
-    const {repositories, themes} = useDataContext();
+	// const { themes } = useThemes()
 
-    const addJob = () => setJobs([...jobs, { company: "", title: "", startDate: "", endDate: "", location : "", pointOne: "", pointTwo : "", pointThree: "", pointFour: "" }]);
+	const { repositories, themes } = useDataContext()
 
-    const addSkill = () => setSkillPoints([...skillPoints, { title: "", skills: ""}]);
+	const addJob = () =>
+		setJobs([
+			...jobs,
+			{
+				company: '',
+				title: '',
+				startDate: '',
+				endDate: '',
+				location: '',
+				pointOne: '',
+				pointTwo: '',
+				pointThree: '',
+				pointFour: ''
+			}
+		])
 
-    const addProject = () => setProjects([...projects, { title: "", pointOne: "", pointTwo : "", pointThree: "", pointFour : ""}]);
+	const addSkill = () => setSkillPoints([...skillPoints, { title: '', skills: '' }])
 
-    const addEducation = () => setEducation([...education, { school: "", program: "", location: "", startDate: "", endDate: "", gpa: "" }]);
+	const addProject = () =>
+		setProjects([...projects, { title: '', pointOne: '', pointTwo: '', pointThree: '', pointFour: '' }])
 
-    const Create = () => {
+	const addEducation = () =>
+		setEducation([...education, { school: '', program: '', location: '', startDate: '', endDate: '', gpa: '' }])
 
-        if(!fname || !lname || !email)
-            return
+	const Create = () => {
+		if (!fname || !lname || !email) return
 
-        const p : Personal = {
-            fname,
-            lname,
-            email,
-            phone,
-            location,
-            summary,
-            website,
-            github
-        }
+		const p: Personal = {
+			fname,
+			lname,
+			email,
+			phone,
+			location,
+			summary,
+			website,
+			github
+		}
 
-        const info : IntakeInfo = {
-            personal : p,
-            skills : skillPoints,
-            jobs,
-            projects,
-            education,
-            theme: props.theme
-        }
+		const info: IntakeInfo = {
+			personal: p,
+			skills: skillPoints,
+			jobs,
+			projects,
+			education,
+			theme: props.theme
+		}
 
-        CreateDemoResume(repositories, info, themes)
+		CreateDemoResume(repositories, info, themes)
 
-        router.navigate({
-            to: '/app',
-        })
-    }
+		router.navigate({
+			to: '/app'
+		})
+	}
 
-    const removeExperience = (index : number) => {
-       setJobs(p => p.filter((_, idx) => idx !== index))
-    }
+	const removeExperience = (index: number) => {
+		setJobs((p) => p.filter((_, idx) => idx !== index))
+	}
 
-    const removeProject = (index : number) => {
-       setProjects(p => p.filter((_, idx) => idx !== index))
-    }
+	const removeProject = (index: number) => {
+		setProjects((p) => p.filter((_, idx) => idx !== index))
+	}
 
-    const removeEducation = (index : number) => {
-       setEducation(p => p.filter((_, idx) => idx !== index))
-    }
+	const removeEducation = (index: number) => {
+		setEducation((p) => p.filter((_, idx) => idx !== index))
+	}
 
-    return (
-        <div className="min-h-screen w-full bg-gradient-to-br from-black via-zinc-900 to-purple-950 text-white p-10">
-            <h3 className="text-3xl py-2 text-mywhite">Welcome!</h3>
-            <p className="text-grey">Get started by adding your data</p>
-            <div className="max-w-4xl mx-auto space-y-10">
-                <PersonalSection 
-                    fname={fname} 
-                    onFNameChange={setFName}
-                    lname={lname} 
-                    onLNameChange={setLName}
-                    email={email}
-                    onEmailChange={setEmail}
-                    phone={phone}
-                    onPhoneChange={setPhone}
-                    location={location}
-                    onLocationChange={setLocation}
-                    website={website}
-                    onWebsiteChange={setWebsite}
-                    github={github}
-                    onGithubChange={setGithub}
-                    summary={summary}
-                    onSummaryChange={setSummary} />
-                <SkillsSection skillPoints={skillPoints} setSkillPoints={setSkillPoints} addSkill={addSkill} />
-                <ExperienceSection jobs={jobs} setJobs={setJobs} addJob={addJob} close={removeExperience} />
-                <ProjectsSection projects={projects} setProjects={setProjects} addProject={addProject} close={removeProject} />
-                <EducationSection education={education} setEducation={setEducation} addEducation={addEducation} close={removeEducation} />
-                <button onClick={() => Create()}>CREATE</button>
-            </div>
-        </div>
-    );
+	return (
+		<div className="min-h-screen w-full bg-gradient-to-br from-black via-zinc-900 to-purple-950 text-white p-10">
+			<h3 className="text-3xl py-2 text-mywhite">Welcome!</h3>
+			<p className="text-grey">Get started by adding your data</p>
+			<div className="max-w-4xl mx-auto space-y-10">
+				<PersonalSection
+					fname={fname}
+					onFNameChange={setFName}
+					lname={lname}
+					onLNameChange={setLName}
+					email={email}
+					onEmailChange={setEmail}
+					phone={phone}
+					onPhoneChange={setPhone}
+					location={location}
+					onLocationChange={setLocation}
+					website={website}
+					onWebsiteChange={setWebsite}
+					github={github}
+					onGithubChange={setGithub}
+					summary={summary}
+					onSummaryChange={setSummary}
+				/>
+				<SkillsSection skillPoints={skillPoints} setSkillPoints={setSkillPoints} addSkill={addSkill} />
+				<ExperienceSection jobs={jobs} setJobs={setJobs} addJob={addJob} close={removeExperience} />
+				<ProjectsSection
+					projects={projects}
+					setProjects={setProjects}
+					addProject={addProject}
+					close={removeProject}
+				/>
+				<EducationSection
+					education={education}
+					setEducation={setEducation}
+					addEducation={addEducation}
+					close={removeEducation}
+				/>
+				<button onClick={() => Create()}>CREATE</button>
+			</div>
+		</div>
+	)
 }

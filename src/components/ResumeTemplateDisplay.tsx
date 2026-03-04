@@ -24,39 +24,32 @@ const DataItemDisplay = (props: DataItemDisplayProps) => {
 	const { repositories } = useDataContext()
 	const { isOver, setNodeRef, active } = useDroppable({
 		id: `dataitem-${props.section_id}`,
-		data: props.data,
+		data: props.data
 	})
 
 	const [bgColor, setBGColor] = useState('')
 
 	useEffect(() => {
-		isOver && active?.id.toString().startsWith('dataitem-')
-			? setBGColor('bg-green-900')
-			: setBGColor('')
+		isOver && active?.id.toString().startsWith('dataitem-') ? setBGColor('bg-green-900') : setBGColor('')
 	}, [isOver])
 
 	const RemoveDataItemFromResume = (data_item_id: number) => {
 		repositories.resumeSectionData.delete({
 			section_id: props.section_id,
-			data_item_id: data_item_id,
+			data_item_id: data_item_id
 		})
 	}
 
 	return (
-		<div
-			ref={setNodeRef}
-			className="flex flex-col w-full items-start justify-start  min-h-5 pt-2"
-		>
+		<div ref={setNodeRef} className="flex flex-col w-full items-start justify-start  min-h-5 pt-2">
 			<Toggle
 				buttonStyle={clsx([
 					'flex justify-between items-center px-2 py-1 text-sm font-medium text-left text-mywhite bg-darkest rounded-sm ',
-					bgColor,
+					bgColor
 				])}
 				panelStyle={clsx(['pt-4 bg-darkest p-2 ', bgColor])}
 				barContents={
-					<p className="text-grey text-md font-bold">
-						Data Items: ({props.data ? props.data.length : 0})
-					</p>
+					<p className="text-grey text-md font-bold">Data Items: ({props.data ? props.data.length : 0})</p>
 				}
 			>
 				<GroupedTable dataItems={props.data} onRemove={RemoveDataItemFromResume} />
@@ -114,7 +107,7 @@ type ResumeTemplateDisplayProps = {
 export const ResumeSectionCard = (props: ResumeTemplateDisplayProps) => {
 	const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
 		id: `section-${props.resumeSection.id}`,
-		data: props.resumeSection,
+		data: props.resumeSection
 	})
 
 	return (
@@ -125,7 +118,7 @@ export const ResumeSectionCard = (props: ResumeTemplateDisplayProps) => {
 			{...attributes}
 			style={{
 				transform: CSS.Transform.toString(transform),
-				transition: transition,
+				transition: transition
 			}}
 		>
 			<div className="w-full min-w-0">
@@ -143,10 +136,7 @@ export const ResumeSectionCard = (props: ResumeTemplateDisplayProps) => {
 					</div>
 				</div>
 				{/* <TemplateItemDisplay template={props.resumeSection.template}  section_id={props.resumeSection.id} /> */}
-				<DataItemDisplay
-					data={props.resumeSection.items}
-					section_id={props.resumeSection.id}
-				/>
+				<DataItemDisplay data={props.resumeSection.items} section_id={props.resumeSection.id} />
 			</div>
 			<div className="pl-2">
 				<GrabHandle dotColor="bg-darkest" />

@@ -52,12 +52,7 @@ export default function ResumeStylePicker(props: ResumeStylePickerProps) {
 								className="bg-black w-full"
 								file={`/${theme.name}.pdf`}
 							>
-								<Page
-									pageNumber={1}
-									className="overflow-hidden"
-									width={250}
-									scale={2}
-								/>
+								<Page pageNumber={1} className="overflow-hidden" width={250} scale={2} />
 							</Document>
 						</div>
 					</div>

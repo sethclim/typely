@@ -1,16 +1,15 @@
-import { createContext, useContext } from "react";
-import { ResumeConfig } from "../../types";
-
+import { createContext, useContext } from 'react'
+import { ResumeConfig } from '../../types'
 
 type ResumeContextType = {
-  resume: ResumeConfig | null;
-  refresh: () => void;
-};
+	resume: ResumeConfig | null
+	refresh: () => void
+}
 
 export const ResumeContext = createContext<ResumeContextType>({
-  resume: null,
-  refresh: () => {},
-});
+	resume: null,
+	refresh: () => {}
+})
 
 // Custom hook to use context
-export const useResume = () => useContext(ResumeContext);
+export const useResume = () => useContext(ResumeContext)

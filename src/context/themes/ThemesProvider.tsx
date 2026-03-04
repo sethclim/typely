@@ -6,7 +6,6 @@
 // import { TemplateRow } from "../../db/types";
 // // import { TemplateRow } from "../../db/types";
 
-
 // type ThemesProviderProps = {
 //   children: React.ReactNode;
 // };
@@ -16,7 +15,6 @@
 //     if (!rows || rows.length === 0) return [];
 
 //     const res = rows.map(themeRow => {
-        
 
 //         const templates = JSON.parse(themeRow.templates) as TemplateRow[]
 //         // console.log(JSON.stringify(templates))
@@ -38,7 +36,7 @@
 //                 }
 //                 return template
 //             })
-//         } 
+//         }
 
 //         return t
 //     })
@@ -48,7 +46,6 @@
 
 // export const ThemesProvider: React.FC<ThemesProviderProps> = ({ children }) => {
 //     const [themes, setThemes] = useState<Theme[]>([]);
-
 
 //     const fetchThemes = async () => {
 //         await DB.tablesReady;
@@ -65,7 +62,7 @@
 //         const unsubscribe1 = ThemeTable.subscribe(fetchThemes);
 //         const unsubscribe2 = TemplateTable.subscribe(fetchThemes);
 //         return () => {
-//             unsubscribe1; 
+//             unsubscribe1;
 //             unsubscribe2;
 //         };
 //     }, [DB.tablesReady]);
