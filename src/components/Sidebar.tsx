@@ -1,12 +1,4 @@
 import { ReactNode } from "react";
-// import { PlusIcon } from "@heroicons/react/24/outline";
-// import { ResumeConfigRow } from "../db/types";
-// import { ResumeConfigTable } from "../db/tables";
-// import { DocumentDuplicateIcon, EllipsisVerticalIcon, TrashIcon } from "@heroicons/react/20/solid";
-// import { PencilIcon } from "@heroicons/react/20/solid";
-// import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-// import { DuplicateResume } from "../db";
-// import { DeleteModal } from "./DeleteModal";
 
 type SidebarProps = {
     expanded : boolean,

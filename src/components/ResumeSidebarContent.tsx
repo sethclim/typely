@@ -1,12 +1,10 @@
 import { PlusIcon } from "@heroicons/react/24/outline";
-import { DocumentDuplicateIcon, EllipsisVerticalIcon, TrashIcon } from "@heroicons/react/20/solid";
-import { PencilIcon } from "@heroicons/react/20/solid";
-import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { ResumeConfigRow } from "../db/types";
-// import { DuplicateResume } from "../db";
+import { DuplicateResume } from "../db";
 import { useState } from "react";
 import { DeleteModal } from "./DeleteModal";
 import { useDataContext } from "../context/data/DataContext";
+import { HoverMenu } from "./HoverMenu";
 
 type ResumeSidebarContentProps = {
     resumes : Array<ResumeConfigRow>
@@ -22,7 +20,7 @@ export const ResumeSidebarContent = ({ resumes, activeId, onSelect, expanded } :
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const [deleteResume, setDeleteResume] = useState<ResumeConfigRow | null>()
 
-    const { repositories } = useDataContext();
+    const { repositories, dbService } = useDataContext();
 
     const createResume = () => {
       console.log("CREATE")
@@ -38,9 +36,8 @@ export const ResumeSidebarContent = ({ resumes, activeId, onSelect, expanded } :
     
       const duplicateResume = (id? : number) => {
         if(id){
-          
+          DuplicateResume(repositories, dbService, id)
         }
-        //   DuplicateResume(repositories, id)
       }
     
       const onRename = (currentName : string, id? : number) => {
@@ -70,20 +67,19 @@ export const ResumeSidebarContent = ({ resumes, activeId, onSelect, expanded } :
     
         setDeleteResume(resume)
         setShowDeleteModal(true)
-        // ResumeConfigTable.delete(id)
       }
 
-       const performDeleteAction = () => {
-    if(!deleteResume || !deleteResume.id)
-    {
-      console.error("No Delete Resume! ", JSON.stringify(deleteResume))
-      return
-    }
+    const performDeleteAction = () => {
+      if(!deleteResume || !deleteResume.id)
+      {
+        console.error("No Delete Resume! ", JSON.stringify(deleteResume))
+        return
+      }
 
-   repositories.resumeConfig.delete(deleteResume.id!)
-    setShowDeleteModal(false)
-    setDeleteResume(null)
-  }
+      repositories.resumeConfig.delete(deleteResume.id!)
+      setShowDeleteModal(false)
+      setDeleteResume(null)
+    }
 
     return(
       <>
@@ -143,60 +139,11 @@ export const ResumeSidebarContent = ({ resumes, activeId, onSelect, expanded } :
                   pointer-events-none group-hover:pointer-events-auto
                   transition-opacity
                 ">
-                  <Menu as="div" className="relative">
-                    <MenuButton className="p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
-                      <EllipsisVerticalIcon className="h-5 w-5 text-grey" />
-                    </MenuButton>
-
-                    <MenuItems
-                      className="
-                        absolute right-0 mt-1 w-36 rounded-md bg-darker shadow-lg border
-                        focus:outline-none z-20
-                      "
-                    >
-                      <MenuItem>
-                        {({ active }) => (
-                          <button
-                            className={`${
-                              active ? "bg-dark" : ""
-                            } flex w-full items-center gap-2 px-3 py-2 text-left text-grey`}
-                            onClick={() => onRename(r.name, r.id ?? undefined)}
-                          >
-                            <PencilIcon className="h-4 w-4" />
-                            Rename
-                          </button>
-                        )}
-                      </MenuItem>
-
-                      <MenuItem>
-                        {({ active }) => (
-                          <button
-                            className={`${
-                              active ? "bg-dark" : ""
-                            } flex w-full items-center gap-2 px-3 py-2 text-left text-grey`}
-                            onClick={() => duplicateResume(r.id ?? undefined)}
-                          >
-                            <DocumentDuplicateIcon className="h-4 w-4" />
-                            Duplicate
-                          </button>
-                        )}
-                      </MenuItem>
-
-                      <MenuItem>
-                        {({ active }) => (
-                          <button
-                            className={`${
-                              active ? "bg-dark" : ""
-                            } flex w-full items-center gap-2 px-3 py-2 text-red-600 text-left text-grey`}
-                            onClick={() => onDelete(r)}
-                          >
-                            <TrashIcon className="h-4 w-4" />
-                            Delete
-                          </button>
-                        )}
-                      </MenuItem>
-                    </MenuItems>
-                  </Menu>
+                  <HoverMenu 
+                    resume={r} 
+                    onRename={onRename} 
+                    onDelete={onDelete} 
+                    duplicateResume={duplicateResume} />
                 </div>
             </button>
           ))}
