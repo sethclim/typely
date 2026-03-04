@@ -71,24 +71,20 @@ export const CurrentResumeBlockViewer = (props : CurrentResumeBlockViewerProps) 
         }
     }, [sections, reordered]);
 
-    // const { themes } = useThemes()
-
     const [activeTheme, setActiveTheme] = useState("")
 
+
     useEffect(()=>{
-        if(props.resume)
+        if (props.resume) {
             setActiveTheme(props.resume.theme.name)
-    },[props.resume])
+        }
+    },[props.resume?.id])
 
     const changeThemeForResume = (newThemeName: string | null) => {
-        console.log("newTheme " + newThemeName)
         if(!newThemeName || !props.resume)
             return
 
         setActiveTheme(newThemeName)
-
-
-        // console.log("@themes " + JSON.stringify(themes))
 
         const newTheme = themes.filter(t => t.name === newThemeName.toLowerCase())[0]
 
@@ -96,7 +92,6 @@ export const CurrentResumeBlockViewer = (props : CurrentResumeBlockViewerProps) 
 
         // Change resume config theme
         // change sections to point to right template from new theme
-
         repositories.resumeConfig.updateTheme({
             id: props.resume.id, 
             themeId: newTheme.id, 
