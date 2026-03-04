@@ -1,7 +1,10 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
+echo "💥 pre-push hook is running"
+
 # Run Prettier / lint-staged before push
 pnpm dlx lint-staged
 # OR if you want all files formatted
 # pnpm run format
+pnpm dlx build
