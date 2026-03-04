@@ -23,7 +23,7 @@ export const ResumeSidebarContent = ({ resumes, activeId, onSelect, expanded } :
     const { repositories, dbService } = useDataContext();
 
     const createResume = () => {
-      console.log("CREATE")
+      // console.log("CREATE")
         const uuid = crypto.randomUUID();
         repositories.resumeConfig.insert({
             uuid: uuid,
@@ -51,7 +51,7 @@ export const ResumeSidebarContent = ({ resumes, activeId, onSelect, expanded } :
         if(newName === null)
           return
     
-        console.log("ON SUBMIT")
+        // console.log("ON SUBMIT")
     
         repositories.resumeConfig.updateName({
             "id": rename,

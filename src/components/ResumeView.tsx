@@ -54,7 +54,7 @@ export const ResumeView = () => {
       // await DB.ready
       const templateData = repositories.template.getAll();
       const hydratedTemplate = templateData.map((item) => mapRowToTemplate(item))
-      hydratedTemplate.forEach(t => console.log(t.sectionType))
+      // hydratedTemplate.forEach(t => console.log(t.sectionType))
       setTemplates(hydratedTemplate)
     }
     init()
@@ -96,9 +96,9 @@ export const ResumeView = () => {
 
       const active_data_item_keys = active.data.current?.data.map((item : string[]) => item[0]).sort();
 
-      const over_data_items_keys_list : [] = over.data.current?.map((item : DataItem) => item.data.map((item : string[]) => item[0]))
+      // const over_data_items_keys_list : [] = over.data.current?.map((item : DataItem) => item.data.map((item : string[]) => item[0]))
 
-      console.log("active_data_item_keys " + JSON.stringify(active_data_item_keys) + " over_data_items_keys_list " + JSON.stringify(over_data_items_keys_list))
+      // console.log("active_data_item_keys " + JSON.stringify(active_data_item_keys) + " over_data_items_keys_list " + JSON.stringify(over_data_items_keys_list))
 
 
       const match = over.data.current?.find((item: DataItem) => {

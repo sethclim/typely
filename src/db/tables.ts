@@ -163,7 +163,7 @@ export class ResumeConfigTable {
     }: ResumeConfigRow) {
         if (!uuid || !theme_id) return;
 
-        const res = await this._svc.db
+        await this._svc.db
             .insert(resumeConfig)
             .values({
                 uuid,
@@ -176,14 +176,14 @@ export class ResumeConfigTable {
 
         this._svc.save();
 
-        console.log(`[ResumeConfigTable] insert ${res}`);
+        // console.log(`[ResumeConfigTable] insert ${res}`);
 
         this._svc.notifyTable(RESUME_CONFIG_TABLE);
     }
     async getResumeConfig(resumeId: number) {
         console.log(`[ResumeConfigTable] resumeId ${resumeId}`);
         const query = getFullResumeQuery(resumeId);
-        console.log(`[ResumeConfigTable] query ${query}`);
+        // console.log(`[ResumeConfigTable] query ${query}`);
         const res = this._svc.db.all(query);
         // const resumeWithTheme = DB.db
         //     ?.select()
@@ -194,7 +194,7 @@ export class ResumeConfigTable {
 
         // const resumeWithTheme = DB.db?.select().from(resumeConfig).all();
 
-        console.log(`[ResumeConfigTable] result ${JSON.stringify(res)}`);
+        // console.log(`[ResumeConfigTable] result ${JSON.stringify(res)}`);
         return res || [];
     }
     getAllResumeConfig() {
@@ -229,7 +229,9 @@ export class ResumeConfigTable {
                 updatedAt: updated_at ?? new Date().toISOString(),
             })
             .where(eq(resumeConfig.id, id));
-        if (notify) this._svc.notifyTable(RESUME_CONFIG_TABLE);
+        if (notify) {
+            this._svc.notifyTable(RESUME_CONFIG_TABLE);
+        }
     }
 
     async delete(id: number) {
@@ -563,7 +565,7 @@ export class ThemeTable {
     getAll() {
         const query = getFullThemesQuery();
         const result = this._svc.db?.all(query);
-        console.log("result!! " + JSON.stringify(result));
+        // console.log("result!! " + JSON.stringify(result));
         return result || [];
 
         // const res = DB.exec(getFullThemesQuery());

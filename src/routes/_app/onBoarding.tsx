@@ -21,7 +21,7 @@ const hydrateThemes = (rows : Array<any>) : Array<Theme> => {
         
 
         const templates = JSON.parse(themeRow.templates) as TemplateRow[]
-        console.log(JSON.stringify(templates))
+        // console.log(JSON.stringify(templates))
 
         const t : Theme = {
             id: themeRow.id!,
