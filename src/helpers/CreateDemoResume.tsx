@@ -176,7 +176,11 @@ export const CreateDemoResume = async(data: Repositories, info : IntakeInfo, the
     }
 
     if(info.personal.website){
-        me.push(["WEBSITE", info.personal.website],)
+        me.push(["WEBSITE", info.personal.website])
+    }
+
+    if(info.personal.location){
+        me.push(["LOCATION", info.personal.location])
     }
 
     const myInfoDataItemId = await data.resumeDataItem.insert({
