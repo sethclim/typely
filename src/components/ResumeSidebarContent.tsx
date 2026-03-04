@@ -1,7 +1,4 @@
 import { PlusIcon } from "@heroicons/react/24/outline";
-import { DocumentDuplicateIcon, EllipsisVerticalIcon, TrashIcon } from "@heroicons/react/20/solid";
-import { PencilIcon } from "@heroicons/react/20/solid";
-import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { ResumeConfigRow } from "../db/types";
 import { DuplicateResume } from "../db";
 import { useState } from "react";
