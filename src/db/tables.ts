@@ -238,6 +238,7 @@ export class ResumeConfigTable {
         await this._svc.db?.delete(resumeConfig).where(eq(resumeConfig.id, id));
         this._svc.notifyTable(RESUME_CONFIG_TABLE);
     }
+
     subscribe(cb: () => void) {
         return this._svc.subscribe(RESUME_CONFIG_TABLE, cb);
     }

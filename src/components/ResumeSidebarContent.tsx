@@ -3,7 +3,7 @@ import { DocumentDuplicateIcon, EllipsisVerticalIcon, TrashIcon } from "@heroico
 import { PencilIcon } from "@heroicons/react/20/solid";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { ResumeConfigRow } from "../db/types";
-// import { DuplicateResume } from "../db";
+import { DuplicateResume } from "../db";
 import { useState } from "react";
 import { DeleteModal } from "./DeleteModal";
 import { useDataContext } from "../context/data/DataContext";
@@ -23,7 +23,7 @@ export const ResumeSidebarContent = ({ resumes, activeId, onSelect, expanded } :
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const [deleteResume, setDeleteResume] = useState<ResumeConfigRow | null>()
 
-    const { repositories } = useDataContext();
+    const { repositories, dbService } = useDataContext();
 
     const createResume = () => {
       console.log("CREATE")
@@ -39,9 +39,8 @@ export const ResumeSidebarContent = ({ resumes, activeId, onSelect, expanded } :
     
       const duplicateResume = (id? : number) => {
         if(id){
-          
+          DuplicateResume(repositories, dbService, id)
         }
-        //   DuplicateResume(repositories, id)
       }
     
       const onRename = (currentName : string, id? : number) => {
@@ -71,7 +70,6 @@ export const ResumeSidebarContent = ({ resumes, activeId, onSelect, expanded } :
     
         setDeleteResume(resume)
         setShowDeleteModal(true)
-        // ResumeConfigTable.delete(id)
       }
 
     const performDeleteAction = () => {
