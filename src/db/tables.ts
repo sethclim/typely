@@ -229,7 +229,9 @@ export class ResumeConfigTable {
                 updatedAt: updated_at ?? new Date().toISOString(),
             })
             .where(eq(resumeConfig.id, id));
-        if (notify) this._svc.notifyTable(RESUME_CONFIG_TABLE);
+        if (notify) {
+            this._svc.notifyTable(RESUME_CONFIG_TABLE);
+        }
     }
 
     async delete(id: number) {

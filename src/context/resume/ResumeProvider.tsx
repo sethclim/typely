@@ -18,13 +18,19 @@ export const ResumeProvider: React.FC<ResumeProviderProps> = ({ resumeId, childr
     // await DB.tablesReady;
     const data = await repositories.resumeConfig.getResumeConfig(resumeId);
     const hydratedResume = hydrateResume(data)
-    console.log("hydratedResume " + hydratedResume?.name);
+    console.log("hydratedResume name: " + hydratedResume?.name + " theme: " + hydratedResume?.theme.name);
     setResume(hydratedResume);
+    
   };
+
+  const subbedFetch = () => {
+    console.log("REFRESH FROM FETCH ")
+    fetchResume();
+  }
 
   useEffect(() => {
     fetchResume();
-    const unsubscribe = repositories.resumeConfig.subscribe(fetchResume);
+    const unsubscribe = repositories.resumeConfig.subscribe(subbedFetch);
     return () => unsubscribe();
   }, [resumeId]);
 
