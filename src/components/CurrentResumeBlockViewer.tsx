@@ -1,7 +1,7 @@
 import { DragEndEvent, useDndMonitor } from "@dnd-kit/core";
 import { ResumeConfig, ResumeSection } from "../types"
 import { ResumeSectionCard } from "./ResumeTemplateDisplay";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { PencilIcon } from '@heroicons/react/20/solid';
 
 import {
