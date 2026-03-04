@@ -1,0 +1,7 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Run Prettier / lint-staged before push
+pnpm dlx lint-staged
+# OR if you want all files formatted
+# pnpm run format
