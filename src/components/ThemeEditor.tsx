@@ -1,5 +1,5 @@
 import { Editor, Monaco } from '@monaco-editor/react'
-import { Link, useRouterState } from '@tanstack/react-router'
+import { useRouterState } from '@tanstack/react-router'
 import { Header } from '../components/Header';
 import { Sidebar } from '../components/Sidebar';
 import { Footer } from '../components/Footer';
@@ -76,7 +76,7 @@ export const ThemeEditor = (props : ThemeEditorProps) => {
     const [template, setTemplate] = useState<Template>();
 
     const [activeCode, setActiveCode]  = useState<ActiveCode>();
-    const [activeChanges, setActiveChanges] = useState<string>();
+    const [activeChanges, setActiveChanges] = useState<string | null>(null);
     const [showUnsavedDialog, setShowUnsavedDialog] = useState(false);
     const { location } = useRouterState();
 
@@ -86,7 +86,7 @@ export const ThemeEditor = (props : ThemeEditorProps) => {
 
     const inData = useDataContext();
 
-    const saveChange = () => {
+    const saveChange = async() => {
 
         if(!activeChanges)
             return;
@@ -97,7 +97,7 @@ export const ThemeEditor = (props : ThemeEditorProps) => {
             return;
           
           console.log('Saving Template...');
-          inData.repositories.template.update(template.id, activeChanges)
+          await inData.repositories.template.update(template.id, activeChanges)
 
         } else if(activeCode?.type === CodeType.Theme){
 
@@ -105,28 +105,32 @@ export const ThemeEditor = (props : ThemeEditorProps) => {
             return;
 
           console.log('Saving Theme...');
-          inData.repositories.theme.update(theme.id, activeChanges)
+          await inData.repositories.theme.update(theme.id, activeChanges)
         }
+
+        setActiveChanges(null)
     }
 
     useSaveShortcut(saveChange);
     
     useEffect(() => {
-  const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-    if (activeChanges) {
-      e.preventDefault();
-      e.returnValue = '';
-    }
-  };
+      const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+        if (activeChanges) {
+          e.preventDefault();
+          e.returnValue = '';
+        }
+      };
 
-  window.addEventListener("beforeunload", handleBeforeUnload);
+      window.addEventListener("beforeunload", handleBeforeUnload);
 
-  return () => {
-    window.removeEventListener("beforeunload", handleBeforeUnload);
-  };
-}, [activeChanges]);
+      return () => {
+        window.removeEventListener("beforeunload", handleBeforeUnload);
+      };
+    }, [activeChanges]);
+    
     const handleEditorChange = (text : string | undefined) => {
-        setActiveChanges(text)
+        if(text)
+          setActiveChanges(text)
     }
 
     function handleEditorDidMount(editor: monacoEditor.editor.IStandaloneCodeEditor , monaco: Monaco) {
@@ -236,17 +240,17 @@ export const ThemeEditor = (props : ThemeEditorProps) => {
             </button>
 
             <button
-  className="text-grey hover:text-mywhite"
-  onClick={() => {
-    if (activeChanges) {
-      setShowUnsavedDialog(true);
-    } else {
-      window.location.href = base;
-    }
-  }}
->
-  BACK
-</button>
+              className="text-grey hover:text-mywhite"
+              onClick={() => {
+                if (activeChanges) {
+                  setShowUnsavedDialog(true);
+                } else {
+                  window.location.href = base;
+                }
+              }}
+            >
+              BACK
+            </button>
 
           </div>
         </Header>
@@ -273,20 +277,20 @@ export const ThemeEditor = (props : ThemeEditorProps) => {
                 <div className='min-w-50 flex flex-col gap-2'>                
                   {
                       templates.map(t => (
-                          <button
-                          key={t.id}
-                          className='text-mywhite text-left p-2 bg-darker hover:bg-darkest hover:text-primary mx-2'
-                           onClick={() => {
-                           if (activeChanges) {
-                               setPendingTemplate(t);
-                              setShowUnsavedDialog(true);
-                      } else {
-                                onPickTemplate(t);
-                       }
-  }}
->
-  {t.name}
-</button>
+                        <button
+                              key={t.id}
+                              className='text-mywhite text-left p-2 bg-darker hover:bg-darkest hover:text-primary mx-2'
+                              onClick={() => {
+                                if (activeChanges) {
+                                  setPendingTemplate(t);
+                                  setShowUnsavedDialog(true);
+                                } else {
+                                  onPickTemplate(t);
+                                }
+                              }}
+                          >
+                          {t.name}
+                        </button>
                       ))
                   }
                 </div>
@@ -302,7 +306,7 @@ export const ThemeEditor = (props : ThemeEditorProps) => {
                    theme="latex-dark"
                   onMount={handleEditorDidMount}
                    onChange={handleEditorChange}
-/>
+              />
 
         </div>
 {showUnsavedDialog && (
@@ -314,34 +318,34 @@ export const ThemeEditor = (props : ThemeEditorProps) => {
         You have unsaved changes. Leave without saving?
       </p>
 
-      <div className="flex gap-4 justify-end">
-        <button
-          className="text-grey hover:text-mywhite"
-          onClick={() => setShowUnsavedDialog(false)}
-        >
-          Cancel
-        </button>
+            <div className="flex gap-4 justify-end">
+              <button
+                className="text-grey hover:text-mywhite"
+                onClick={() => setShowUnsavedDialog(false)}
+              >
+                Cancel
+              </button>
 
-        <button
-           className="text-red-400 hover:text-red-300"
-            onClick={() => {
-            if (pendingTemplate) {
-               onPickTemplate(pendingTemplate);
-              setPendingTemplate(null);
-                setShowUnsavedDialog(false);
-             setActiveChanges(undefined);
-           } else {
-            window.location.href = base;
-          }
-  }}
->
-  Leave
-</button>
-      </div>
-    </div>
-  </div>
-)}
-        <Footer />
-      </>
-    )
+              <button
+                className="text-red-400 hover:text-red-300"
+                  onClick={() => {
+                    if (pendingTemplate) {
+                      onPickTemplate(pendingTemplate);
+                      setPendingTemplate(null);
+                      setShowUnsavedDialog(false);
+                      setActiveChanges(null);
+                    } else {
+                      window.location.href = base;
+                    }
+                  }}
+              >
+                Leave
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      <Footer />
+    </>
+  )
 }
