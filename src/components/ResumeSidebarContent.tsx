@@ -73,17 +73,17 @@ export const ResumeSidebarContent = ({ resumes, activeId, onSelect, expanded } :
         // ResumeConfigTable.delete(id)
       }
 
-       const performDeleteAction = () => {
-    if(!deleteResume || !deleteResume.id)
-    {
-      console.error("No Delete Resume! ", JSON.stringify(deleteResume))
-      return
-    }
+    const performDeleteAction = () => {
+      if(!deleteResume || !deleteResume.id)
+      {
+        console.error("No Delete Resume! ", JSON.stringify(deleteResume))
+        return
+      }
 
-   repositories.resumeConfig.delete(deleteResume.id!)
-    setShowDeleteModal(false)
-    setDeleteResume(null)
-  }
+      repositories.resumeConfig.delete(deleteResume.id!)
+      setShowDeleteModal(false)
+      setDeleteResume(null)
+    }
 
     return(
       <>
@@ -144,13 +144,13 @@ export const ResumeSidebarContent = ({ resumes, activeId, onSelect, expanded } :
                   transition-opacity
                 ">
                   <Menu as="div" className="relative">
-                    <MenuButton className="p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                    <MenuButton className="p-3 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-red-500">
                       <EllipsisVerticalIcon className="h-5 w-5 text-grey" />
                     </MenuButton>
 
                     <MenuItems
                       className="
-                        absolute right-0 mt-1 w-36 rounded-md bg-darker shadow-lg border
+                        absolute right-0 mt-0 w-36 rounded-md bg-darker shadow-lg border
                         focus:outline-none z-20
                       "
                     >
