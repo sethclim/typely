@@ -7,6 +7,7 @@ import { ResumeConfigRow } from "../db/types";
 import { useState } from "react";
 import { DeleteModal } from "./DeleteModal";
 import { useDataContext } from "../context/data/DataContext";
+import { HoverMenu } from "./HoverMenu";
 
 type ResumeSidebarContentProps = {
     resumes : Array<ResumeConfigRow>
@@ -143,60 +144,11 @@ export const ResumeSidebarContent = ({ resumes, activeId, onSelect, expanded } :
                   pointer-events-none group-hover:pointer-events-auto
                   transition-opacity
                 ">
-                  <Menu as="div" className="relative">
-                    <MenuButton className="p-3 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-red-500">
-                      <EllipsisVerticalIcon className="h-5 w-5 text-grey" />
-                    </MenuButton>
-
-                    <MenuItems
-                      className="
-                        absolute right-0 mt-0 w-36 rounded-md bg-darker shadow-lg border
-                        focus:outline-none z-20
-                      "
-                    >
-                      <MenuItem>
-                        {({ active }) => (
-                          <button
-                            className={`${
-                              active ? "bg-dark" : ""
-                            } flex w-full items-center gap-2 px-3 py-2 text-left text-grey`}
-                            onClick={() => onRename(r.name, r.id ?? undefined)}
-                          >
-                            <PencilIcon className="h-4 w-4" />
-                            Rename
-                          </button>
-                        )}
-                      </MenuItem>
-
-                      <MenuItem>
-                        {({ active }) => (
-                          <button
-                            className={`${
-                              active ? "bg-dark" : ""
-                            } flex w-full items-center gap-2 px-3 py-2 text-left text-grey`}
-                            onClick={() => duplicateResume(r.id ?? undefined)}
-                          >
-                            <DocumentDuplicateIcon className="h-4 w-4" />
-                            Duplicate
-                          </button>
-                        )}
-                      </MenuItem>
-
-                      <MenuItem>
-                        {({ active }) => (
-                          <button
-                            className={`${
-                              active ? "bg-dark" : ""
-                            } flex w-full items-center gap-2 px-3 py-2 text-red-600 text-left text-grey`}
-                            onClick={() => onDelete(r)}
-                          >
-                            <TrashIcon className="h-4 w-4" />
-                            Delete
-                          </button>
-                        )}
-                      </MenuItem>
-                    </MenuItems>
-                  </Menu>
+                  <HoverMenu 
+                    resume={r} 
+                    onRename={onRename} 
+                    onDelete={onDelete} 
+                    duplicateResume={duplicateResume} />
                 </div>
             </button>
           ))}
