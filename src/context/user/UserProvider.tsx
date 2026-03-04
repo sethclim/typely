@@ -24,25 +24,24 @@ export const UserProvider: React.FC<ResumeProviderProps> = ({ children }) => {
   }, [router])
   
   useEffect(() => {
-        supabase.auth.getSession().then(({ data }) => {
-          setUser(data.session?.user ?? null);
-        });
+    supabase.auth.getSession().then(({ data }) => {
+      setUser(data.session?.user ?? null);
+    });
 
-        // Whenever the auth state changes, we receive an event and a session object.
-        // Save the user from the session object to the state.
-       supabase.auth.onAuthStateChange((event, session) => { //Func Changed 02/27/26
-  if (event === "SIGNED_IN") {
-    console.log("User" + JSON.stringify(session?.user))
+    // Whenever the auth state changes, we receive an event and a session object.
+    // Save the user from the session object to the state.
+    supabase.auth.onAuthStateChange((event, session) => { //Func Changed 02/27/26
+      if (event === "SIGNED_IN") {
+        // console.log("User" + JSON.stringify(session?.user))
 
-  setUser(session?.user ?? null);
- 
-  if (previousPath.current) {
-    navigate({ to: previousPath.current });
-  }
-}
-});
-    }, []
-  )
+        setUser(session?.user ?? null);
+      
+        if (previousPath.current) {
+          navigate({ to: previousPath.current });
+        }
+      }
+    });
+  }, [])
 
   return (
     <UserContext.Provider value={{ user }}>

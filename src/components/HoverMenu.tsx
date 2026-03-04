@@ -16,9 +16,7 @@ export const HoverMenu = ({ resume, onRename, duplicateResume, onDelete }: Hover
     const openMenu = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault()
         e.stopPropagation();
-        console.log("PRE SET " + isOpen)
         setIsOpen(true)
-        console.log("Post SET " + isOpen)
     }
 
     return (

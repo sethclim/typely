@@ -80,7 +80,7 @@ export const CurrentResumeBlockViewer = (props : CurrentResumeBlockViewerProps) 
         }
     },[props.resume?.id])
 
-    const changeThemeForResume = (newThemeName: string | null) => {
+    const changeThemeForResume = async(newThemeName: string | null) => {
         if(!newThemeName || !props.resume)
             return
 
@@ -88,26 +88,26 @@ export const CurrentResumeBlockViewer = (props : CurrentResumeBlockViewerProps) 
 
         const newTheme = themes.filter(t => t.name === newThemeName.toLowerCase())[0]
 
-        console.log("@newTheme " + JSON.stringify(newTheme))
+        console.log("@newTheme " + newTheme.name)
 
         // Change resume config theme
         // change sections to point to right template from new theme
-        repositories.resumeConfig.updateTheme({
+        await repositories.resumeConfig.updateTheme({
             id: props.resume.id, 
             themeId: newTheme.id, 
             updatedAt: Date.now().toString(),
             notify: false
         })
         
-        props.resume?.sections.forEach(section => {
-
-            console.log("section.sectionType " + section.sectionType)
+        for (const section of props.resume.sections) {
+            // console.log("section.sectionType " + section.sectionType)
             
             const newTemplateForSection = newTheme.templates.filter(t => t.sectionType === section.sectionType)[0]
-            console.log("@newTemplateForSection " + JSON.stringify(newTemplateForSection))
+            // console.log("@newTemplateForSection " + JSON.stringify(newTemplateForSection))
             
-            repositories.resumeSectionConfig.updateTemplate(section.id, newTemplateForSection.id, false)
-        })
+            await repositories.resumeSectionConfig.updateTemplate(section.id, newTemplateForSection.id, false)
+        }
+        console.log("@newTheme " + newTheme.name + " DONE INSERTS")
         dbService.notifyTable(RESUME_CONFIG_TABLE)
     }
 
