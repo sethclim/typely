@@ -136,7 +136,6 @@ export const OutputView = (props : OutputViewProps) => {
 
     
     useEffect(()=>{
-        console.log("PROPS RESUME ID " + props.resume?.id + " THEME " + props.resume?.theme.name)
         async function get(){
             if (props.resume != null)
             {

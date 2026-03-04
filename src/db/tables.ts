@@ -163,7 +163,7 @@ export class ResumeConfigTable {
     }: ResumeConfigRow) {
         if (!uuid || !theme_id) return;
 
-        const res = await this._svc.db
+        await this._svc.db
             .insert(resumeConfig)
             .values({
                 uuid,
