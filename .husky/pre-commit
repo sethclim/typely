@@ -7,4 +7,4 @@ echo "💥 pre-push hook is running"
 pnpm dlx lint-staged
 # OR if you want all files formatted
 # pnpm run format
-pnpm dlx build
+pnpm run build
