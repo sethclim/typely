@@ -29,12 +29,15 @@ export const SectionContextMenu = (props: SectionContextMenuProps) => {
 	}
 
 	const saveInstance = async () => {
-		console.log('SAVE INSTANCE')
-		await repositories.resumeSectionInstance.insertInstance({
-			title: 'Skills',
-			templateId: 0,
-			sectionType: 'skills'
-		})
+		if (props.section.template) {
+			console.log('SAVING INSTANCE!')
+			await repositories.resumeSectionInstance.insertInstance({
+				title: props.section.title,
+				templateId: props.section.template.id,
+				sectionType: props.section.sectionType,
+				dataItemIds: props.section.items.map((di) => di.id)
+			})
+		}
 	}
 
 	return (

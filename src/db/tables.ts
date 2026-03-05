@@ -6,6 +6,7 @@ import {
 	resumeSectionConfig,
 	resumeSectionData,
 	resumeSectionInstance,
+	resumeSectionInstanceData,
 	template,
 	themes
 } from './schema'
@@ -530,6 +531,7 @@ type InsertInstanceProps = {
 	title: string
 	templateId: number
 	sectionType: string
+	dataItemIds: number[]
 }
 
 export class ResumeSectionInstanceTable {
@@ -538,7 +540,7 @@ export class ResumeSectionInstanceTable {
 		this._svc = svc
 	}
 
-	async insertInstance({ title, templateId, sectionType }: InsertInstanceProps) {
+	async insertInstance({ title, templateId, sectionType, dataItemIds }: InsertInstanceProps) {
 		const result = await this._svc.db
 			?.insert(resumeSectionInstance)
 			.values({
@@ -549,11 +551,20 @@ export class ResumeSectionInstanceTable {
 				updatedAt: new Date().toISOString()
 			})
 			.returning({ id: resumeSectionInstance.id })
-		this._svc.save()
-		const id = result[0].id
-		console.log('INSERTED INSTANCE ID ' + id)
+		if (!result) return -1
+		const newId = result[0].id
+		console.log('INSERTED INSTANCE ID ' + newId)
+		// Insert M2M links for data items if provided
+		if (dataItemIds?.length) {
+			const m2mRows = dataItemIds.map((dataItemId) => ({
+				instanceId: newId,
+				dataItemId
+			}))
+			await this._svc.db?.insert(resumeSectionInstanceData).values(m2mRows)
+		}
 
-		return id
+		this._svc.save()
+		return newId
 	}
 	getAll() {
 		const instances: ResumeSectionInstanceRow[] = this._svc.db?.select().from(resumeSectionInstance).all() || []
