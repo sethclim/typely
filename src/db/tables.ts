@@ -17,7 +17,6 @@ import {
 	ResumeConfigRow,
 	ResumeSectionConfigRow,
 	ResumeSectionDataRow,
-	ResumeSectionInstanceDataRow,
 	ResumeSectionInstanceRow,
 	TemplateRow,
 	ThemeDataRow

@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react'
 import { EllipsisVerticalIcon } from '@heroicons/react/24/solid'
 import { DeleteModal } from './DeleteModal'
-import { ResumeSection, ResumeSectionInstance } from '../types'
+import { ResumeSection } from '../types'
 import { useDataContext } from '../context/data/DataContext'
 
 type SectionContextMenuProps = {
