@@ -32,18 +32,18 @@ export function hydrateResume(raw: any[]): ResumeConfig | null {
 							description: s.template.description
 						}
 					: undefined,
-				items: Array.isArray(s.items)
-					? s.items.map((item: any) => ({
-							id: item.id,
+				dataItems: Array.isArray(s.dataItems)
+					? s.dataItems.map((dataItem: any) => ({
+							id: dataItem.id,
 							type: {
-								id: item.type?.id ?? 0,
-								name: item.type?.name ?? ''
+								id: dataItem.type?.id ?? 0,
+								name: dataItem.type?.name ?? ''
 							},
-							title: item.title,
-							description: item.description,
-							data: item.data,
-							created_at: item.created_at ?? new Date().toISOString(),
-							updated_at: item.updated_at ?? new Date().toISOString()
+							title: dataItem.title,
+							description: dataItem.description,
+							data: dataItem.data,
+							created_at: dataItem.created_at ?? new Date().toISOString(),
+							updated_at: dataItem.updated_at ?? new Date().toISOString()
 						}))
 					: []
 			}))

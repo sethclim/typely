@@ -17,6 +17,7 @@ import {
 	ResumeConfigRow,
 	ResumeSectionConfigRow,
 	ResumeSectionDataRow,
+	ResumeSectionInstanceDataRow,
 	ResumeSectionInstanceRow,
 	TemplateRow,
 	ThemeDataRow
@@ -77,7 +78,7 @@ function getFullResumeQuery(resumeIdParam: number): SQL<any> {
                      )
                      ELSE json(NULL)
                    END,
-                 'items',
+                 'dataItems',
                    COALESCE(
                      (
                        SELECT json_group_array(
@@ -408,6 +409,11 @@ export class ResumeDataItemTypeTable {
 
 		return newId
 	}
+
+	getAll(): DataItemTypeRow[] {
+		const rows: DataItemTypeRow[] = this._svc.db?.select().from(resumeDataItemType).all() || []
+		return rows
+	}
 }
 
 export class TemplateTable {
@@ -577,5 +583,27 @@ export class ResumeSectionInstanceDataTable {
 	_svc: DBService
 	constructor(svc: DBService) {
 		this._svc = svc
+	}
+
+	getDataForInstance(instanceId: number): DataItemRow[] {
+		const rows =
+			this._svc.db
+				?.select({
+					id: resumeDataItem.id,
+					type_id: resumeDataItem.typeId,
+					title: resumeDataItem.title,
+					description: resumeDataItem.description,
+					data: resumeDataItem.data,
+					created_at: resumeDataItem.createdAt,
+					updated_at: resumeDataItem.updatedAt
+				})
+				.from(resumeSectionInstanceData)
+				.innerJoin(resumeDataItem, eq(resumeSectionInstanceData.dataItemId, resumeDataItem.id))
+				.where(eq(resumeSectionInstanceData.instanceId, instanceId))
+				.all() || []
+
+		//get data item type
+
+		return rows
 	}
 }

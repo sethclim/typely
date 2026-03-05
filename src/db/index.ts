@@ -58,7 +58,7 @@ export const DuplicateResume = async (data: Repositories, _svc: DBService, id: n
 			_svc.notifyTable('resume_section_config')
 
 			// Insert all section data items (M2M)
-			for (const item of section.items) {
+			for (const item of section.dataItems) {
 				await _svc.db?.insert(resumeSectionData).values({
 					sectionId: newSectionId,
 					dataItemId: item.id

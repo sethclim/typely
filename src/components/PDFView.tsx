@@ -42,7 +42,7 @@ function excapeLatexSymbolsInData(input: string): string {
 
 export const ReplaceVariables = (section: ResumeSection) => {
 	let str = section.template?.content || ''
-	const dict = Object.fromEntries(section.items.flatMap((item) => item.data))
+	const dict = Object.fromEntries(section.dataItems.flatMap((item) => item.data))
 	// console.log("dict", dict);
 
 	// Replace all [[KEY]] in one pass

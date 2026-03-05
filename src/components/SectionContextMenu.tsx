@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react'
 import { EllipsisVerticalIcon } from '@heroicons/react/24/solid'
 import { DeleteModal } from './DeleteModal'
-import { ResumeSection } from '../types'
+import { ResumeSection, ResumeSectionInstance } from '../types'
 import { useDataContext } from '../context/data/DataContext'
 
 type SectionContextMenuProps = {
@@ -35,7 +35,7 @@ export const SectionContextMenu = (props: SectionContextMenuProps) => {
 				title: props.section.title,
 				templateId: props.section.template.id,
 				sectionType: props.section.sectionType,
-				dataItemIds: props.section.items.map((di) => di.id)
+				dataItemIds: props.section.dataItems.map((di) => di.id)
 			})
 		}
 	}

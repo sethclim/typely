@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { DataItem, DataItemType, Template } from '../types'
+import { DataItem, DataItemType, ResumeSectionInstance, Template } from '../types'
 import ThreeWaySlider from './ThreeWaySlider'
 
 // @ts-ignore
@@ -237,7 +237,7 @@ const AddBar = (props: AddBarProps) => {
 export const ComponentLibrary = () => {
 	const [dataItems, setDataItems] = useState<Array<DataItem>>()
 	// const [templates, setTemplates] = useState<Array<Template>>();
-	const [instances, setInstances] = useState<Array<any>>()
+	const [instances, setInstances] = useState<Array<ResumeSectionInstance>>([])
 
 	const [level, setLevel] = useState('DataItems')
 	const [isDataItemModalOpen, setIsOpenDataItemModal] = useState(false)
@@ -251,7 +251,48 @@ export const ComponentLibrary = () => {
 		const hydrated = data.map((item) => mapRowToDataItem(item))
 		setDataItems(hydrated)
 
-		const instanceData = repositories.resumeSectionInstance.getAll()
+		const instanceDataRows = repositories.resumeSectionInstance.getAll()
+		const dataItemTypes = repositories.resumeDataItemType.getAll()
+
+		let instanceData: ResumeSectionInstance[] = []
+
+		instanceDataRows.forEach((instanceRow) => {
+			const dataItemRows = repositories.resumeSectionInstanceData.getDataForInstance(instanceRow.id)
+			const dataItems: DataItem[] = dataItemRows.map((dataItemRow) => {
+				const typeRow = dataItemTypes.find((t) => t.id === dataItemRow.type_id)
+				if (!typeRow || typeRow.id === undefined) {
+					throw new Error(`DataItemType not found or has no ID for id ${dataItemRow.type_id}`)
+				}
+
+				const type: DataItemType = {
+					id: typeRow.id,
+					name: typeRow.name
+				}
+
+				return {
+					id: dataItemRow.id ?? -1,
+					type,
+					title: dataItemRow.title ?? undefined,
+					description: dataItemRow.description ?? undefined,
+					data: dataItemRow.data ? JSON.parse(dataItemRow.data) : [],
+					created_at: dataItemRow.created_at ?? new Date().toISOString(),
+					updated_at: dataItemRow.updated_at ?? new Date().toISOString()
+				}
+			})
+
+			let instance: ResumeSectionInstance = {
+				id: instanceRow.id,
+				title: instanceRow.title,
+				templateId: instanceRow.templateId,
+				sectionType: instanceRow.sectionType,
+				createdAt: instanceRow.createdAt,
+				updatedAt: instanceRow.updatedAt,
+				dataItems: dataItems
+			}
+
+			instanceData.push(instance)
+		})
+
 		// const hydrated = data.map((item) => mapRowToDataItem(item))
 		setInstances(instanceData)
 

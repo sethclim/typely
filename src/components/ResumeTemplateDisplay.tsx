@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { DataItem, ResumeSection } from '../types'
+import { DataItem, ResumeSection, ResumeSectionInstance } from '../types'
 // @ts-ignore
 import SyntaxHighlighter from 'react-syntax-highlighter'
 // @ts-ignore
@@ -101,7 +101,7 @@ const DataItemDisplay = (props: DataItemDisplayProps) => {
 // }
 
 type ResumeTemplateDisplayProps = {
-	resumeSection: ResumeSection
+	resumeSection: ResumeSection | ResumeSectionInstance
 }
 
 export const ResumeSectionCardDisplay = (props: ResumeTemplateDisplayProps) => {
@@ -112,9 +112,11 @@ export const ResumeSectionCardDisplay = (props: ResumeTemplateDisplayProps) => {
 					<div className="grow w-full flex">
 						<div className="flex flex-row relative">
 							<h3 className="text-mywhite text-lg">{props.resumeSection.title}</h3>
-							<div className="opacity-0 group-hover:opacity-100 transition-opacity duration-150">
-								<SectionContextMenu section={props.resumeSection} />
-							</div>
+							{'template' in props.resumeSection ? (
+								<div className="opacity-0 group-hover:opacity-100 transition-opacity duration-150">
+									<SectionContextMenu section={props.resumeSection} />
+								</div>
+							) : null}
 						</div>
 					</div>
 					<div className="inline-flex items-center px-2 rounded-sm bg-black/30 text-other/80 text-xs">
@@ -122,7 +124,7 @@ export const ResumeSectionCardDisplay = (props: ResumeTemplateDisplayProps) => {
 					</div>
 				</div>
 				{/* <TemplateItemDisplay template={props.resumeSection.template}  section_id={props.resumeSection.id} /> */}
-				<DataItemDisplay data={props.resumeSection.items} section_id={props.resumeSection.id} />
+				<DataItemDisplay data={props.resumeSection.dataItems} section_id={props.resumeSection.id} />
 			</div>
 			<div className="pl-2">
 				<GrabHandle dotColor="bg-darkest" />

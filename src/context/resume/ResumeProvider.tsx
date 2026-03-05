@@ -17,8 +17,9 @@ export const ResumeProvider: React.FC<ResumeProviderProps> = ({ resumeId, childr
 	const fetchResume = async () => {
 		// await DB.tablesReady;
 		const data = await repositories.resumeConfig.getResumeConfig(resumeId)
+		// console.log('fetch resume data: ' + JSON.stringify(data))
 		const hydratedResume = hydrateResume(data)
-		console.log('hydratedResume name: ' + hydratedResume?.name)
+		console.log('hydratedResume name: ' + JSON.stringify(hydratedResume))
 		setResume(hydratedResume)
 	}
 
