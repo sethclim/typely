@@ -5,6 +5,7 @@ import {
 	resumeDataItemType,
 	resumeSectionConfig,
 	resumeSectionData,
+	resumeSectionInstance,
 	template,
 	themes
 } from './schema'
@@ -521,5 +522,40 @@ export class ThemeTable {
 	}
 	subscribe(cb: () => void) {
 		this._svc.subscribe(THEME_TABLE, cb)
+	}
+}
+
+type InsertInstanceProps = {
+	title: string
+	templateId: number
+	sectionType: string
+}
+
+export class ResumeSectionInstanceTable {
+	_svc: DBService
+	constructor(svc: DBService) {
+		this._svc = svc
+	}
+
+	async insertInstance({ title, templateId, sectionType }: InsertInstanceProps) {
+		const result = await this._svc.db
+			?.insert(resumeSectionInstance)
+			.values({
+				title: title,
+				templateId: templateId,
+				sectionType: sectionType,
+				createdAt: new Date().toISOString(),
+				updatedAt: new Date().toISOString()
+			})
+			.returning({ id: resumeSectionInstance.id })
+
+		return result[0].id
+	}
+}
+
+export class ResumeSectionInstanceDataTable {
+	_svc: DBService
+	constructor(svc: DBService) {
+		this._svc = svc
 	}
 }

@@ -55,3 +55,19 @@ export interface ThemeDataRow {
 	owner_user_id?: string
 	created_at: string
 }
+
+export interface ResumeSectionInstanceRow {
+	id: number
+	title: string
+	templateId: number
+	sectionType: string
+	createdAt: string | null // ISO datetime
+	updatedAt: string | null // ISO datetime
+	// Optional: attach dataItemIds when fetching with M2M
+	dataItemIds?: number[]
+}
+
+export interface ResumeSectionInstanceDataRow {
+	instanceId: number
+	dataItemId: number
+}
