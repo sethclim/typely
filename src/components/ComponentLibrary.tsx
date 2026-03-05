@@ -16,6 +16,7 @@ import { GrabHandle } from './GrabHandle'
 import { PlusIcon } from '@heroicons/react/20/solid'
 import { DeleteModal } from './DeleteModal'
 import { useDataContext } from '../context/data/DataContext'
+import { ResumeSectionCardDisplay } from './ResumeTemplateDisplay'
 
 // type componentLibraryProps = {
 //     // latex_comps : Array<Block>
@@ -236,6 +237,7 @@ const AddBar = (props: AddBarProps) => {
 export const ComponentLibrary = () => {
 	const [dataItems, setDataItems] = useState<Array<DataItem>>()
 	// const [templates, setTemplates] = useState<Array<Template>>();
+	const [instances, setInstances] = useState<Array<any>>()
 
 	const [level, setLevel] = useState('DataItems')
 	const [isDataItemModalOpen, setIsOpenDataItemModal] = useState(false)
@@ -248,6 +250,10 @@ export const ComponentLibrary = () => {
 		const data = repositories.resumeDataItem.getAll()
 		const hydrated = data.map((item) => mapRowToDataItem(item))
 		setDataItems(hydrated)
+
+		const instanceData = repositories.resumeSectionInstance.getAll()
+		// const hydrated = data.map((item) => mapRowToDataItem(item))
+		setInstances(instanceData)
 
 		// const templateData = TemplateTable.getAll();
 		// const hydratedTemplate = templateData.map((item) => mapRowToTemplate(item))
@@ -302,6 +308,28 @@ export const ComponentLibrary = () => {
                     </>
                     : null
                 } */}
+
+			{level == 'Instances' ? (
+				<>
+					{/* <AddBar title="Add Item" action={setIsOpenDataItemModal} /> */}
+					<div className="flex flex-col gap-1 bg-red p-2">
+						{instances?.map((instance) => {
+							return (
+								<ResumeSectionCardDisplay resumeSection={instance} />
+								// <>
+								// 	<h3 className="text-pink-500 bg-blue-500">{instance.title}</h3>
+								// 	<h3 className="text-pink-500 bg-blue-500">{instance.templateId}</h3>
+								// 	<h3 className="text-pink-500 bg-blue-500">{instance.sectionType}</h3>
+								// </>
+
+								// <Draggable key={data_item.id} dragId={`dataitem-${data_item.id}`} data={data_item}>
+								// 	<DataItemComponent dataItem={data_item} />
+								// </Draggable>
+							)
+						})}
+					</div>
+				</>
+			) : null}
 
 			<AddDetailsModal isOpen={isDataItemModalOpen} setIsOpen={setIsOpenDataItemModal} />
 			<AddTemplateModal isOpen={isTemplateModalOpen} setIsOpen={setIsOpenTemplateModal} />

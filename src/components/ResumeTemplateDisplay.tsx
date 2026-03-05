@@ -104,23 +104,9 @@ type ResumeTemplateDisplayProps = {
 	resumeSection: ResumeSection
 }
 
-export const ResumeSectionCard = (props: ResumeTemplateDisplayProps) => {
-	const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
-		id: `section-${props.resumeSection.id}`,
-		data: props.resumeSection
-	})
-
+export const ResumeSectionCardDisplay = (props: ResumeTemplateDisplayProps) => {
 	return (
-		<div
-			className="min-w-0 flex flex-row w-full items-center bg-gradient-to-tr from-darker via-dark/70 to-primary/50 p-2 rounded-lg"
-			ref={setNodeRef}
-			{...listeners}
-			{...attributes}
-			style={{
-				transform: CSS.Transform.toString(transform),
-				transition: transition
-			}}
-		>
+		<div className="min-w-0 flex flex-row w-full items-center bg-gradient-to-tr from-darker via-dark/70 to-primary/50 p-2 rounded-lg">
 			<div className="w-full min-w-0">
 				<div className="flex flex-row w-full group">
 					<div className="grow w-full flex">
@@ -141,6 +127,27 @@ export const ResumeSectionCard = (props: ResumeTemplateDisplayProps) => {
 			<div className="pl-2">
 				<GrabHandle dotColor="bg-darkest" />
 			</div>
+		</div>
+	)
+}
+
+export const ResumeSectionCard = (props: ResumeTemplateDisplayProps) => {
+	const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
+		id: `section-${props.resumeSection.id}`,
+		data: props.resumeSection
+	})
+
+	return (
+		<div
+			ref={setNodeRef}
+			{...listeners}
+			{...attributes}
+			style={{
+				transform: CSS.Transform.toString(transform),
+				transition: transition
+			}}
+		>
+			<ResumeSectionCardDisplay resumeSection={props.resumeSection} />
 		</div>
 	)
 }

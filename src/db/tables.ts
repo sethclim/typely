@@ -16,6 +16,7 @@ import {
 	ResumeConfigRow,
 	ResumeSectionConfigRow,
 	ResumeSectionDataRow,
+	ResumeSectionInstanceRow,
 	TemplateRow,
 	ThemeDataRow
 } from './types'
@@ -548,8 +549,16 @@ export class ResumeSectionInstanceTable {
 				updatedAt: new Date().toISOString()
 			})
 			.returning({ id: resumeSectionInstance.id })
+		this._svc.save()
+		const id = result[0].id
+		console.log('INSERTED INSTANCE ID ' + id)
 
-		return result[0].id
+		return id
+	}
+	getAll() {
+		const instances: ResumeSectionInstanceRow[] = this._svc.db?.select().from(resumeSectionInstance).all() || []
+		console.log('instances ' + JSON.stringify(instances))
+		return instances
 	}
 }
 
