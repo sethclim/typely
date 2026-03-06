@@ -4,13 +4,13 @@ export interface DataItemTypeRow {
 }
 
 export interface DataItemRow {
-	id?: number
+	id?: number | null
 	type_id: number // FK → DataItemType.id
-	title?: string
-	description?: string
-	data?: string // stored as JSON text in DB
-	created_at?: string // ISO timestamp
-	updated_at: string
+	title?: string | null
+	description?: string | null
+	data?: string | null // stored as JSON text in DB
+	created_at?: string | null // ISO timestamp
+	updated_at?: string | null
 }
 
 export interface TemplateRow {
@@ -54,4 +54,20 @@ export interface ThemeDataRow {
 	is_system: boolean
 	owner_user_id?: string
 	created_at: string
+}
+
+export interface ResumeSectionInstanceRow {
+	id: number
+	title: string
+	templateId: number
+	sectionType: string
+	createdAt: string | null // ISO datetime
+	updatedAt: string | null // ISO datetime
+	// Optional: attach dataItemIds when fetching with M2M
+	dataItemIds?: number[]
+}
+
+export interface ResumeSectionInstanceDataRow {
+	instanceId: number
+	dataItemId: number
 }

@@ -5,6 +5,8 @@ import {
 	ResumeDataItemTypeTable,
 	ResumeSectionConfigTable,
 	ResumeSectionDataTable,
+	ResumeSectionInstanceDataTable,
+	ResumeSectionInstanceTable,
 	TemplateTable,
 	ThemeTable
 } from '../../db/tables'
@@ -20,6 +22,8 @@ export type Repositories = {
 	resumeDataItemType: ResumeDataItemTypeTable
 	template: TemplateTable
 	theme: ThemeTable
+	resumeSectionInstance: ResumeSectionInstanceTable
+	resumeSectionInstanceData: ResumeSectionInstanceDataTable
 }
 
 export type DataContextData = {
@@ -37,7 +41,9 @@ export function createRepositories(svc: DBService): Repositories {
 		resumeDataItem: new ResumeDataItemTable(svc),
 		resumeDataItemType: new ResumeDataItemTypeTable(svc),
 		template: new TemplateTable(svc),
-		theme: new ThemeTable(svc)
+		theme: new ThemeTable(svc),
+		resumeSectionInstance: new ResumeSectionInstanceTable(svc),
+		resumeSectionInstanceData: new ResumeSectionInstanceDataTable(svc)
 	}
 }
 

@@ -5,6 +5,8 @@ import {
 	resumeDataItemType,
 	resumeSectionConfig,
 	resumeSectionData,
+	resumeSectionInstance,
+	resumeSectionInstanceData,
 	template,
 	themes
 } from './schema'
@@ -15,6 +17,7 @@ import {
 	ResumeConfigRow,
 	ResumeSectionConfigRow,
 	ResumeSectionDataRow,
+	ResumeSectionInstanceRow,
 	TemplateRow,
 	ThemeDataRow
 } from './types'
@@ -27,6 +30,7 @@ const RESUME_DATA_ITEM_TABLE = 'resume_data_item'
 // const RESUME_DATA_ITEM_TYPE_TABLE = "resume_data_item_type";
 const RESUME_TEMPLATE_TABLE = 'template'
 const THEME_TABLE = 'themes'
+const RESUME_SECTION_INSTANCE_TABLE = 'resume_section_instance'
 
 // function mapRows<T = any>(columns: string[], values: any[][]): T[] {
 //     return values.map((row) => {
@@ -74,7 +78,7 @@ function getFullResumeQuery(resumeIdParam: number): SQL<any> {
                      )
                      ELSE json(NULL)
                    END,
-                 'items',
+                 'dataItems',
                    COALESCE(
                      (
                        SELECT json_group_array(
@@ -405,6 +409,11 @@ export class ResumeDataItemTypeTable {
 
 		return newId
 	}
+
+	getAll(): DataItemTypeRow[] {
+		const rows: DataItemTypeRow[] = this._svc.db?.select().from(resumeDataItemType).all() || []
+		return rows
+	}
 }
 
 export class TemplateTable {
@@ -521,5 +530,84 @@ export class ThemeTable {
 	}
 	subscribe(cb: () => void) {
 		this._svc.subscribe(THEME_TABLE, cb)
+	}
+}
+
+type InsertInstanceProps = {
+	title: string
+	templateId: number
+	sectionType: string
+	dataItemIds: number[]
+}
+
+export class ResumeSectionInstanceTable {
+	_svc: DBService
+	constructor(svc: DBService) {
+		this._svc = svc
+	}
+
+	async insertInstance({ title, templateId, sectionType, dataItemIds }: InsertInstanceProps) {
+		const result = await this._svc.db
+			?.insert(resumeSectionInstance)
+			.values({
+				title: title,
+				templateId: templateId,
+				sectionType: sectionType,
+				createdAt: new Date().toISOString(),
+				updatedAt: new Date().toISOString()
+			})
+			.returning({ id: resumeSectionInstance.id })
+		if (!result) return -1
+		const newId = result[0].id
+		console.log('INSERTED INSTANCE ID ' + newId)
+		// Insert M2M links for data items if provided
+		if (dataItemIds?.length) {
+			const m2mRows = dataItemIds.map((dataItemId) => ({
+				instanceId: newId,
+				dataItemId
+			}))
+			await this._svc.db?.insert(resumeSectionInstanceData).values(m2mRows)
+		}
+
+		this._svc.save()
+		this._svc.notifyTable(RESUME_SECTION_INSTANCE_TABLE)
+		return newId
+	}
+	getAll() {
+		const instances: ResumeSectionInstanceRow[] = this._svc.db?.select().from(resumeSectionInstance).all() || []
+		console.log('instances ' + JSON.stringify(instances))
+		return instances
+	}
+	subscribe(cb: () => void) {
+		this._svc.subscribe(RESUME_SECTION_INSTANCE_TABLE, cb)
+	}
+}
+
+export class ResumeSectionInstanceDataTable {
+	_svc: DBService
+	constructor(svc: DBService) {
+		this._svc = svc
+	}
+
+	getDataForInstance(instanceId: number): DataItemRow[] {
+		const rows =
+			this._svc.db
+				?.select({
+					id: resumeDataItem.id,
+					type_id: resumeDataItem.typeId,
+					title: resumeDataItem.title,
+					description: resumeDataItem.description,
+					data: resumeDataItem.data,
+					created_at: resumeDataItem.createdAt,
+					updated_at: resumeDataItem.updatedAt
+				})
+				.from(resumeSectionInstanceData)
+				.innerJoin(resumeDataItem, eq(resumeSectionInstanceData.dataItemId, resumeDataItem.id))
+				.where(eq(resumeSectionInstanceData.instanceId, instanceId))
+				.all() || []
+
+		//get data item type
+
+		return rows
 	}
 }

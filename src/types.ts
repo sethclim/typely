@@ -37,7 +37,7 @@ export interface ResumeSection {
 	sectionType: string
 	order: number
 	template: Template | undefined
-	items: DataItem[]
+	dataItems: DataItem[]
 }
 
 export interface ResumeConfig {
@@ -48,4 +48,14 @@ export interface ResumeConfig {
 	updatedAt: string
 	sections: ResumeSection[]
 	theme: Theme
+}
+
+export interface ResumeSectionInstance {
+	id: number
+	title: string
+	templateId: number
+	sectionType: string
+	createdAt: string | null // ISO datetime
+	updatedAt: string | null // ISO datetime
+	dataItems: DataItem[]
 }

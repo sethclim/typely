@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { DataItem, DataItemType, Template } from '../types'
+import { DataItem, DataItemType, ResumeSectionInstance, Template } from '../types'
 import ThreeWaySlider from './ThreeWaySlider'
 
 // @ts-ignore
@@ -16,6 +16,7 @@ import { GrabHandle } from './GrabHandle'
 import { PlusIcon } from '@heroicons/react/20/solid'
 import { DeleteModal } from './DeleteModal'
 import { useDataContext } from '../context/data/DataContext'
+import { ResumeSectionCardDisplay } from './ResumeTemplateDisplay'
 
 // type componentLibraryProps = {
 //     // latex_comps : Array<Block>
@@ -236,6 +237,7 @@ const AddBar = (props: AddBarProps) => {
 export const ComponentLibrary = () => {
 	const [dataItems, setDataItems] = useState<Array<DataItem>>()
 	// const [templates, setTemplates] = useState<Array<Template>>();
+	const [instances, setInstances] = useState<Array<ResumeSectionInstance>>([])
 
 	const [level, setLevel] = useState('DataItems')
 	const [isDataItemModalOpen, setIsOpenDataItemModal] = useState(false)
@@ -249,6 +251,51 @@ export const ComponentLibrary = () => {
 		const hydrated = data.map((item) => mapRowToDataItem(item))
 		setDataItems(hydrated)
 
+		const instanceDataRows = repositories.resumeSectionInstance.getAll()
+		const dataItemTypes = repositories.resumeDataItemType.getAll()
+
+		let instanceData: ResumeSectionInstance[] = []
+
+		instanceDataRows.forEach((instanceRow) => {
+			const dataItemRows = repositories.resumeSectionInstanceData.getDataForInstance(instanceRow.id)
+			const dataItems: DataItem[] = dataItemRows.map((dataItemRow) => {
+				const typeRow = dataItemTypes.find((t) => t.id === dataItemRow.type_id)
+				if (!typeRow || typeRow.id === undefined) {
+					throw new Error(`DataItemType not found or has no ID for id ${dataItemRow.type_id}`)
+				}
+
+				const type: DataItemType = {
+					id: typeRow.id,
+					name: typeRow.name
+				}
+
+				return {
+					id: dataItemRow.id ?? -1,
+					type,
+					title: dataItemRow.title ?? undefined,
+					description: dataItemRow.description ?? undefined,
+					data: dataItemRow.data ? JSON.parse(dataItemRow.data) : [],
+					created_at: dataItemRow.created_at ?? new Date().toISOString(),
+					updated_at: dataItemRow.updated_at ?? new Date().toISOString()
+				}
+			})
+
+			let instance: ResumeSectionInstance = {
+				id: instanceRow.id,
+				title: instanceRow.title,
+				templateId: instanceRow.templateId,
+				sectionType: instanceRow.sectionType,
+				createdAt: instanceRow.createdAt,
+				updatedAt: instanceRow.updatedAt,
+				dataItems: dataItems
+			}
+
+			instanceData.push(instance)
+		})
+
+		// const hydrated = data.map((item) => mapRowToDataItem(item))
+		setInstances(instanceData)
+
 		// const templateData = TemplateTable.getAll();
 		// const hydratedTemplate = templateData.map((item) => mapRowToTemplate(item))
 		// setTemplates(hydratedTemplate)
@@ -257,10 +304,10 @@ export const ComponentLibrary = () => {
 	useEffect(() => {
 		fetchDataForLib()
 		const unsubscribeResumeDataItemTable = repositories.resumeDataItem.subscribe(fetchDataForLib)
-		const unsubscribeTemplateTable = repositories.template.subscribe(fetchDataForLib)
+		const unsubscribeResumeSectionInstanceTable = repositories.resumeSectionInstance.subscribe(fetchDataForLib)
 		return () => {
 			unsubscribeResumeDataItemTable
-			unsubscribeTemplateTable
+			unsubscribeResumeSectionInstanceTable
 		}
 	}, [])
 
@@ -302,6 +349,30 @@ export const ComponentLibrary = () => {
                     </>
                     : null
                 } */}
+
+			{level == 'Instances' ? (
+				<>
+					{/* <AddBar title="Add Item" action={setIsOpenDataItemModal} /> */}
+					<div className="flex flex-col gap-1 bg-red p-2">
+						{instances?.map((instance) => {
+							return (
+								<Draggable key={instance.id} dragId={`sectioninstance-${instance.id}`} data={instance}>
+									<ResumeSectionCardDisplay resumeSection={instance} />
+								</Draggable>
+								// <>
+								// 	<h3 className="text-pink-500 bg-blue-500">{instance.title}</h3>
+								// 	<h3 className="text-pink-500 bg-blue-500">{instance.templateId}</h3>
+								// 	<h3 className="text-pink-500 bg-blue-500">{instance.sectionType}</h3>
+								// </>
+
+								// <Draggable key={data_item.id} dragId={`dataitem-${data_item.id}`} data={data_item}>
+								// 	<DataItemComponent dataItem={data_item} />
+								// </Draggable>
+							)
+						})}
+					</div>
+				</>
+			) : null}
 
 			<AddDetailsModal isOpen={isDataItemModalOpen} setIsOpen={setIsOpenDataItemModal} />
 			<AddTemplateModal isOpen={isTemplateModalOpen} setIsOpen={setIsOpenTemplateModal} />

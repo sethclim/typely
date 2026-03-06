@@ -61,7 +61,8 @@ export const resumeSectionConfig = sqliteTable('resume_section_config', {
 	templateId: integer('template_id')
 		.notNull()
 		.references(() => template.id),
-	sectionOrder: integer('section_order').default(0)
+	sectionOrder: integer('section_order').default(0),
+	instanceId: integer('instance_id').references(() => resumeSectionInstance.id, { onDelete: 'set null' })
 })
 
 export const resumeSectionResumeIdx = index('idx_section_resume').on(resumeSectionConfig.resumeId)
@@ -106,4 +107,29 @@ export const resumeSectionData = sqliteTable('resume_section_data', {
 export const resumeSectionDataPk = primaryKey({
 	name: 'resume_section_data_pk',
 	columns: [resumeSectionData.sectionId, resumeSectionData.dataItemId]
+})
+
+export const resumeSectionInstance = sqliteTable('resume_section_instance', {
+	id: integer('id').primaryKey({ autoIncrement: true }),
+	title: text('title').notNull(),
+	templateId: integer('template_id')
+		.notNull()
+		.references(() => template.id),
+	sectionType: text('section_type').notNull(),
+	createdAt: text('created_at').default("datetime('now')"),
+	updatedAt: text('updated_at').default("datetime('now')")
+})
+
+export const resumeSectionInstanceData = sqliteTable('resume_section_instance_data', {
+	instanceId: integer('instance_id')
+		.notNull()
+		.references(() => resumeSectionInstance.id, { onDelete: 'cascade' }),
+	dataItemId: integer('data_item_id')
+		.notNull()
+		.references(() => resumeDataItem.id)
+})
+
+export const resumeSectionInstanceDataPk = primaryKey({
+	name: 'resume_section_instance_data_pk',
+	columns: [resumeSectionInstanceData.instanceId, resumeSectionInstanceData.dataItemId]
 })

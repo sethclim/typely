@@ -28,6 +28,18 @@ export const SectionContextMenu = (props: SectionContextMenuProps) => {
 		if (deleteSection) repositories.resumeSectionConfig.delete(deleteSection.id)
 	}
 
+	const saveInstance = async () => {
+		if (props.section.template) {
+			console.log('SAVING INSTANCE!')
+			await repositories.resumeSectionInstance.insertInstance({
+				title: props.section.title,
+				templateId: props.section.template.id,
+				sectionType: props.section.sectionType,
+				dataItemIds: props.section.dataItems.map((di) => di.id)
+			})
+		}
+	}
+
 	return (
 		<>
 			<div className="relative inline-block">
@@ -48,6 +60,12 @@ export const SectionContextMenu = (props: SectionContextMenuProps) => {
 							onClick={() => deleteSectionFromResume(props.section)}
 						>
 							Delete
+						</button>
+						<button
+							className="w-full text-left px-4 py-2 bg-darker text-primary hover:bg-dark"
+							onClick={() => saveInstance()}
+						>
+							Save Instance
 						</button>
 					</div>
 				)}
