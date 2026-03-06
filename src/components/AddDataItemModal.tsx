@@ -66,7 +66,10 @@ export const AddDetailsModal = (props: AddDetailsModalProps) => {
 	}
 
 	const AddDataItem = () => {
-		if (Object.keys(items).length === 0 || title == '' || title == null) return
+		if (Object.keys(items).length === 0 || title == '' || title == null) {
+			console.log('Object.keys(items).length ' + Object.keys(items).length + ' title ' + title)
+			return
+		}
 
 		if (!props.dataItem) {
 			repositories.resumeDataItem.insert({

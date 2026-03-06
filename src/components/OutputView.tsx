@@ -79,7 +79,7 @@ export const OutputView = (props: OutputViewProps) => {
 		})
 		latex_string += `\n\\end{document}`
 
-		setLatex(latex_string)
+		// setLatex(latex_string)
 		return latex_string
 	}
 
@@ -133,6 +133,7 @@ export const OutputView = (props: OutputViewProps) => {
 
 				// const docuClass = "\\documentclass[10pt, letterpaper]{article}"
 				const latex = ''.concat(sty_source, '\n', templatedLatexResume)
+				setLatex(latex)
 
 				const newHash = await hashString(latex)
 				console.log(`pdfData ${JSON.stringify(pdfData)} newHash ${newHash}`)
