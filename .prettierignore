@@ -1,0 +1,69 @@
+# Dependencies
+node_modules
+.pnpm-store
+
+# Build output
+dist
+build
+.out
+coverage
+
+# Vite
+.vite
+
+# Logs
+*.log
+pnpm-debug.log*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Lockfiles (optional but usually best)
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Generated files
+*.min.js
+*.min.css
+*.map
+
+# TypeScript build info
+*.tsbuildinfo
+
+# IDE
+.idea
+.vscode/*
+
+# OS
+.DS_Store
+Thumbs.db
+
+*.ps1
+
+.github/
+.tanstack/
+drizzle/
+drizzle.config.ts
+
+playwright-report/
+playwright.config.ts
+
+public/
+
+eslint.config.js
+README.md
+index.html
+
+*.css
+*.json
+*.jsonc
+
+vite.config.ts
+
+*.gen.ts

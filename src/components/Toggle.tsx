@@ -1,42 +1,38 @@
-import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react';
-import { ReactNode } from 'react';
-import { ChevronUpIcon } from '@heroicons/react/20/solid';
+import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react'
+import { ReactNode } from 'react'
+import { ChevronUpIcon } from '@heroicons/react/20/solid'
 
 type ToggleProps = {
-    children : ReactNode,
-    barContents: ReactNode;
-    postBarContent?: ReactNode;
-    buttonStyle?: string;
-    panelStyle?: string;
+	children: ReactNode
+	barContents: ReactNode
+	postBarContent?: ReactNode
+	buttonStyle?: string
+	panelStyle?: string
 }
 
 export const Toggle = ({
-  children, 
-  barContents, 
-  postBarContent, 
-  buttonStyle = "flex justify-between items-center px-2 py-1 text-sm font-medium text-left text-white bg-darkest rounded-sm",
-  panelStyle = "pt-4 bg-darkest p-2"
-} : ToggleProps) => {
-  return (
-    <div className="flex flex-col w-full min-w-0 max-w-full overflow-hidden">
-      <Disclosure>
-        {({ open }) => (
-          <>
-            <DisclosureButton className={buttonStyle}>
-              {barContents}
-              <ChevronUpIcon
-                className={`${
-                  open ? 'transform rotate-180' : ''
-                } w-5 h-5 text-purple-500`}
-              />
-              {postBarContent}
-            </DisclosureButton>
-            <DisclosurePanel className={panelStyle}>
-              {children}
-            </DisclosurePanel>
-          </>
-        )}
-      </Disclosure>
-    </div>
-  );
+	children,
+	barContents,
+	postBarContent,
+	buttonStyle = 'flex justify-between items-center px-2 py-1 text-sm font-medium text-left text-white bg-darkest rounded-sm',
+	panelStyle = 'pt-4 bg-darkest p-2'
+}: ToggleProps) => {
+	return (
+		<div className="flex flex-col w-full min-w-0 max-w-full overflow-hidden">
+			<Disclosure>
+				{({ open }) => (
+					<>
+						<DisclosureButton className={buttonStyle}>
+							{barContents}
+							<ChevronUpIcon
+								className={`${open ? 'transform rotate-180' : ''} w-5 h-5 text-purple-500`}
+							/>
+							{postBarContent}
+						</DisclosureButton>
+						<DisclosurePanel className={panelStyle}>{children}</DisclosurePanel>
+					</>
+				)}
+			</Disclosure>
+		</div>
+	)
 }

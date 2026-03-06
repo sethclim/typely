@@ -5,80 +5,88 @@ import { databaseExists, loadFile } from '../services/OPFS'
 import { useDataContext } from '../context/data/DataContext'
 
 export const Settings = () => {
+	const [file, setFile] = useState<Uint8Array | null>(null)
+	const [oPFSSaveExists, setOPFSSaveExists] = useState(false)
 
-    const [file, setFile] = useState<Uint8Array | null>(null)
-    const [oPFSSaveExists, setOPFSSaveExists] = useState(false)
+	const { dbService } = useDataContext()
 
+	useEffect(() => {
+		const init = async () => {
+			const res = await databaseExists()
+			setOPFSSaveExists(res)
+		}
+		init()
+	}, [])
 
-    const { dbService } = useDataContext()
+	const backUpSQLite = () => {
+		const data = dbService._rawDB?.export()
+		const blob = new Blob([data], { type: 'application/octet-stream' })
 
-    useEffect(()=>{
-        const init = async() => {
-           const res = await databaseExists()
-           setOPFSSaveExists(res)
-        }
-        init()
-    },[])
+		const a = document.createElement('a')
+		a.href = URL.createObjectURL(blob)
+		a.download = 'my_database.sqlite'
+		a.click()
+	}
 
-    const backUpSQLite = () => {
-        const data = dbService._rawDB?.export();
-        const blob = new Blob([data], { type: "application/octet-stream" });
+	const onRestore = async () => {
+		if (!file) return
+		dbService.restoreDB(file)
+	}
 
-        const a = document.createElement("a");
-        a.href = URL.createObjectURL(blob);
-        a.download = "my_database.sqlite";
-        a.click();
-    }
+	const handleFileChange = async (e: any) => {
+		const file = e.target.files[0]
+		if (!file) return
 
-    const onRestore = async() => {
-        if(!file) return
-        dbService.restoreDB(file)
-    }
+		if (file) console.log('Selected file:', file.name)
+		const arrayBuffer = await file.arrayBuffer()
+		const uint8 = new Uint8Array(arrayBuffer)
+		setFile(uint8)
+	}
 
-    const handleFileChange = async (e : any) => {
-        const file = e.target.files[0];
-        if (!file) return;
+	const onRestoreFromOPFS = async () => {
+		const file = await loadFile()
+		if (!file) return
+		const arrayBuffer = await file.arrayBuffer()
+		const uint8 = new Uint8Array(arrayBuffer)
+		dbService.restoreDB(uint8)
+	}
 
-        if (file) console.log("Selected file:", file.name);
-        const arrayBuffer = await file.arrayBuffer()
-        const uint8 = new Uint8Array(arrayBuffer);
-        setFile(uint8)
-    };
-
-    const onRestoreFromOPFS  = async() => {
-        const file = await loadFile()
-        if (!file) return;
-        const arrayBuffer = await file.arrayBuffer()
-        const uint8 = new Uint8Array(arrayBuffer);
-        dbService.restoreDB(uint8)
-    }
-
-    return (
-        <>
-            <Header />
-                <div className='grow flex flex-row justify-center'>
-                    <div className="min-w-150 p-4 pt-10 text-mywhite" >
-                        <h1 className='text-mywhite text-xl'>SETTINGS</h1>
-                        <div className='flex justify-start items-start flex-col gap-4 bg-dark min-w-150 p-4 rounded'>
-                            <h3 className='text-lg'>DATA</h3>
-                            {
-                                oPFSSaveExists ? (
-                                    <>
-                                     <p className='text-grey'>Autosave Backup</p>
-                                     <button className='bg-mywhite text-black p-2 rounded' onClick={onRestoreFromOPFS}>RESTORE</button>
-                                    </>
-                                ) : null
-                            }
-                            <p>{}</p>
-                            <p className='text-grey'>Download data from browser</p>
-                            <button className='bg-mywhite text-black p-2 rounded' onClick={backUpSQLite}>BACKUP DATA</button>
-                            <p className='text-grey'>Restore From Save</p>
-                            <input className='bg-darker hover:cursor-pointer' type="file" id="filePicker" accept=".sqlite"  onChange={handleFileChange} />
-                            <button className='bg-mywhite text-black p-2 rounded' onClick={onRestore}>RESTORE</button>
-                        </div>
-                    </div>
-                </div>
-            <Footer />
-        </>
-  )
+	return (
+		<>
+			<Header />
+			<div className="grow flex flex-row justify-center">
+				<div className="min-w-150 p-4 pt-10 text-mywhite">
+					<h1 className="text-mywhite text-xl">SETTINGS</h1>
+					<div className="flex justify-start items-start flex-col gap-4 bg-dark min-w-150 p-4 rounded">
+						<h3 className="text-lg">DATA</h3>
+						{oPFSSaveExists ? (
+							<>
+								<p className="text-grey">Autosave Backup</p>
+								<button className="bg-mywhite text-black p-2 rounded" onClick={onRestoreFromOPFS}>
+									RESTORE
+								</button>
+							</>
+						) : null}
+						<p>{}</p>
+						<p className="text-grey">Download data from browser</p>
+						<button className="bg-mywhite text-black p-2 rounded" onClick={backUpSQLite}>
+							BACKUP DATA
+						</button>
+						<p className="text-grey">Restore From Save</p>
+						<input
+							className="bg-darker hover:cursor-pointer"
+							type="file"
+							id="filePicker"
+							accept=".sqlite"
+							onChange={handleFileChange}
+						/>
+						<button className="bg-mywhite text-black p-2 rounded" onClick={onRestore}>
+							RESTORE
+						</button>
+					</div>
+				</div>
+			</div>
+			<Footer />
+		</>
+	)
 }

@@ -1,7 +1,6 @@
 // import { createContext, useContext } from "react";
 // import { Theme } from "../../types";
 
-
 // type ThemesContextType = {
 //   themes: Theme[];
 //   refresh: () => void;

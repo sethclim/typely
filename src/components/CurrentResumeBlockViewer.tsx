@@ -1,163 +1,156 @@
-import { DragEndEvent, useDndMonitor } from "@dnd-kit/core";
-import { ResumeConfig, ResumeSection } from "../types"
-import { ResumeSectionCard } from "./ResumeTemplateDisplay";
-import { useEffect, useState } from "react";
-import { PencilIcon } from '@heroicons/react/20/solid';
+import { DragEndEvent, useDndMonitor } from '@dnd-kit/core'
+import { ResumeConfig, ResumeSection } from '../types'
+import { ResumeSectionCard } from './ResumeTemplateDisplay'
+import { useEffect, useState } from 'react'
+import { PencilIcon } from '@heroicons/react/20/solid'
 
-import {
-    arrayMove,
-    SortableContext
-} from '@dnd-kit/sortable';
-import { RESUME_CONFIG_TABLE } from "../db/tables";
-import { Link, useRouterState } from "@tanstack/react-router";
+import { arrayMove, SortableContext } from '@dnd-kit/sortable'
+import { RESUME_CONFIG_TABLE } from '../db/tables'
+import { Link, useRouterState } from '@tanstack/react-router'
 
-import { Dropdown } from "./Dropdown";
-import { useDataContext } from "../context/data/DataContext";
+import { Dropdown } from './Dropdown'
+import { useDataContext } from '../context/data/DataContext'
 
 export type CurrentResumeBlockViewerProps = {
-    resume? : ResumeConfig | null,
-    setIsNewRsumeOpen: (state : true) => void;
+	resume?: ResumeConfig | null
+	setIsNewRsumeOpen: (state: true) => void
 }
 
-export const CurrentResumeBlockViewer = (props : CurrentResumeBlockViewerProps) => {
+export const CurrentResumeBlockViewer = (props: CurrentResumeBlockViewerProps) => {
+	const [sections, setSections] = useState<ResumeSection[]>([])
+	const [reordered, setReordered] = useState(false)
 
-    const [sections, setSections] =  useState<ResumeSection[]>([])
-    const [reordered, setReordered] = useState(false);
+	const { repositories, dbService, themes } = useDataContext()
 
-    const { repositories, dbService, themes } = useDataContext();
+	useEffect(() => {
+		if (props.resume?.sections != null) setSections(props.resume!.sections)
+	}, [props.resume?.sections])
 
-    useEffect(() => {
-        if(props.resume?.sections != null) 
-            setSections(props.resume!.sections)
+	useDndMonitor({
+		onDragEnd(event) {
+			reorderGamesList(event)
+		}
+	})
 
-    },[props.resume?.sections])
+	const reorderGamesList = (e: DragEndEvent) => {
+		if (!e.over) return
 
-     useDndMonitor({
-        onDragEnd(event) {
-            reorderGamesList(event)
-        },
-    });
+		if (sections == null) return
 
-    const reorderGamesList = (e: DragEndEvent) => {
-        if (!e.over) return;
+		const [overPrefix, over_id] = e.over.id.toString().split('-')
+		const [activePrefix, active_id] = e.active.id.toString().split('-')
 
-        if (sections == null) return;
+		if (overPrefix !== 'section' || activePrefix !== 'section' || over_id === '' || active_id === '') return
 
-        const [overPrefix, over_id] = e.over.id.toString().split('-');
-        const [activePrefix, active_id] = e.active.id.toString().split('-');
+		if (over_id !== active_id) {
+			setSections((sections) => {
+				const oldIdx = sections.findIndex((s) => s.id === parseInt(active_id))
+				const newIdx = sections.findIndex((s) => s.id === parseInt(over_id))
+				return arrayMove(sections, oldIdx, newIdx)
+			})
 
-        if (overPrefix !== "section" || activePrefix !== "section" || over_id === "" || active_id === "")
-            return
+			setReordered(true)
+		}
+	}
 
-        if (over_id !== active_id) {
-            setSections((sections) => {
-                const oldIdx = sections.findIndex(s => s.id === parseInt(active_id));
-                const newIdx = sections.findIndex(s => s.id === parseInt(over_id));
-                return arrayMove(sections, oldIdx, newIdx);
-            });
+	useEffect(() => {
+		if (reordered) {
+			sections.forEach((section, index) => {
+				repositories.resumeSectionConfig.updateOrder(section.id, index)
+			})
 
-            setReordered(true);
-        }   
-    };
+			// Reset the flag
+			setReordered(false)
+		}
+	}, [sections, reordered])
 
-    useEffect(() => {
-        if (reordered) {
-            sections.forEach((section, index) => {
-                repositories.resumeSectionConfig.updateOrder(section.id, index);
-            });
+	const [activeTheme, setActiveTheme] = useState('')
 
-            // Reset the flag
-            setReordered(false);
-        }
-    }, [sections, reordered]);
+	useEffect(() => {
+		if (props.resume) {
+			setActiveTheme(props.resume.theme.name)
+		}
+	}, [props.resume?.id])
 
-    const [activeTheme, setActiveTheme] = useState("")
+	const changeThemeForResume = async (newThemeName: string | null) => {
+		if (!newThemeName || !props.resume) return
 
+		setActiveTheme(newThemeName)
 
-    useEffect(()=>{
-        if (props.resume) {
-            setActiveTheme(props.resume.theme.name)
-        }
-    },[props.resume?.id])
+		const newTheme = themes.filter((t) => t.name === newThemeName.toLowerCase())[0]
 
-    const changeThemeForResume = async(newThemeName: string | null) => {
-        if(!newThemeName || !props.resume)
-            return
+		console.log('@newTheme ' + newTheme.name)
 
-        setActiveTheme(newThemeName)
+		// Change resume config theme
+		// change sections to point to right template from new theme
+		await repositories.resumeConfig.updateTheme({
+			id: props.resume.id,
+			themeId: newTheme.id,
+			updatedAt: Date.now().toString(),
+			notify: false
+		})
 
-        const newTheme = themes.filter(t => t.name === newThemeName.toLowerCase())[0]
+		for (const section of props.resume.sections) {
+			// console.log("section.sectionType " + section.sectionType)
 
-        console.log("@newTheme " + newTheme.name)
+			const newTemplateForSection = newTheme.templates.filter((t) => t.sectionType === section.sectionType)[0]
+			// console.log("@newTemplateForSection " + JSON.stringify(newTemplateForSection))
 
-        // Change resume config theme
-        // change sections to point to right template from new theme
-        await repositories.resumeConfig.updateTheme({
-            id: props.resume.id, 
-            themeId: newTheme.id, 
-            updatedAt: Date.now().toString(),
-            notify: false
-        })
-        
-        for (const section of props.resume.sections) {
-            // console.log("section.sectionType " + section.sectionType)
-            
-            const newTemplateForSection = newTheme.templates.filter(t => t.sectionType === section.sectionType)[0]
-            // console.log("@newTemplateForSection " + JSON.stringify(newTemplateForSection))
-            
-            await repositories.resumeSectionConfig.updateTemplate(section.id, newTemplateForSection.id, false)
-        }
-        console.log("@newTheme " + newTheme.name + " DONE INSERTS")
-        dbService.notifyTable(RESUME_CONFIG_TABLE)
-    }
+			await repositories.resumeSectionConfig.updateTemplate(section.id, newTemplateForSection.id, false)
+		}
+		console.log('@newTheme ' + newTheme.name + ' DONE INSERTS')
+		dbService.notifyTable(RESUME_CONFIG_TABLE)
+	}
 
+	const { location } = useRouterState()
 
-    const { location } = useRouterState();
+	const isDemo = location.pathname.startsWith('/demo')
+	const base = isDemo ? '/demo' : ''
 
-    const isDemo = location.pathname.startsWith('/demo');
-    const base = isDemo ? '/demo' : '';
-
-
-    return (
-        <div className='flex flex-col gap-4 p-4'>
-            <h4 className='text-white text-lg font-bold'>Resume Blocks</h4>
-            <div className="flex flex-row  p-2 bg-dark m-2 overflow-hidden">
-                <div className="w-full flex flex-row justify-start items-center gap-2 text-grey" > 
-                    <p className="">Theme:</p>
-                    <div className="flex flex-row gap-2 items-center justify-center">
-                        <Dropdown 
-                            options={["Engineering", "Colorful", "Faang"]} 
-                            selected={activeTheme} 
-                            onSelected={(v) => changeThemeForResume(v)} />
-                        {
-                            props?.resume?.theme ? 
-                            <Link   to={`${base}/theme-editor/$themeId`}
-                                    params={{ themeId: props.resume.theme.id.toString() }} >
-                                <PencilIcon className="h-4 w-4 text-grey hover:text-mywhite cursor-pointer" />
-                            </Link> : null
-                        }
-                    </div>
-                </div>
-                <div className="flex flex-col justify-center">
-                    <button className='bg-darker text-grey rounded-lg w-30 p-2 m-2' onClick={() => props.setIsNewRsumeOpen(true)}>Add Block +</button>
-                </div>
-            </div>
-            <div className='flex flex-col gap-4 bg-darkest p-2'>
-            {
-                props.resume && 
-                    <SortableContext items={sections.map((x) => `section-${x.id}`)} >
-                    {
-                        sections.map((section) => {
-                            return (
-                                <>
-                                    <ResumeSectionCard key={section.id} resumeSection={section}  /> 
-                                </>
-                            )
-                        })
-                    }
-                    </SortableContext>
-            }
-            </div>
-        </div>
-    )
+	return (
+		<div className="flex flex-col gap-4 p-4">
+			<h4 className="text-white text-lg font-bold">Resume Blocks</h4>
+			<div className="flex flex-row  p-2 bg-dark m-2 overflow-hidden">
+				<div className="w-full flex flex-row justify-start items-center gap-2 text-grey">
+					<p className="">Theme:</p>
+					<div className="flex flex-row gap-2 items-center justify-center">
+						<Dropdown
+							options={['Engineering', 'Colorful', 'Faang']}
+							selected={activeTheme}
+							onSelected={(v) => changeThemeForResume(v)}
+						/>
+						{props?.resume?.theme ? (
+							<Link
+								to={`${base}/theme-editor/$themeId`}
+								params={{ themeId: props.resume.theme.id.toString() }}
+							>
+								<PencilIcon className="h-4 w-4 text-grey hover:text-mywhite cursor-pointer" />
+							</Link>
+						) : null}
+					</div>
+				</div>
+				<div className="flex flex-col justify-center">
+					<button
+						className="bg-darker text-grey rounded-lg w-30 p-2 m-2"
+						onClick={() => props.setIsNewRsumeOpen(true)}
+					>
+						Add Block +
+					</button>
+				</div>
+			</div>
+			<div className="flex flex-col gap-4 bg-darkest p-2">
+				{props.resume && (
+					<SortableContext items={sections.map((x) => `section-${x.id}`)}>
+						{sections.map((section) => {
+							return (
+								<>
+									<ResumeSectionCard key={section.id} resumeSection={section} />
+								</>
+							)
+						})}
+					</SortableContext>
+				)}
+			</div>
+		</div>
+	)
 }
