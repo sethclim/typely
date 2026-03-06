@@ -30,6 +30,7 @@ const RESUME_DATA_ITEM_TABLE = 'resume_data_item'
 // const RESUME_DATA_ITEM_TYPE_TABLE = "resume_data_item_type";
 const RESUME_TEMPLATE_TABLE = 'template'
 const THEME_TABLE = 'themes'
+const RESUME_SECTION_INSTANCE_TABLE = 'resume_section_instance'
 
 // function mapRows<T = any>(columns: string[], values: any[][]): T[] {
 //     return values.map((row) => {
@@ -569,12 +570,16 @@ export class ResumeSectionInstanceTable {
 		}
 
 		this._svc.save()
+		this._svc.notifyTable(RESUME_SECTION_INSTANCE_TABLE)
 		return newId
 	}
 	getAll() {
 		const instances: ResumeSectionInstanceRow[] = this._svc.db?.select().from(resumeSectionInstance).all() || []
 		console.log('instances ' + JSON.stringify(instances))
 		return instances
+	}
+	subscribe(cb: () => void) {
+		this._svc.subscribe(RESUME_SECTION_INSTANCE_TABLE, cb)
 	}
 }
 

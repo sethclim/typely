@@ -304,10 +304,10 @@ export const ComponentLibrary = () => {
 	useEffect(() => {
 		fetchDataForLib()
 		const unsubscribeResumeDataItemTable = repositories.resumeDataItem.subscribe(fetchDataForLib)
-		const unsubscribeTemplateTable = repositories.template.subscribe(fetchDataForLib)
+		const unsubscribeResumeSectionInstanceTable = repositories.resumeSectionInstance.subscribe(fetchDataForLib)
 		return () => {
 			unsubscribeResumeDataItemTable
-			unsubscribeTemplateTable
+			unsubscribeResumeSectionInstanceTable
 		}
 	}, [])
 

@@ -16,7 +16,7 @@ export const DropTarget = (props: DropTargetProps) => {
 
 	useEffect(() => {
 		isOver && active?.id.toString().startsWith('sectioninstance-')
-			? setBGColor('border-primary')
+			? setBGColor('border-other/80')
 			: setBGColor('border-dark')
 	}, [isOver])
 
