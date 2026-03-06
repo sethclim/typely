@@ -95,6 +95,7 @@ export const ResumeView = () => {
 
 		const [overPrefix, section_id] = over.id.toString().split('-')
 		const [activePrefix, active_id] = active.id.toString().split('-')
+		console.log('DRAG END overPrefix' + overPrefix + ' activePrefix ' + activePrefix)
 
 		if (overPrefix === 'dataitem' && activePrefix === 'dataitem') {
 			//check if keys match then show dialog
@@ -129,10 +130,25 @@ export const ResumeView = () => {
 			}
 		} else if (overPrefix === 'template' && activePrefix === 'template') {
 			repositories.resumeSectionConfig.updateTemplate(parseInt(section_id), parseInt(active_id))
+		} else if (overPrefix === 'sectionT' && activePrefix === 'sectioninstance') {
+			console.log('THIS IS OVER!!! ' + over.data.current?.index)
+			if (myResume == null || draggingResumeInstance == null || over.data.current == null) return
+
+			let overIdx = over.data.current.index
+			repositories.resumeSectionConfig.insert({
+				resume_id: myResume.id,
+				title: draggingResumeInstance.title,
+				template_id: draggingResumeInstance.templateId,
+				section_type: draggingResumeInstance.sectionType,
+				section_order: over.data.current?.index
+			})
+
+			myResume.sections.forEach((section, index) => {
+				if (index >= overIdx) {
+					repositories.resumeSectionConfig.updateOrder(section.id, index + 1)
+				}
+			})
 		}
-		// else if(overPrefix === "section" && activePrefix === "section"){
-		//   // console.log("THIS IS OVER!!!")
-		// }
 
 		setIsDragging(false)
 		setDraggingDataItem(null)

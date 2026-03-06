@@ -10,6 +10,7 @@ import { Link, useRouterState } from '@tanstack/react-router'
 
 import { Dropdown } from './Dropdown'
 import { useDataContext } from '../context/data/DataContext'
+import { DropTarget } from './DropTarget'
 
 export type CurrentResumeBlockViewerProps = {
 	resume?: ResumeConfig | null
@@ -138,16 +139,18 @@ export const CurrentResumeBlockViewer = (props: CurrentResumeBlockViewerProps) =
 					</button>
 				</div>
 			</div>
-			<div className="flex flex-col gap-4 bg-darkest p-2">
+			<div className="flex flex-col gap-2 bg-darkest p-2">
 				{props.resume && (
 					<SortableContext items={sections.map((x) => `section-${x.id}`)}>
-						{sections.map((section) => {
+						{sections.map((section, i) => {
 							return (
 								<>
+									<DropTarget id={i} />
 									<ResumeSectionCard key={section.id} resumeSection={section} />
 								</>
 							)
 						})}
+						<DropTarget id={sections.length} />
 					</SortableContext>
 				)}
 			</div>
