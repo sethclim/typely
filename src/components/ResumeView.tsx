@@ -8,7 +8,7 @@ import { ComponentLibrary, DataItemComponent, mapRowToTemplate, TemplateItemComp
 
 import 'react-pdf/dist/Page/TextLayer.css'
 import 'react-pdf/dist/Page/AnnotationLayer.css'
-import { DataItem, ResumeSection, Template } from '../types'
+import { DataItem, ResumeSection, ResumeSectionInstance, Template } from '../types'
 import {
 	DndContext,
 	DragEndEvent,
@@ -29,6 +29,7 @@ import { OutputView } from './OutputView'
 import { CurrentResumeBlockViewer } from './CurrentResumeBlockViewer'
 // import { DB } from '../db';
 import { useDataContext } from '../context/data/DataContext'
+import { ResumeSectionCardDisplay } from './ResumeTemplateDisplay'
 
 type ReplaceDataItemInfo = {
 	section_id: string
@@ -52,6 +53,7 @@ export const ResumeView = () => {
 	const [draggingDataItem, setDraggingDataItem] = useState<DataItem | null>(null)
 	const [draggingDataTemplate, setDraggingDataTemplate] = useState<Template | null>(null)
 	const [draggingDataSection, setDraggingDataSection] = useState<ResumeSection | null>(null)
+	const [draggingResumeInstance, setDraggingResumeInstance] = useState<ResumeSectionInstance | null>(null)
 
 	const { repositories } = useDataContext()
 
@@ -146,7 +148,8 @@ export const ResumeView = () => {
 
 		const [activePrefix, _] = active.id.toString().split('-')
 
-		// console.log("activePrefix " + activePrefix)
+		console.log('@handleDragStart')
+		console.log('activePrefix ' + activePrefix)
 
 		if (activePrefix === 'dataitem') {
 			setDraggingDataItem(active.data.current as unknown as DataItem)
@@ -154,6 +157,9 @@ export const ResumeView = () => {
 			setDraggingDataTemplate(active.data.current as unknown as Template)
 		} else if (activePrefix === 'section') {
 			setDraggingDataSection(active.data.current as unknown as ResumeSection)
+		} else if (activePrefix === 'sectioninstance') {
+			console.log('@HEHEH')
+			setDraggingResumeInstance(active.data.current as unknown as ResumeSectionInstance)
 		}
 	}
 
@@ -306,6 +312,9 @@ export const ResumeView = () => {
 					{isDragging && draggingDataItem ? <DataItemComponent dataItem={draggingDataItem} /> : null}
 					{isDragging && draggingDataTemplate ? (
 						<TemplateItemComponent template={draggingDataTemplate} />
+					) : null}
+					{isDragging && draggingResumeInstance ? (
+						<ResumeSectionCardDisplay resumeSection={draggingResumeInstance} />
 					) : null}
 				</DragOverlay>
 			) : null}

@@ -356,7 +356,9 @@ export const ComponentLibrary = () => {
 					<div className="flex flex-col gap-1 bg-red p-2">
 						{instances?.map((instance) => {
 							return (
-								<ResumeSectionCardDisplay resumeSection={instance} />
+								<Draggable key={instance.id} dragId={`sectioninstance-${instance.id}`} data={instance}>
+									<ResumeSectionCardDisplay resumeSection={instance} />
+								</Draggable>
 								// <>
 								// 	<h3 className="text-pink-500 bg-blue-500">{instance.title}</h3>
 								// 	<h3 className="text-pink-500 bg-blue-500">{instance.templateId}</h3>
