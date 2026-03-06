@@ -154,6 +154,7 @@ export const ResumeView = () => {
 		setDraggingDataItem(null)
 		setDraggingDataTemplate(null)
 		setDraggingDataSection(null)
+		setDraggingResumeInstance(null)
 	}
 
 	function handleDragStart(event: DragStartEvent) {
