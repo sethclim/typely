@@ -119,7 +119,16 @@ export const ResumeSectionCardDisplay = (props: ResumeTemplateDisplayProps) => {
 							) : null}
 						</div>
 					</div>
-					<div className="inline-flex items-center px-2 rounded-sm bg-black/30 text-other/80 text-xs">
+					<div
+						className={clsx('inline-flex items-center px-2 rounded-sm bg-black/30  text-xs', {
+							'text-blue-400': props.resumeSection.sectionType === 'skills',
+							'text-other': props.resumeSection.sectionType === 'experience',
+							'text-[#fcc047]': props.resumeSection.sectionType === 'header',
+							'text-[#e85f5f]': props.resumeSection.sectionType === 'education',
+							'text-purple-400 ': props.resumeSection.sectionType === 'section',
+							'text-[#9ffa9d]': props.resumeSection.sectionType === 'project'
+						})}
+					>
 						{props.resumeSection.sectionType}
 					</div>
 				</div>
