@@ -43,18 +43,27 @@ function excapeLatexSymbolsInData(input: string): string {
 export const ReplaceVariables = (section: ResumeSection) => {
 	let str = section.template?.content || ''
 	const dict = Object.fromEntries(section.dataItems.flatMap((item) => item.data))
-	// console.log("dict", dict);
 
-	// Replace all [[KEY]] in one pass
-	str = str.replace(/\[\[(.*?)\]\]/g, (_, key) => {
-		key = key.trim()
-		const data = excapeLatexSymbolsInData(dict[key])
-		// console.log("Replacing", key, "with", data);
-		return data ?? ''
-	})
+	const lines = str.split('\n')
 
-	// console.log("Final str:", str);
-	return str
+	const processed = lines
+		.map((line) => {
+			const replaced = line.replace(/\[\[(.*?)\]\]/g, (_, key) => {
+				key = key.trim()
+				const data = excapeLatexSymbolsInData(dict[key])
+				return data ?? ''
+			})
+
+			// remove \item lines that ended up empty
+			if (/^\s*\\item\s*$/.test(replaced)) {
+				return null
+			}
+
+			return replaced
+		})
+		.filter(Boolean)
+
+	return processed.join('\n')
 }
 
 export const PDFView = (props: PDFViewProps) => {
