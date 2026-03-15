@@ -32,4 +32,5 @@ demo at: [https://typely.seth-typely.workers.dev/demo](https://typely.seth-typel
 
 ### Data Model
 
-<img width="4760" height="4667" alt="Image" src="https://github.com/user-attachments/assets/8c123768-4d3b-4b7f-a74c-726f95c94854" />
+<!-- <img width="4760" height="4667" alt="Image" src="https://github.com/user-attachments/assets/8c123768-4d3b-4b7f-a74c-726f95c94854" /> -->
+<img width="8192" height="4008" alt="Image" src="https://github.com/user-attachments/assets/56015206-13c3-464d-95ca-d1fd7461273a" />
