@@ -83,7 +83,7 @@ export const ResumeView = () => {
 		setIsNewRsumeOpen(false)
 	}
 
-	function handleDragEnd(event: DragEndEvent) {
+	async function handleDragEnd(event: DragEndEvent) {
 		const over = event.over
 		const active = event.active
 
@@ -135,12 +135,19 @@ export const ResumeView = () => {
 			if (myResume == null || draggingResumeInstance == null || over.data.current == null) return
 
 			let overIdx = over.data.current.index
-			repositories.resumeSectionConfig.insert({
+			const newID = await repositories.resumeSectionConfig.insert({
 				resume_id: myResume.id,
 				title: draggingResumeInstance.title,
 				template_id: draggingResumeInstance.templateId,
 				section_type: draggingResumeInstance.sectionType,
 				section_order: over.data.current?.index
+			})
+
+			draggingResumeInstance.dataItems.forEach((dataItem) => {
+				repositories.resumeSectionData.insert({
+					section_id: newID,
+					data_item_id: dataItem.id
+				})
 			})
 
 			myResume.sections.forEach((section, index) => {
