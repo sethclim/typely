@@ -126,7 +126,8 @@ export const ResumeSectionCardDisplay = (props: ResumeTemplateDisplayProps) => {
 							'text-[#fcc047]': props.resumeSection.sectionType === 'header',
 							'text-[#e85f5f]': props.resumeSection.sectionType === 'education',
 							'text-purple-400 ': props.resumeSection.sectionType === 'section',
-							'text-[#9ffa9d]': props.resumeSection.sectionType === 'project'
+							'text-[#9ffa9d]': props.resumeSection.sectionType === 'project',
+							'text-white': !props.resumeSection.sectionType
 						})}
 					>
 						{props.resumeSection.sectionType}

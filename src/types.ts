@@ -1,7 +1,9 @@
+export type ResumeSectionType = 'skills' | 'experience' | 'header' | 'education' | 'section' | 'project'
+
 export interface Template {
 	id: number
 	name: string
-	sectionType: string
+	sectionType: ResumeSectionType
 	content: string
 	description?: string
 }
@@ -34,7 +36,7 @@ export interface DataItem {
 export interface ResumeSection {
 	id: number
 	title: string
-	sectionType: string
+	sectionType: ResumeSectionType
 	order: number
 	template: Template | undefined
 	dataItems: DataItem[]
@@ -54,7 +56,7 @@ export interface ResumeSectionInstance {
 	id: number
 	title: string
 	templateId: number
-	sectionType: string
+	sectionType: ResumeSectionType
 	createdAt: string | null // ISO datetime
 	updatedAt: string | null // ISO datetime
 	dataItems: DataItem[]

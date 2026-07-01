@@ -22,6 +22,7 @@ import {
 	ThemeDataRow
 } from './types'
 import { DBService } from './DBService'
+import { ResumeSectionType } from '../types'
 
 export const RESUME_CONFIG_TABLE = 'resume_config'
 // const RESUME_SECTION_CONFIG_TABLE = "resume_section_config";
@@ -536,7 +537,7 @@ export class ThemeTable {
 type InsertInstanceProps = {
 	title: string
 	templateId: number
-	sectionType: string
+	sectionType: ResumeSectionType
 	dataItemIds: number[]
 }
 

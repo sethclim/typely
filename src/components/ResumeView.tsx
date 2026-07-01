@@ -19,10 +19,10 @@ import {
 	useSensors
 } from '@dnd-kit/core'
 
-// @ts-ignore
-import SyntaxHighlighter from 'react-syntax-highlighter'
-// @ts-ignore
-import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs'
+// // @ts-ignore
+// import SyntaxHighlighter from 'react-syntax-highlighter'
+// // @ts-ignore
+// import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs'
 import { Panel, PanelResizeHandle, PanelGroup } from 'react-resizable-panels'
 
 import { OutputView } from './OutputView'
@@ -76,7 +76,7 @@ export const ResumeView = () => {
 			title: title,
 			template_id: selectedTemplate ? (templates.find((t) => t.name == selectedTemplate)?.id ?? -1) : -1,
 			section_order: 0, //TODO needs to be the last one in the list
-			section_type: selectedType!
+			section_type: selectedType.toLowerCase()
 		})
 
 		setSelectedType(null)
