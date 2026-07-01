@@ -6,11 +6,6 @@ import 'react-pdf/dist/Page/TextLayer.css'
 import 'react-pdf/dist/Page/AnnotationLayer.css'
 import { ResumeSection } from '../types'
 
-// @ts-ignore
-import SyntaxHighlighter from 'react-syntax-highlighter'
-// @ts-ignore
-import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs'
-
 type PDFViewProps = {
 	pdfUrl?: string | null
 }
@@ -41,17 +36,37 @@ function excapeLatexSymbolsInData(input: string): string {
 }
 
 export const ReplaceVariables = (section: ResumeSection) => {
-	let str = section.template?.content || ''
+	const str = section.template?.content || ''
 	const dict = Object.fromEntries(section.dataItems.flatMap((item) => item.data))
 
 	const lines = str.split('\n')
 
 	const processed = lines
-		.map((line) => {
-			const replaced = line.replace(/\[\[(.*?)\]\]/g, (_, key) => {
-				key = key.trim()
-				const data = excapeLatexSymbolsInData(dict[key])
-				return data ?? ''
+		.map((line, index) => {
+			console.log('Line ' + line)
+			const replaced = line.replace(/\[\[(.*?)\]\]/g, (match, rawKey) => {
+				const key = String(rawKey ?? '').trim()
+
+				if (!key) {
+					console.warn(`Empty template key in line ${index}:`, match)
+					return ''
+				}
+
+				const value = dict?.[key]
+
+				if (value === undefined || value === null) {
+					console.warn(`Missing template value for key "${key}"`)
+					return `[[MISSING:${key}]]`
+				}
+
+				console.log('VALUE', value)
+
+				try {
+					return excapeLatexSymbolsInData(String(value))
+				} catch (err) {
+					console.error(`Failed to escape LaTeX for key "${key}"`, err)
+					return String(value)
+				}
 			})
 
 			// remove \item lines that ended up empty
