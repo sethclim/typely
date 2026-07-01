@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { ResumeIntakeForm } from '../../components/ResumeIntakeForm'
 // import { DB } from '../db'
 
-import { Template, Theme } from '../../types'
+import { ResumeSectionType, Template, Theme } from '../../types'
 import { TemplateRow } from '../../db/types'
 import { useDataContext } from '../../context/data/DataContext'
 // import { DataProvider } from '../context/data/DataProvider'
@@ -33,7 +33,7 @@ const hydrateThemes = (rows: Array<any>): Array<Theme> => {
 				const template: Template = {
 					id: templateRow.id!,
 					name: templateRow.name,
-					sectionType: templateRow.section_type,
+					sectionType: templateRow.section_type as ResumeSectionType,
 					content: templateRow.content
 				}
 				return template

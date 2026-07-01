@@ -3,7 +3,7 @@ import { DBService } from '../../db/DBService'
 import { createRepositories, DataContext, Repositories } from './DataContext'
 // import { DB } from "../../db";
 import { TemplateRow } from '../../db/types'
-import { Template, Theme } from '../../types'
+import { ResumeSectionType, Template, Theme } from '../../types'
 import { InsertAllTemplates } from '../../helpers/InsertAllTemplates'
 // import { ResumeConfig, Theme } from "../../types";
 
@@ -31,7 +31,7 @@ const hydrateThemes = (rows: Array<any>): Array<Theme> => {
 				const template: Template = {
 					id: templateRow.id!,
 					name: templateRow.name,
-					sectionType: templateRow.section_type,
+					sectionType: templateRow.section_type as ResumeSectionType,
 					content: templateRow.content
 				}
 				return template

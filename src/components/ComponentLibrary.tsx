@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
-import { DataItem, DataItemType, ResumeSectionInstance, Template } from '../types'
+import { DataItem, DataItemType, ResumeSectionInstance, ResumeSectionType, Template } from '../types'
 import ThreeWaySlider from './ThreeWaySlider'
 
-// @ts-ignore
+// @ts-expect-error says can't find declaration file but works
 import SyntaxHighlighter from 'react-syntax-highlighter'
-// @ts-ignore
+// @ts-expect-error says can't find declaration file but works
 import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs'
 
 import { AddDetailsModal } from './AddDataItemModal'
@@ -210,7 +210,7 @@ export function mapRowToTemplate(row: {
 	return {
 		id: row.id!,
 		name: row.name,
-		sectionType: row.sectionType,
+		sectionType: row.sectionType as ResumeSectionType,
 		content: row.content,
 		description: row.description ?? undefined
 	}
@@ -254,7 +254,7 @@ export const ComponentLibrary = () => {
 		const instanceDataRows = repositories.resumeSectionInstance.getAll()
 		const dataItemTypes = repositories.resumeDataItemType.getAll()
 
-		let instanceData: ResumeSectionInstance[] = []
+		const instanceData: ResumeSectionInstance[] = []
 
 		instanceDataRows.forEach((instanceRow) => {
 			const dataItemRows = repositories.resumeSectionInstanceData.getDataForInstance(instanceRow.id)
@@ -280,11 +280,11 @@ export const ComponentLibrary = () => {
 				}
 			})
 
-			let instance: ResumeSectionInstance = {
+			const instance: ResumeSectionInstance = {
 				id: instanceRow.id,
 				title: instanceRow.title,
 				templateId: instanceRow.templateId,
-				sectionType: instanceRow.sectionType,
+				sectionType: instanceRow.sectionType as ResumeSectionType,
 				createdAt: instanceRow.createdAt,
 				updatedAt: instanceRow.updatedAt,
 				dataItems: dataItems
