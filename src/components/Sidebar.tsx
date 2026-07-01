@@ -15,7 +15,7 @@ export function Sidebar({ children, expanded }: SidebarProps) {
         `}
 			>
 				<div className="flex items-center justify-between px-3 py-3">
-					{expanded && <span className="font-semibold text-grey">Typely</span>}
+					{expanded && <span className="font-semibold text-grey">Slate</span>}
 				</div>
 
 				{children}

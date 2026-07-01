@@ -36,7 +36,7 @@ export const Header = ({ expanded, setExpanded, children, bg = 'bg-darker' }: He
 			</div>
 			<div className="flex flex-col justify-center">
 				<Link to="/app">
-					<h3 className="text-white text-3xl font-bold">TYPELY</h3>
+					<h3 className="text-white text-3xl font-bold">SLATE</h3>
 				</Link>
 			</div>
 			<div className="grow">{children}</div>
