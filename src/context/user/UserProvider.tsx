@@ -15,6 +15,7 @@ export const UserProvider: React.FC<ResumeProviderProps> = ({ children }) => {
 	const navigate = useNavigate()
 	const router = useRouter()
 	const previousPath = useRef<string | null>(null)
+	const userRef = useRef<User | null>(null)
 
 	useEffect(() => {
 		return router.subscribe('onResolved', (event) => {
@@ -25,22 +26,33 @@ export const UserProvider: React.FC<ResumeProviderProps> = ({ children }) => {
 	useEffect(() => {
 		supabase.auth.getSession().then(({ data }) => {
 			setUser(data.session?.user ?? null)
+			userRef.current = data.session?.user ?? null
 		})
 
 		// Whenever the auth state changes, we receive an event and a session object.
 		// Save the user from the session object to the state.
-		supabase.auth.onAuthStateChange((event, session) => {
-			//Func Changed 02/27/26
-			if (event === 'SIGNED_IN') {
-				// console.log("User" + JSON.stringify(session?.user))
+		const {
+			data: { subscription }
+		} = supabase.auth.onAuthStateChange((event, session) => {
+			// Supabase also fires SIGNED_IN on tab refocus when it silently
+			// refreshes the session, not just on an actual login. Only navigate
+			// when this is a genuine signed-out -> signed-in transition, otherwise
+			// refocusing a tab bounces navigation between previousPath and here.
+			const wasSignedOut = userRef.current === null
 
-				setUser(session?.user ?? null)
+			setUser(session?.user ?? null)
+			userRef.current = session?.user ?? null
 
+			if (event === 'SIGNED_IN' && wasSignedOut) {
 				if (previousPath.current) {
 					navigate({ to: previousPath.current })
 				}
 			}
 		})
+
+		return () => {
+			subscription.unsubscribe()
+		}
 	}, [])
 
 	return <UserContext.Provider value={{ user }}>{children}</UserContext.Provider>
