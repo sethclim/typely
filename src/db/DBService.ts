@@ -1,4 +1,5 @@
 import initSqlJs from 'sql.js'
+import sqlWasmUrl from 'sql.js/dist/sql-wasm.wasm?url'
 // import { InsertAllTemplates } from "../helpers/InsertAllTemplates";
 import { SQLiteAutoBackupService } from './backupService'
 import { drizzle, SQLJsDatabase } from 'drizzle-orm/sql-js'
@@ -32,7 +33,7 @@ export class DBService {
 		// console.log("INIT DB " + storageKey);
 		// this.storageKey = storageKey;
 		this.SQL = await initSqlJs({
-			locateFile: (file) => `https://sql.js.org/dist/${file}`
+			locateFile: () => sqlWasmUrl
 		})
 
 		console.log('INIT DATA SERVICE ')
